@@ -33,6 +33,9 @@
     <ClCompile Include="Window.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
