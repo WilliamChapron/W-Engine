@@ -14,10 +14,11 @@ void OpenGL_Mesh::Setup(const std::vector<Vertex>& vertices, const std::vector<u
     m_vertices = vertices;
     m_indices = indices;
 
-    SetupMesh();
-}
+    for (const auto& vertex : m_vertices) {
+        std::cout << "Vertex Color: " << vertex.color[0] << ", " << vertex.color[1] << ", " << vertex.color[2] << ", " << vertex.color[3] << std::endl;
+    }
 
-void OpenGL_Mesh::Update() {
+    SetupMesh();
 }
 
 void OpenGL_Mesh::SetupMesh() {
@@ -48,7 +49,7 @@ void OpenGL_Mesh::SetupMesh() {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
     glEnableVertexAttribArray(2);
 
-    // Couleur (ajout de la gestion de couleur)
+    // Couleur
     glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
     glEnableVertexAttribArray(3);
 

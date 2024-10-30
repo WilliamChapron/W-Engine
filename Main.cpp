@@ -21,6 +21,8 @@ const unsigned int SCR_HEIGHT = 600;
 const char* vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"  // Emplacement des sommets
 "layout (location = 1) in vec4 aColor;\n" // Emplacement des couleurs
+"layout (location = 2) in vec3 aNormal;\n" // Emplacement des normales
+"layout (location = 3) in vec2 aTexCoords;\n" // Emplacement des coordonnées de texture
 "uniform mat4 u_World;\n"                 // Matrice du monde
 "uniform mat4 u_View;\n"                  // Matrice de vue
 "uniform mat4 u_Projection;\n"            // Matrice de projection
@@ -52,6 +54,13 @@ int main()
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
+    FILE* fDummy;
+    freopen_s(&fDummy, "CONIN$", "r", stdin);   // Pour l'entrée
+    freopen_s(&fDummy, "CONOUT$", "w", stderr);  // Pour les erreurs
+    freopen_s(&fDummy, "CONOUT$", "w", stdout);  // Pour la sortie
+
+    // Exemple d'utilisation de cout
+    std::cout << "Bienvenue dans le programme!\n";
 
     // glfw window creation
     // --------------------

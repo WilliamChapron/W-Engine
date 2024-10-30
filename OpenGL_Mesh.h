@@ -8,7 +8,7 @@ public:
     ~OpenGL_Mesh();
 
     void Setup(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) override;
-    void Update() override;
+    void Update() override {};
 
     unsigned int GetVAO() const { return VAO; }
     unsigned int GetIndexCount() const { return static_cast<unsigned int>(m_indices.size()); }
