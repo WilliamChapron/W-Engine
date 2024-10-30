@@ -1,7 +1,15 @@
 #include "pch.h"
 
-#include "OpenGLContext.h"
-#include "OpenGLShader.h" 
+//Render
+#include "OpenGL_Context.h"
+#include "OpenGL_Renderer.h" 
+#include "OpenGL_Shader.h" 
+#include "OpenGL_Mesh.h" 
+
+//Engine
+#include "Camera.h" 
+
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -11,18 +19,26 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
+"layout (location = 0) in vec3 aPos;\n"  // Emplacement des sommets
+"layout (location = 1) in vec4 aColor;\n" // Emplacement des couleurs
+"uniform mat4 u_World;\n"                 // Matrice du monde
+"uniform mat4 u_View;\n"                  // Matrice de vue
+"uniform mat4 u_Projection;\n"            // Matrice de projection
+"out vec4 vertexColor;\n"                 // Sortie de couleur pour le fragment shader
 "void main()\n"
 "{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"   gl_Position = u_Projection * u_View * u_World * vec4(aPos, 1.0);\n"  // Appliquer les transformations
+"   vertexColor = aColor;\n"          // Passer la couleur au fragment shader
 "}\0";
 
 const char* fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
+"in vec4 vertexColor;\n"                // Récupérer la couleur du vertex shader
 "void main()\n"
 "{\n"
-"   FragColor = vec4(1.0f, 0.3f, 0.2f, 1.0f);\n"
+"   FragColor = vertexColor;\n"         // Utiliser la couleur du vertex
 "}\n\0";
+
 
 int main()
 {
@@ -39,50 +55,62 @@ int main()
 
     // glfw window creation
     // --------------------
-    OpenGLContext* openGlContext = new OpenGLContext();
-    openGlContext->Initialize(SCR_WIDTH, SCR_HEIGHT, "OpenGL WINDOW");
+    OpenGL_Context* context = new OpenGL_Context();
+    context->Initialize(SCR_WIDTH, SCR_HEIGHT, "OpenGL WINDOW");
 
-    GLFWwindow* window = openGlContext->getWindow();
+    GLFWwindow* window = context->getWindow();
+
+    // renderer
+    // --------------------
+    OpenGL_Renderer renderer;
+    renderer.Initialize(context);
+
+    //camera
+    // Créer une caméra
+    Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
     // build and compile shader
     // ------------------------------------
-    OpenGLShader shader; 
+    OpenGL_Shader shader; 
     if (!shader.Compile(vertexShaderSource, fragmentShaderSource)) {
         std::cerr << "Shader compilation failed!" << std::endl;
         return -1; 
     }
 
+
+    OpenGL_Mesh mesh;
     // vertices
     // ------------------------------------------------------------------
-    float vertices[] = {
-         0.5f,  0.5f, 0.0f,  // top right
-         0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left 
+    std::vector<Vertex> vertices = {
+        {{ 0.5f,  0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}}, // Rouge
+        {{ 0.5f, -0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Vert
+        {{-0.5f, -0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Bleu
+        {{-0.5f,  0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}, {1.0f, 1.0f, 0.0f, 1.0f}}, // Jaune
+        {{ 0.5f,  0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f, 1.0f, 1.0f}}, // Magenta
+        {{ 0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}, {0.0f, 1.0f, 1.0f, 1.0f}}, // Cyan
+        {{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, {0.5f, 0.5f, 0.5f, 1.0f}}, // Gris
+        {{-0.5f,  0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}, {1.0f, 0.5f, 0.0f, 1.0f}}  // Orange
     };
-    unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 3,  // first Triangle
-        1, 2, 3   // second Triangle
+
+    // Indices pour les triangles du cube
+    std::vector<unsigned int> indices = {
+        0, 1, 3,  // Face avant (triangle 1)
+        1, 2, 3,  // Face avant (triangle 2)
+        4, 5, 7,  // Face arrière (triangle 1)
+        5, 6, 7,  // Face arrière (triangle 2)
+        0, 4, 7,  // Face gauche (triangle 1)
+        0, 3, 7,  // Face gauche (triangle 2)
+        1, 5, 6,  // Face droite (triangle 1)
+        1, 2, 6,  // Face droite (triangle 2)
+        3, 2, 6,  // Face supérieure (triangle 1)
+        3, 6, 7,  // Face supérieure (triangle 2)
+        0, 1, 5,  // Face inférieure (triangle 1)
+        0, 5, 4   // Face inférieure (triangle 2)
     };
-    unsigned int VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    // Configuration du mesh
+    mesh.Setup(vertices, indices);
+    
 
     // render loop
     // -----------
@@ -94,25 +122,35 @@ int main()
 
         // render
         // ------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        renderer.Clear();
 
-        // Utiliser le programme de shader
-        shader.Use();
-        glBindVertexArray(VAO); // On peut se passer de le lier à chaque fois
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // Calculer les matrices
+        glm::mat4 projection = camera.GetProjectionMatrix(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
 
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        // Position de l'objet
+        glm::vec3 position(1.0f, 2.0f, -5.0f);
+
+        // Créer une matrice d'identité
+        glm::mat4 world = glm::mat4(1.0f);
+
+        // Appliquer la translation
+        world = glm::translate(world, position);
+
+        // Appliquer la rotation (ex. 45 degrés autour de l'axe Y)
+        float angle = glm::radians(45.0f); // Convertir les degrés en radians
+        world = glm::rotate(world, angle, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotation autour de l'axe Y
+
+        // Mettre à jour les matrices dans le shader
+        shader.UpdateMatrices(world, view, projection); // Appel à UpdateMatrices
+
+        // Dessiner le mesh
+        renderer.Draw(mesh, shader);
+
+        // Présenter le buffer
+        renderer.Present();
     }
 
-    // optional: de-allocate all resources once they've outlived their purpose:
-    // ------------------------------------------------------------------------
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------

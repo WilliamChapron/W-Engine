@@ -1,17 +1,16 @@
 #include "pch.h"
-#include "OpenGLShader.h"
 
-#include "OpenGLShader.h"
+#include "OpenGL_Shader.h"
 
-OpenGLShader::OpenGLShader() : m_programID(0) {}
+OpenGL_Shader::OpenGL_Shader() : m_programID(0) {}
 
-OpenGLShader::~OpenGLShader() {
+OpenGL_Shader::~OpenGL_Shader() {
     if (m_programID != 0) {
         glDeleteProgram(m_programID);
     }
 }
 
-bool OpenGLShader::Compile(const std::string& vertexSource, const std::string& fragmentSource) {
+bool OpenGL_Shader::Compile(const std::string& vertexSource, const std::string& fragmentSource) {
     // Compilation des shaders vertex et fragment
     unsigned int vertexShader = CompileShader(GL_VERTEX_SHADER, vertexSource);
     unsigned int fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentSource);
@@ -43,15 +42,15 @@ bool OpenGLShader::Compile(const std::string& vertexSource, const std::string& f
     return true;
 }
 
-void OpenGLShader::Use() const {
+void OpenGL_Shader::Use() const {
     glUseProgram(m_programID);
 }
 
-unsigned int OpenGLShader::GetProgramID() const {
+unsigned int OpenGL_Shader::GetProgramID() const {
     return m_programID;
 }
 
-unsigned int OpenGLShader::CompileShader(unsigned int type, const std::string& source) {
+unsigned int OpenGL_Shader::CompileShader(unsigned int type, const std::string& source) {
     unsigned int shader = glCreateShader(type);
     const char* src = source.c_str();
     glShaderSource(shader, 1, &src, NULL);
@@ -69,4 +68,16 @@ unsigned int OpenGLShader::CompileShader(unsigned int type, const std::string& s
         return 0;
     }
     return shader;
+}
+
+void OpenGL_Shader::UpdateMatrices(const glm::mat4& world, const glm::mat4& view, const glm::mat4& projection) {
+    Use();
+
+    GLuint worldLoc = glGetUniformLocation(m_programID, "u_World");
+    GLuint viewLoc = glGetUniformLocation(m_programID, "u_View");
+    GLuint projectionLoc = glGetUniformLocation(m_programID, "u_Projection");
+
+    glUniformMatrix4fv(worldLoc, 1, GL_FALSE, glm::value_ptr(world));
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 }

@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\OpenGL-Engine\OpenGL\includes;$(IncludePath)</IncludePath>
+    <IncludePath>C:\OpenGL-Engine\OpenGL\includes;C:\OpenGL-Engine\glm-math;$(IncludePath)</IncludePath>
     <LibraryPath>C:\OpenGL-Engine\OpenGL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -134,14 +134,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Context.cpp" />
     <ClCompile Include="glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="OpenGLContext.cpp" />
-    <ClCompile Include="OpenGLRenderer.cpp" />
-    <ClCompile Include="OpenGLShader.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="OpenGL_Context.cpp" />
+    <ClCompile Include="OpenGL_Mesh.cpp" />
+    <ClCompile Include="OpenGL_Renderer.cpp" />
+    <ClCompile Include="OpenGL_Shader.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
@@ -151,10 +154,13 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Context.h" />
-    <ClInclude Include="OpenGLContext.h" />
-    <ClInclude Include="OpenGLRenderer.h" />
-    <ClInclude Include="OpenGLShader.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="OpenGL_Context.h" />
+    <ClInclude Include="OpenGL_Mesh.h" />
+    <ClInclude Include="OpenGL_Renderer.h" />
+    <ClInclude Include="OpenGL_Shader.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />

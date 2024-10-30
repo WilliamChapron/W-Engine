@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Shader.h" 
+#include "Mesh.h" 
 
 class Context;
+
 
 class Renderer {
 public:
@@ -10,6 +12,6 @@ public:
 
     virtual void Initialize(Context* context) = 0;
     virtual void Clear() = 0;
-    virtual void Draw(const std::vector<float>& vertices, const Shader& shader) = 0;
+    virtual void Draw(const Mesh& mesh, const Shader& shader) = 0;
     virtual void Present() = 0;
 };

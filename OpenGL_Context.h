@@ -2,10 +2,10 @@
 
 #include "Context.h"
 
-class OpenGLContext : public Context {
+class OpenGL_Context : public Context {
 public:
-    OpenGLContext() {};
-    virtual ~OpenGLContext() {};
+    OpenGL_Context() {};
+    virtual ~OpenGL_Context() {};
 
     bool Initialize(int width, int height, const char* title) override;
     void Terminate() override {};

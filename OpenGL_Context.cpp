@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "OpenGLContext.h"
+#include "OpenGL_Context.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -8,7 +8,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-bool OpenGLContext::Initialize(int width, int height, const char* title) {
+bool OpenGL_Context::Initialize(int width, int height, const char* title) {
     m_window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
     if (m_window == NULL)
     {
