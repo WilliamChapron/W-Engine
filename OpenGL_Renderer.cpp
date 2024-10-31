@@ -24,14 +24,11 @@ void OpenGL_Renderer::Draw(const Mesh& mesh, const Shader& shader) {
 
     const OpenGL_Mesh& glMesh = static_cast<const OpenGL_Mesh&>(mesh);
 
-    // Liaison du VAO du mesh
     glBindVertexArray(glMesh.GetVAO()); 
 
-    // Dessinez
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Afficher uniquement les contours
-    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(glMesh.GetIndexCount()), GL_UNSIGNED_INT, 0); // Dessine avec des indices
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(glMesh.GetIndexCount()), GL_UNSIGNED_INT, 0); 
 
-    // Déliez le VAO (facultatif, mais souvent une bonne pratique)
     glBindVertexArray(0);
 }
 

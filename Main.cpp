@@ -11,11 +11,6 @@
 #include "Transform.h" 
 #include "Body.h"
 
-
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
-
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
@@ -158,9 +153,6 @@ int main()
     //std::vector<unsigned int> indices;
 
     //LoadModel("C:/Users/wchapron/Documents/GitHub/W-Engine/res/models/locker.obj", vertices, indices);
-       
-
-
     mesh.Setup(vertices, indices);
 
     glEnable(GL_DEPTH_TEST);

@@ -35,10 +35,9 @@ bool OpenGL_Shader::Compile(const std::string& vertexPath, const std::string& fr
     unsigned int fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentSource.c_str());
 
     if (vertexShader == 0 || fragmentShader == 0) {
-        return false; // Si la compilation échoue
+        return false; 
     }
 
-    // Création et liaison du programme shader
     m_programID = glCreateProgram();
     glAttachShader(m_programID, vertexShader);
     glAttachShader(m_programID, fragmentShader);
@@ -79,7 +78,7 @@ unsigned int OpenGL_Shader::CompileShader(unsigned int type, const std::string& 
     if (!success) {
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
         std::cerr << "ERROR::SHADER::" << (type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT") << "::COMPILATION_FAILED\n" << infoLog << std::endl;
-        glDeleteShader(shader); // Supprime le shader en cas d’échec
+        glDeleteShader(shader); 
         return 0;
     }
     return shader;

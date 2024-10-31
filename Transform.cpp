@@ -20,30 +20,24 @@ void Transform::SetScale(const glm::vec3& scale) {
 }
 
 glm::mat4 Transform::GetTransformMatrix() const {
-    // Matrice d'identité
+    //#IMPORTANT - Good order : translate->rotate->rescale !
+    // -----------
     glm::mat4 world = glm::mat4(1.0f);
 
-    // Conversion des angles d'Euler en radians
-    float pitch = glm::radians(m_Rotation.x); // Rotation autour de l'axe X
-    float yaw = glm::radians(m_Rotation.y);   // Rotation autour de l'axe Y
-    float roll = glm::radians(m_Rotation.z);  // Rotation autour de l'axe Z
+    float pitch = glm::radians(m_Rotation.x);
+    float yaw = glm::radians(m_Rotation.y);   
+    float roll = glm::radians(m_Rotation.z);  
 
-    // Création d'un quaternion à partir des angles d'Euler
-    glm::quat quaternionX = glm::angleAxis(pitch, glm::vec3(1, 0, 0)); // Rotation autour de X
-    glm::quat quaternionY = glm::angleAxis(yaw, glm::vec3(0, 1, 0));   // Rotation autour de Y
-    glm::quat quaternionZ = glm::angleAxis(roll, glm::vec3(0, 0, 1));  // Rotation autour de Z
+    glm::quat quaternionX = glm::angleAxis(pitch, glm::vec3(1, 0, 0)); 
+    glm::quat quaternionY = glm::angleAxis(yaw, glm::vec3(0, 1, 0));   
+    glm::quat quaternionZ = glm::angleAxis(roll, glm::vec3(0, 0, 1));  
 
-    // Combinaison des quaternions
-    glm::quat combinedQuaternion = quaternionZ * quaternionY * quaternionX; // Notez l'ordre
+    glm::quat combinedQuaternion = quaternionZ * quaternionY * quaternionX; 
 
-    // Conversion du quaternion en matrice de rotation
     glm::mat4 rotationMatrix = glm::mat4_cast(combinedQuaternion);
 
-    // Appliquer la transformation complète
-    world = glm::translate(world, m_Position); // Appliquer la translation
-    world = world * rotationMatrix; // Appliquer la rotation
-
-    // Appliquer l'échelle
+    world = glm::translate(world, m_Position); 
+    world = world * rotationMatrix; 
     world = glm::scale(world, m_Scale);
 
     return world;
