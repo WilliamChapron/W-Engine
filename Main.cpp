@@ -182,7 +182,8 @@ int main()
         glm::mat4 projection = camera.GetProjectionMatrix(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         bodyT->SetScale(glm::vec3(scale, scale, scale));
-        rotationSpeed += 0.0001f;
+        bodyT->SetRotation(glm::vec3(rotationSpeed, 0.f, rotationSpeed));
+        rotationSpeed += 1.f;
         x -= 0.005f;
         scale = 1.f;
         glm::mat4 world = body.GetTransform()->GetTransformMatrix();
