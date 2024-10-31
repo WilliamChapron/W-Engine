@@ -1,21 +1,26 @@
-//#pragma once
-//
-//class Body {
-//public:
-//    Body(float startY, float mass);
-//
-//    void update(float deltaTime, float gravity);
-//
-//    float getPositionY() const;
-//
-//    bool isStatic() const;
-//
-//private:
-//    float positionY; // Position verticale
-//    float velocityY; // Vitesse verticale
-//    float mass;      // Masse du corps
-//    bool staticFlag; // Indique si le corps est statique
-//    static const float groundY; // Position du sol (constante)
-//};
-//
-//#endif // BODY_H
+#pragma once
+
+#include "Transform.h"
+
+class Body {
+public:
+    Body();
+    Body(const float velocity[3], float mass);
+
+    // Getters
+    glm::vec3 GetPosition() const;
+    const float* GetVelocity() const;
+    float GetMass() const;
+    inline Transform* GetTransform() { return m_Transform; }
+
+    // Setters
+    void SetVelocity(const float velocity[3]);
+
+    void ApplyForce(const float force[3]);
+    void Update(float deltaTime);
+
+private:
+    Transform* m_Transform;   
+    float m_Velocity[3];      
+    float m_Mass;              
+};
