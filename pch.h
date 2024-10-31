@@ -45,3 +45,9 @@
 // Linking External Libraries
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "opengl32.lib")
+
+
+// Assimp
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>

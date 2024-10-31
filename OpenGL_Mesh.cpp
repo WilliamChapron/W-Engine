@@ -14,9 +14,9 @@ void OpenGL_Mesh::Setup(const std::vector<Vertex>& vertices, const std::vector<u
     m_vertices = vertices;
     m_indices = indices;
 
-    for (const auto& vertex : m_vertices) {
-        std::cout << "Vertex Color: " << vertex.color[0] << ", " << vertex.color[1] << ", " << vertex.color[2] << ", " << vertex.color[3] << std::endl;
-    }
+    //for (const auto& vertex : m_vertices) {
+    //    std::cout << "Vertex Color: " << vertex.color[0] << ", " << vertex.color[1] << ", " << vertex.color[2] << ", " << vertex.color[3] << std::endl;
+    //}
 
     SetupMesh();
 }

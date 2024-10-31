@@ -28,6 +28,7 @@ void OpenGL_Renderer::Draw(const Mesh& mesh, const Shader& shader) {
     glBindVertexArray(glMesh.GetVAO()); 
 
     // Dessinez
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Afficher uniquement les contours
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(glMesh.GetIndexCount()), GL_UNSIGNED_INT, 0); // Dessine avec des indices
 
     // Déliez le VAO (facultatif, mais souvent une bonne pratique)
