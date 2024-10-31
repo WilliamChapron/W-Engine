@@ -1,5 +1,6 @@
 #include "pch.h"
 
+
 #include "OpenGL_Shader.h"
 
 OpenGL_Shader::OpenGL_Shader() : m_programID(0) {}
@@ -10,10 +11,28 @@ OpenGL_Shader::~OpenGL_Shader() {
     }
 }
 
-bool OpenGL_Shader::Compile(const std::string& vertexSource, const std::string& fragmentSource) {
-    // Compilation des shaders vertex et fragment
-    unsigned int vertexShader = CompileShader(GL_VERTEX_SHADER, vertexSource);
-    unsigned int fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentSource);
+std::string OpenGL_Shader::LoadShaderSource(const std::string& filePath) {
+    std::ifstream file(filePath);
+    if (!file.is_open()) {
+        std::cerr << "Erreur : impossible d'ouvrir le fichier shader : " << filePath << std::endl;
+        return "";
+    }
+
+    std::stringstream buffer;
+    buffer << file.rdbuf(); 
+    return buffer.str();    
+}
+
+bool OpenGL_Shader::Compile(const std::string& vertexPath, const std::string& fragmentPath) {
+    std::string vertexSource = LoadShaderSource(vertexPath);
+    std::string fragmentSource = LoadShaderSource(fragmentPath);
+
+    if (vertexSource.empty() || fragmentSource.empty()) {
+        return false; 
+    }
+
+    unsigned int vertexShader = CompileShader(GL_VERTEX_SHADER, vertexSource.c_str());
+    unsigned int fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentSource.c_str());
 
     if (vertexShader == 0 || fragmentShader == 0) {
         return false; // Si la compilation échoue
@@ -25,7 +44,6 @@ bool OpenGL_Shader::Compile(const std::string& vertexSource, const std::string& 
     glAttachShader(m_programID, fragmentShader);
     glLinkProgram(m_programID);
 
-    // Vérification des erreurs de liaison
     int success;
     char infoLog[512];
     glGetProgramiv(m_programID, GL_LINK_STATUS, &success);
@@ -35,7 +53,6 @@ bool OpenGL_Shader::Compile(const std::string& vertexSource, const std::string& 
         return false;
     }
 
-    // Nettoyage des shaders (ils sont désormais intégrés au programme)
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
@@ -56,14 +73,12 @@ unsigned int OpenGL_Shader::CompileShader(unsigned int type, const std::string& 
     glShaderSource(shader, 1, &src, NULL);
     glCompileShader(shader);
 
-    // Vérification des erreurs de compilation
     int success;
     char infoLog[512];
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        std::cerr << "ERROR::SHADER::" << (type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT")
-            << "::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cerr << "ERROR::SHADER::" << (type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT") << "::COMPILATION_FAILED\n" << infoLog << std::endl;
         glDeleteShader(shader); // Supprime le shader en cas d’échec
         return 0;
     }

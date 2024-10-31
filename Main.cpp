@@ -18,29 +18,6 @@ void processInput(GLFWwindow* window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"  // Emplacement des sommets
-"layout (location = 1) in vec4 aColor;\n" // Emplacement des couleurs
-"layout (location = 2) in vec3 aNormal;\n" // Emplacement des normales
-"layout (location = 3) in vec2 aTexCoords;\n" // Emplacement des coordonnées de texture
-"uniform mat4 u_World;\n"                 // Matrice du monde
-"uniform mat4 u_View;\n"                  // Matrice de vue
-"uniform mat4 u_Projection;\n"            // Matrice de projection
-"out vec4 vertexColor;\n"                 // Sortie de couleur pour le fragment shader
-"void main()\n"
-"{\n"
-"   gl_Position = u_Projection * u_View * u_World * vec4(aPos, 1.0);\n"  // Appliquer les transformations
-"   vertexColor = aColor;\n"          // Passer la couleur au fragment shader
-"}\0";
-
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"in vec4 vertexColor;\n"                // Récupérer la couleur du vertex shader
-"void main()\n"
-"{\n"
-"   FragColor = vertexColor;\n"         // Utiliser la couleur du vertex
-"}\n\0";
-
 
 int main()
 {
@@ -81,7 +58,7 @@ int main()
     // build and compile shader
     // ------------------------------------
     OpenGL_Shader shader; 
-    if (!shader.Compile(vertexShaderSource, fragmentShaderSource)) {
+    if (!shader.Compile("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl")) {
         std::cerr << "Shader compilation failed!" << std::endl;
         return -1; 
     }
@@ -91,43 +68,48 @@ int main()
     // vertices
     // ------------------------------------------------------------------
     std::vector<Vertex> vertices = {
-        {{ 0.5f,  0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}}, // Rouge
-        {{ 0.5f, -0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Vert
-        {{-0.5f, -0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Bleu
-        {{-0.5f,  0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}, {1.0f, 1.0f, 0.0f, 1.0f}}, // Jaune
-        {{ 0.5f,  0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f, 1.0f, 1.0f}}, // Magenta
-        {{ 0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}, {0.0f, 1.0f, 1.0f, 1.0f}}, // Cyan
-        {{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, {0.5f, 0.5f, 0.5f, 1.0f}}, // Gris
-        {{-0.5f,  0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}, {1.0f, 0.5f, 0.0f, 1.0f}}  // Orange
+        // Sommet de la pyramide (maintenant en haut)
+        {{ 0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}, {0.5f, 1.0f}}, // Sommet (blanc)
+
+        // Base de la pyramide
+        {{-0.5f, 0.0f, -0.5f}, {1.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // Bas gauche arrière (rouge)
+        {{ 0.5f, 0.0f, -0.5f}, {0.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}}, // Bas droit arrière (vert)
+        {{ 0.5f, 0.0f,  0.5f}, {0.0f, 0.0f, 1.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}, // Bas droit avant (bleu)
+        {{-0.5f, 0.0f,  0.5f}, {1.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}}  // Bas gauche avant (jaune)
     };
 
-    // Indices pour les triangles du cube
+    // Indices pour les triangles de la pyramide
     std::vector<unsigned int> indices = {
-        0, 1, 3,  // Face avant (triangle 1)
-        1, 2, 3,  // Face avant (triangle 2)
-        4, 5, 7,  // Face arrière (triangle 1)
-        5, 6, 7,  // Face arrière (triangle 2)
-        0, 4, 7,  // Face gauche (triangle 1)
-        0, 3, 7,  // Face gauche (triangle 2)
-        1, 5, 6,  // Face droite (triangle 1)
-        1, 2, 6,  // Face droite (triangle 2)
-        3, 2, 6,  // Face supérieure (triangle 1)
-        3, 6, 7,  // Face supérieure (triangle 2)
-        0, 1, 5,  // Face inférieure (triangle 1)
-        0, 5, 4   // Face inférieure (triangle 2)
+        // Faces triangulaires
+        0, 1, 2,  // Face arrière
+        0, 2, 3,  // Face droite
+        0, 3, 4,  // Face avant
+        0, 4, 1,  // Face gauche
+
+        // Base (face inférieure)
+        1, 2, 3,  // Triangle 1 de la base
+        1, 3, 4   // Triangle 2 de la base
     };
 
     // Configuration du mesh
     mesh.Setup(vertices, indices);
+
+    glEnable(GL_DEPTH_TEST);
     
+
+    // Variables globales
+    float rotationSpeed = 0.0f; // Vitesse de rotation en degrés par seconde
 
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
+        // Calculer le temps écoulé depuis la dernière frame
         // input
         // -----
         processInput(window);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // render
         // ------
@@ -138,7 +120,7 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
 
         // Position de l'objet
-        glm::vec3 position(1.0f, 2.0f, -5.0f);
+        glm::vec3 position(0.0f, -0.5f, 0.0f);
 
         // Créer une matrice d'identité
         glm::mat4 world = glm::mat4(1.0f);
@@ -146,13 +128,14 @@ int main()
         // Appliquer la translation
         world = glm::translate(world, position);
 
-        // Appliquer la rotation (ex. 45 degrés autour de l'axe Y)
-        float angle = glm::radians(45.0f); // Convertir les degrés en radians
-        world = glm::rotate(world, angle, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotation autour de l'axe Y
+        // Appliquer la rotation
+        float angle = rotationSpeed; // Calculer l'angle de rotation en fonction du temps écoulé
+        world = glm::rotate(world, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotation autour de l'axe Y
 
         // Mettre à jour les matrices dans le shader
         shader.UpdateMatrices(world, view, projection); // Appel à UpdateMatrices
 
+        rotationSpeed += 1.f;
         // Dessiner le mesh
         renderer.Draw(mesh, shader);
 
