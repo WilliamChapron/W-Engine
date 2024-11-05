@@ -9,9 +9,10 @@ uniform mat4 u_View;
 uniform mat4 u_Projection;
 
 out vec4 vertexColor;
+out vec2 TexCoords;   
 
 void main() {
     gl_Position = u_Projection * u_View * u_World * vec4(aPos, 1.0);
     vertexColor = aColor;
-
+    TexCoords = aTexCoords; 
 }

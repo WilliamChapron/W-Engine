@@ -137,6 +137,9 @@
     <ClCompile Include="Body.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Context.cpp" />
+    <ClCompile Include="extern\stb_image.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -152,6 +155,7 @@
     </ClCompile>
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="OpenGL_Texture.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -159,6 +163,7 @@
     <ClInclude Include="Body.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Context.h" />
+    <ClInclude Include="extern\stb_image.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OpenGL_Context.h" />
     <ClInclude Include="OpenGL_Mesh.h" />
@@ -167,6 +172,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="OpenGL_Texture.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

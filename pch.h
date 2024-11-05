@@ -51,3 +51,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
+// Stb image (texture)
+#include "extern/stb_image.h" // Inclure ici pour utiliser les fonctions de stb_image

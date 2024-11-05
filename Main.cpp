@@ -5,6 +5,7 @@
 #include "OpenGL_Renderer.h" 
 #include "OpenGL_Shader.h" 
 #include "OpenGL_Mesh.h" 
+#include "OpenGL_Texture.h" 
 
 //Engine
 #include "Camera.h" 
@@ -120,39 +121,43 @@ int main()
         return -1; 
     }
 
+    // load textures
+    // ------------------------------------
+    OpenGLTexture texture("res\\textures\\cottage\\diffuse.jpg");
+
 
     OpenGL_Mesh mesh;
 
     // vertices
     // ------------------------------------------------------------------
-    std::vector<Vertex> vertices = {
-        // Sommet de la pyramide (maintenant en haut)
-        {{ 0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}, {0.5f, 1.0f}}, // Sommet (blanc)
+    //std::vector<Vertex> vertices = {
+    //    // Sommet de la pyramide (maintenant en haut)
+    //    {{ 0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}, {0.5f, 1.0f}}, // Sommet (blanc)
 
-        // Base de la pyramide
-        {{-0.5f, 0.0f, -0.5f}, {1.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // Bas gauche arrière (rouge)
-        {{ 0.5f, 0.0f, -0.5f}, {0.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}}, // Bas droit arrière (vert)
-        {{ 0.5f, 0.0f,  0.5f}, {0.0f, 0.0f, 1.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}, // Bas droit avant (bleu)
-        {{-0.5f, 0.0f,  0.5f}, {1.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}}  // Bas gauche avant (jaune)
-    };
+    //    // Base de la pyramide
+    //    {{-0.5f, 0.0f, -0.5f}, {1.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // Bas gauche arrière (rouge)
+    //    {{ 0.5f, 0.0f, -0.5f}, {0.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}}, // Bas droit arrière (vert)
+    //    {{ 0.5f, 0.0f,  0.5f}, {0.0f, 0.0f, 1.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}, // Bas droit avant (bleu)
+    //    {{-0.5f, 0.0f,  0.5f}, {1.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}}  // Bas gauche avant (jaune)
+    //};
 
-    // Indices pour les triangles de la pyramide
-    std::vector<unsigned int> indices = {
-        // Faces triangulaires
-        0, 1, 2,  // Face arrière
-        0, 2, 3,  // Face droite
-        0, 3, 4,  // Face avant
-        0, 4, 1,  // Face gauche
+    //// Indices pour les triangles de la pyramide
+    //std::vector<unsigned int> indices = {
+    //    // Faces triangulaires
+    //    0, 1, 2,  // Face arrière
+    //    0, 2, 3,  // Face droite
+    //    0, 3, 4,  // Face avant
+    //    0, 4, 1,  // Face gauche
 
-        // Base (face inférieure)
-        1, 2, 3,  // Triangle 1 de la base
-        1, 3, 4   // Triangle 2 de la base
-    };
+    //    // Base (face inférieure)
+    //    1, 2, 3,  // Triangle 1 de la base
+    //    1, 3, 4   // Triangle 2 de la base
+    //};
 
-    //std::vector<Vertex> vertices;
-    //std::vector<unsigned int> indices;
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
 
-    //LoadModel("C:/Users/wchapron/Documents/GitHub/W-Engine/res/models/locker.obj", vertices, indices);
+    LoadModel("C:/Users/wchapron/Documents/GitHub/W-Engine/res/models/cottage/obj.obj", vertices, indices);
     mesh.Setup(vertices, indices);
 
     glEnable(GL_DEPTH_TEST);
@@ -185,14 +190,16 @@ int main()
         bodyT->SetRotation(glm::vec3(rotationSpeed, 0.f, rotationSpeed));
         rotationSpeed += 1.f;
         x -= 0.005f;
-        scale = 1.f;
+        scale = 0.1f;
         glm::mat4 world = body.GetTransform()->GetTransformMatrix();
 
 
         // Rendering
         // ------
+
         shader.UpdateMatrices(world, view, projection);
         renderer.Clear();
+        texture.Bind();
         renderer.Draw(mesh, shader);
         renderer.Present();
     }
