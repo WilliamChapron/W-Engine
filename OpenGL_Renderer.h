@@ -5,6 +5,8 @@
 class Context;
 class OpenGL_Context;
 
+#include "RenderableEntity.h";
+
 class OpenGL_Renderer : public Renderer {
 private:
     OpenGL_Context* m_context; 
@@ -15,7 +17,7 @@ public:
 
     void Initialize(Context* context) override;
     void Clear() override;                           
-    void Draw(const Mesh& mesh, const Shader& shader) override;
+    void Draw(RenderableEntity* renderObject) override;
     void Present() override;                          
 
 };

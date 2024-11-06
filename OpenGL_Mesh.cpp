@@ -1,54 +1,61 @@
 #include "pch.h"
-#include "OpenGL_Mesh.h"
 
-OpenGL_Mesh::OpenGL_Mesh() : VAO(0), VBO(0), EBO(0) {}
+#include "Texture.h"
+
+#include "OpenGL_Mesh.h"
+#include "OpenGL_SubMesh.h"
+#include "OpenGL_Texture.h"
+
+
+
+
+
+OpenGL_Mesh::OpenGL_Mesh() {}
 
 OpenGL_Mesh::~OpenGL_Mesh() {
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+    for (auto subMesh : m_subMeshes) {
+        delete subMesh;
+    }
+    for (auto texture : m_diffuseTextures) {
+        delete texture;
+    }
 }
 
-void OpenGL_Mesh::Setup(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
-    m_vertices = vertices;
-    m_indices = indices;
-
-    SetupMesh();
+void OpenGL_Mesh::LoadPrimitive() {
+    
 }
 
-void OpenGL_Mesh::SetupMesh() {
-    // Generate and bind the Vertex Array Object (VAO)
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+void OpenGL_Mesh::LoadFile(const std::string& filePath) {
+    m_scene = m_importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
 
-    glBindVertexArray(VAO);
+    if (!m_scene || m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode) {
+        std::cerr << "Erreur : " << m_importer.GetErrorString() << std::endl;
+        return;
+    }
 
-    // Bind and configure the vertex buffer (VBO)
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vertex), m_vertices.data(), GL_STATIC_DRAW);
+    for (unsigned int i = 0; i < m_scene->mNumMeshes; i++) {
+        aiMesh* mesh = m_scene->mMeshes[i];
 
-    // Bind and configure the index buffer (EBO)
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(unsigned int), m_indices.data(), GL_STATIC_DRAW);
+        OpenGL_SubMesh* subMesh = new OpenGL_SubMesh();
+        subMesh->Setup(mesh);
+        AddSubMesh(subMesh);
 
-    // Position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
-    glEnableVertexAttribArray(0);
+        aiMaterial* material = m_scene->mMaterials[mesh->mMaterialIndex];
+        aiString texturePath;
 
-    // Color
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
-    glEnableVertexAttribArray(1);
+        if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS) {
+            //Texture* texture = new OpenGL_Texture(std::string(texturePath.C_Str()));
 
-    // Normals
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-    glEnableVertexAttribArray(2);
+            //AddDiffuseTexture(texture);
+            subMesh->SetTextureInfo(m_diffuseTextures.size());
+        }
+    }
+}
 
-    // Texture coordinates
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
-    glEnableVertexAttribArray(3);
+void OpenGL_Mesh::AddSubMesh(SubMesh* subMesh) {
+    m_subMeshes.push_back(subMesh);
+}
 
-    // Unbind the VBO and the VAO
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+void OpenGL_Mesh::AddDiffuseTexture(Texture* texture) {
+    m_diffuseTextures.push_back(texture);
 }

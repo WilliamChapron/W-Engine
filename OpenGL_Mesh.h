@@ -2,19 +2,21 @@
 
 #include "Mesh.h" 
 
+#include  "Texture.h";
+#include  "SubMesh.h";
+
 class OpenGL_Mesh : public Mesh {
 public:
     OpenGL_Mesh();
     ~OpenGL_Mesh();
 
-    void Setup(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) override;
-    void Update() override {};
-
-    unsigned int GetVAO() const { return VAO; }
-    unsigned int GetIndexCount() const { return static_cast<unsigned int>(m_indices.size()); }
+    void LoadPrimitive() override;
+    void LoadFile(const std::string& filePath) override;
 
 private:
-    void SetupMesh();
+    void AddSubMesh(SubMesh* subMesh);
+    void AddDiffuseTexture(Texture* texture);
 
-    unsigned int VAO, VBO, EBO;
+    Assimp::Importer m_importer;
+    const aiScene* m_scene;
 };

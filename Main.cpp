@@ -1,78 +1,26 @@
 #include "pch.h"
 
+//Core
+#include "Window.h"
+
 //Render
+
 #include "OpenGL_Context.h"
 #include "OpenGL_Renderer.h" 
 #include "OpenGL_Shader.h" 
 #include "OpenGL_Mesh.h" 
 #include "OpenGL_Texture.h" 
 
-//Engine
+#include "OpenGL_RenderableEntity.h"
+#include "RenderableEntity.h"
+
+//Physic
 #include "Camera.h" 
 #include "Transform.h" 
 #include "Body.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-
-void LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<std::string>& albedoTextures) {
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
-
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-        std::cerr << "Erreur : " << importer.GetErrorString() << std::endl;
-        return;
-    }
-
-    // Parcourir tous les sous-maillages pour récupérer les vertices et indices
-    for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
-        aiMesh* mesh = scene->mMeshes[i];
-
-        // Récupérer les vertices et les coordonnées de texture
-        for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
-            Vertex vertex;
-            vertex.position[0] = mesh->mVertices[j].x;
-            vertex.position[1] = mesh->mVertices[j].y;
-            vertex.position[2] = mesh->mVertices[j].z;
-
-            if (mesh->mNormals) {
-                vertex.normal[0] = mesh->mNormals[j].x;
-                vertex.normal[1] = mesh->mNormals[j].y;
-                vertex.normal[2] = mesh->mNormals[j].z;
-            }
-
-            if (mesh->mTextureCoords[0]) {
-                vertex.texCoords[0] = mesh->mTextureCoords[0][j].x;
-                vertex.texCoords[1] = mesh->mTextureCoords[0][j].y;
-            }
-            else {
-                vertex.texCoords[0] = 0.0f;
-                vertex.texCoords[1] = 0.0f;
-            }
-
-            vertices.push_back(vertex);
-        }
-
-        // Récupérer les indices
-        for (unsigned int j = 0; j < mesh->mNumFaces; j++) {
-            aiFace face = mesh->mFaces[j];
-            for (unsigned int k = 0; k < face.mNumIndices; k++) {
-                indices.push_back(face.mIndices[k]);
-            }
-        }
-
-        // Récupérer le chemin de la texture albedo pour ce sous-maillage
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        aiString texturePath;
-        if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS) {
-            albedoTextures.push_back(texturePath.C_Str());
-        }
-        else {
-            albedoTextures.push_back(""); // Ajouter une chaîne vide si pas de texture albedo
-        }
-    }
-}
-
 
 int main()
 {
@@ -115,11 +63,13 @@ int main()
 
     // build and compile shader
     // ------------------------------------
-    OpenGL_Shader shader; 
-    if (!shader.Compile("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl")) {
-        std::cerr << "Shader compilation failed!" << std::endl;
-        return -1; 
-    }
+    //OpenGL_Shader shader; 
+
+    RenderableEntity* renderableEntity = new OpenGL_RenderableEntity();
+    renderableEntity->Init();
+    renderableEntity->SetShader("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl");
+    renderableEntity->SetMesh("res/models/moto/scene.gltf");
+
 
     // load textures
     // ------------------------------------
@@ -151,17 +101,17 @@ int main()
     //    1, 3, 4   // Triangle 2 de la base
     //};
 
-    OpenGLTexture texture("res\\textures\\scooter\\diffuse.png");
+    //OpenGLTexture texture("res\\textures\\scooter\\diffuse.png");
 
 
-    OpenGL_Mesh mesh;
+    //OpenGL_Mesh mesh;
 
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<std::string> albedoTextures;
+    //std::vector<Vertex> vertices;
+    //std::vector<unsigned int> indices;
+    //std::vector<std::string> albedoTextures;
 
-    LoadModel("res/models/moto/scene.gltf", vertices, indices, albedoTextures);
-    mesh.Setup(vertices, indices);
+    //LoadModel("res/models/moto/scene.gltf", vertices, indices, albedoTextures);
+    //mesh.LoadFile("res/models/moto/scene.gltf");
 
     glEnable(GL_DEPTH_TEST);
     
@@ -200,10 +150,13 @@ int main()
         // Rendering
         // ------
 
-        shader.UpdateMatrices(world, view, projection);
+        OpenGL_RenderableEntity* glRE = static_cast<OpenGL_RenderableEntity*>(renderableEntity);
+        glRE->GetShader()->UpdateMatrices(world, view, projection);
+
         renderer.Clear();
         //texture.Bind();
-        renderer.Draw(mesh, shader);
+        // Bind and draw
+        renderer.Draw(renderableEntity);
         renderer.Present();
     }
 

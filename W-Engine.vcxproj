@@ -144,18 +144,25 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="OpenGL_Context.cpp" />
+    <ClCompile Include="OpenGL_Material.cpp" />
     <ClCompile Include="OpenGL_Mesh.cpp" />
     <ClCompile Include="OpenGL_Renderer.cpp" />
     <ClCompile Include="OpenGL_Shader.cpp" />
+    <ClCompile Include="OpenGL_SubMesh.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="OpenGL_RenderableEntity.cpp" />
+    <ClCompile Include="RenderableEntity.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="OpenGL_Texture.cpp" />
+    <ClCompile Include="SubMesh.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -164,15 +171,23 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Context.h" />
     <ClInclude Include="extern\stb_image.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OpenGL_Context.h" />
+    <ClInclude Include="OpenGL_Material.h" />
     <ClInclude Include="OpenGL_Mesh.h" />
     <ClInclude Include="OpenGL_Renderer.h" />
     <ClInclude Include="OpenGL_Shader.h" />
+    <ClInclude Include="OpenGL_SubMesh.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="OpenGL_RenderableEntity.h" />
+    <ClInclude Include="RenderableEntity.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RenderStructures.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="OpenGL_Texture.h" />
+    <ClInclude Include="SubMesh.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

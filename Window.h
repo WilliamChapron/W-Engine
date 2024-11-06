@@ -3,8 +3,8 @@
 class Window
 {
 public:
-    Window(HINSTANCE hInstance);
-    virtual ~Window();
+    Window(/*HINSTANCE hInstance*/) {};
+    virtual ~Window() {};
     
 
 

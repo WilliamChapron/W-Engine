@@ -1,19 +1,22 @@
 #pragma once
 
-struct Vertex {
-    float position[3];
-    float color[4];
-    float normal[3];
-    float texCoords[2];
-};
+#include "RenderStructures.h"
+
+class SubMesh;
+class Texture;
 
 class Mesh {
 public:
-    std::vector<Vertex> m_vertices;
-    std::vector<unsigned int> m_indices;
+    virtual ~Mesh() {};
 
-    virtual ~Mesh() {}
+    virtual void LoadPrimitive() = 0;
+    virtual void LoadFile(const std::string& filePath) = 0;
 
-    virtual void Setup(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) = 0;
-    virtual void Update() = 0; 
+    std::vector<SubMesh*>& GetSubMeshes() { return m_subMeshes; }
+    std::vector<Texture*>& GetDiffuseTextures() { return m_diffuseTextures; }
+
+protected:
+
+    std::vector<SubMesh*> m_subMeshes;
+    std::vector<Texture*> m_diffuseTextures;
 };
