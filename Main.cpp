@@ -15,40 +15,30 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-void LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) {
+void LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<std::string>& albedoTextures) {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std::cerr << "Erreur : " << importer.GetErrorString() << std::endl;
         return;
     }
 
-    // all Submesh
+    // Parcourir tous les sous-maillages pour récupérer les vertices et indices
     for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
         aiMesh* mesh = scene->mMeshes[i];
 
-        // each Submesh
+        // Récupérer les vertices et les coordonnées de texture
         for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
             Vertex vertex;
             vertex.position[0] = mesh->mVertices[j].x;
             vertex.position[1] = mesh->mVertices[j].y;
             vertex.position[2] = mesh->mVertices[j].z;
 
-            vertex.color[0] = mesh->mColors[0] ? mesh->mColors[0][j].r : 0.0f; // Default color to white if no color is provided
-            vertex.color[1] = mesh->mColors[0] ? mesh->mColors[0][j].g : 1.0f;
-            vertex.color[2] = mesh->mColors[0] ? mesh->mColors[0][j].b : 1.0f;
-            vertex.color[3] = 1.0f; // Alpha channel
-
             if (mesh->mNormals) {
                 vertex.normal[0] = mesh->mNormals[j].x;
                 vertex.normal[1] = mesh->mNormals[j].y;
                 vertex.normal[2] = mesh->mNormals[j].z;
-            }
-            else {
-                vertex.normal[0] = 0.0f;
-                vertex.normal[1] = 0.0f;
-                vertex.normal[2] = 1.0f; 
             }
 
             if (mesh->mTextureCoords[0]) {
@@ -63,12 +53,22 @@ void LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::
             vertices.push_back(vertex);
         }
 
-        // Indices
+        // Récupérer les indices
         for (unsigned int j = 0; j < mesh->mNumFaces; j++) {
             aiFace face = mesh->mFaces[j];
             for (unsigned int k = 0; k < face.mNumIndices; k++) {
                 indices.push_back(face.mIndices[k]);
             }
+        }
+
+        // Récupérer le chemin de la texture albedo pour ce sous-maillage
+        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        aiString texturePath;
+        if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS) {
+            albedoTextures.push_back(texturePath.C_Str());
+        }
+        else {
+            albedoTextures.push_back(""); // Ajouter une chaîne vide si pas de texture albedo
         }
     }
 }
@@ -123,10 +123,7 @@ int main()
 
     // load textures
     // ------------------------------------
-    OpenGLTexture texture("res\\textures\\cottage\\diffuse.jpg");
 
-
-    OpenGL_Mesh mesh;
 
     // vertices
     // ------------------------------------------------------------------
@@ -154,10 +151,16 @@ int main()
     //    1, 3, 4   // Triangle 2 de la base
     //};
 
+    OpenGLTexture texture("res\\textures\\scooter\\diffuse.png");
+
+
+    OpenGL_Mesh mesh;
+
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
+    std::vector<std::string> albedoTextures;
 
-    LoadModel("C:/Users/wchapron/Documents/GitHub/W-Engine/res/models/cottage/obj.obj", vertices, indices);
+    LoadModel("res/models/moto/scene.gltf", vertices, indices, albedoTextures);
     mesh.Setup(vertices, indices);
 
     glEnable(GL_DEPTH_TEST);
@@ -183,14 +186,14 @@ int main()
         float currentFrameTime = glfwGetTime(); // Temps actuel
         float deltaTime = currentFrameTime - lastFrameTime; // Delta time
         lastFrameTime = currentFrameTime; // Mettre à jour le temps de la dernière frame
-        body.Update(deltaTime);;
+        //body.Update(deltaTime);;
         glm::mat4 projection = camera.GetProjectionMatrix(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         bodyT->SetScale(glm::vec3(scale, scale, scale));
-        bodyT->SetRotation(glm::vec3(rotationSpeed, 0.f, rotationSpeed));
+        //bodyT->SetRotation(glm::vec3(rotationSpeed, 0.f, rotationSpeed));
         rotationSpeed += 1.f;
         x -= 0.005f;
-        scale = 0.1f;
+        scale = 1.1f;
         glm::mat4 world = body.GetTransform()->GetTransformMatrix();
 
 
@@ -199,7 +202,7 @@ int main()
 
         shader.UpdateMatrices(world, view, projection);
         renderer.Clear();
-        texture.Bind();
+        //texture.Bind();
         renderer.Draw(mesh, shader);
         renderer.Present();
     }

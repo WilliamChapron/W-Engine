@@ -26,7 +26,7 @@ void OpenGL_Renderer::Draw(const Mesh& mesh, const Shader& shader) {
 
     glBindVertexArray(glMesh.GetVAO()); 
 
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(glMesh.GetIndexCount()), GL_UNSIGNED_INT, 0); 
 
     glBindVertexArray(0);
