@@ -4,6 +4,8 @@
 
 class OpenGL_Material;
 
+#include "RenderStructures.hpp"
+
 class OpenGL_SubMesh : public SubMesh {
 public:
     OpenGL_SubMesh();
@@ -21,8 +23,12 @@ public:
     // Each frame
     void Prepare(OpenGL_Material* material);
 
+    void LoadModel(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
+
 private:
     void LoadModel(aiMesh* mesh);
+
+
     void SetupBinding();
 
     unsigned int m_VAO, m_VBO, m_EBO;

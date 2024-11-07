@@ -23,10 +23,6 @@ OpenGL_Mesh::~OpenGL_Mesh() {
     }
 }
 
-void OpenGL_Mesh::LoadPrimitive() {
-    
-}
-
 void OpenGL_Mesh::LoadFile(const std::string& filePath) {
     m_scene = m_importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
 

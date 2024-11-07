@@ -11,11 +11,11 @@ public:
     OpenGL_Mesh();
     ~OpenGL_Mesh();
 
-    void LoadPrimitive() override;
     void LoadFile(const std::string& filePath) override;
 
-private:
     void AddSubMesh(SubMesh* subMesh);
+private:
+
     void AddMaterial(Material* texture);
 
     Assimp::Importer m_importer;

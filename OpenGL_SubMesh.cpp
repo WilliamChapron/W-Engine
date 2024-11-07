@@ -1,9 +1,13 @@
 #include "pch.h"
 
+#include "RenderStructures.hpp"
+
 #include "OpenGL_SubMesh.h"
 #include "OpenGL_Material.h"
 
-OpenGL_SubMesh::OpenGL_SubMesh() : m_VAO(0), m_VBO(0), m_EBO(0) {}
+OpenGL_SubMesh::OpenGL_SubMesh() : m_VAO(0), m_VBO(0), m_EBO(0) 
+{
+}
 
 OpenGL_SubMesh::~OpenGL_SubMesh() {
     glDeleteVertexArrays(1, &m_VAO);
@@ -47,6 +51,11 @@ void OpenGL_SubMesh::LoadModel(aiMesh* mesh) {
             m_indices.push_back(face.mIndices[k]);
         }
     }
+}
+
+void OpenGL_SubMesh::LoadModel(const  std::vector<Vertex>& vertices,const std::vector<unsigned int>& indices) {
+    m_vertices = vertices;
+    m_indices = indices;
 }
 
 void OpenGL_SubMesh::SetupBinding() {

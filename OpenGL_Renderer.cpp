@@ -23,6 +23,8 @@
 
 void OpenGL_Renderer::Initialize(Context* context) {
     m_context = static_cast<OpenGL_Context*>(context);
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 void OpenGL_Renderer::Clear() {

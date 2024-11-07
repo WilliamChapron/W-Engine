@@ -19,6 +19,8 @@
 #include "Transform.h" 
 #include "Body.h"
 
+#include "Primitive.h"
+
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
@@ -70,52 +72,15 @@ int main()
     renderableEntity->SetShader("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl");
     renderableEntity->SetMesh("res/models/moto/scene.gltf");
 
+    RenderableEntity* pyramid = new OpenGL_RenderableEntity();
 
-    // load textures
-    // ------------------------------------
+    pyramid->Init();
+    pyramid->SetShader("res\\shaders\\colorV.glsl", "res\\shaders\\colorF.glsl");
 
+    //Primitive* pyramidGeometry = new Pyramid();
+    //pyramid->SetMesh(pyramidGeometry);
 
-    // vertices
-    // ------------------------------------------------------------------
-    //std::vector<Vertex> vertices = {
-    //    // Sommet de la pyramide (maintenant en haut)
-    //    {{ 0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}, {0.5f, 1.0f}}, // Sommet (blanc)
-
-    //    // Base de la pyramide
-    //    {{-0.5f, 0.0f, -0.5f}, {1.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // Bas gauche arrière (rouge)
-    //    {{ 0.5f, 0.0f, -0.5f}, {0.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}}, // Bas droit arrière (vert)
-    //    {{ 0.5f, 0.0f,  0.5f}, {0.0f, 0.0f, 1.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}, // Bas droit avant (bleu)
-    //    {{-0.5f, 0.0f,  0.5f}, {1.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}}  // Bas gauche avant (jaune)
-    //};
-
-    //// Indices pour les triangles de la pyramide
-    //std::vector<unsigned int> indices = {
-    //    // Faces triangulaires
-    //    0, 1, 2,  // Face arrière
-    //    0, 2, 3,  // Face droite
-    //    0, 3, 4,  // Face avant
-    //    0, 4, 1,  // Face gauche
-
-    //    // Base (face inférieure)
-    //    1, 2, 3,  // Triangle 1 de la base
-    //    1, 3, 4   // Triangle 2 de la base
-    //};
-
-    //OpenGLTexture texture("res\\textures\\scooter\\diffuse.png");
-
-
-    //OpenGL_Mesh mesh;
-
-    //std::vector<Vertex> vertices;
-    //std::vector<unsigned int> indices;
-    //std::vector<std::string> albedoTextures;
-
-    //LoadModel("res/models/moto/scene.gltf", vertices, indices, albedoTextures);
-    //mesh.LoadFile("res/models/moto/scene.gltf");
-
-    glEnable(GL_DEPTH_TEST);
     
-
 
     float rotationSpeed = 0.0f; 
     float x = 0.0f;

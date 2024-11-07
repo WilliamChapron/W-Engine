@@ -88,6 +88,9 @@
     <ClCompile Include="RenderableEntity.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="Primitive.cpp">
+      <Filter>Physic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -160,6 +163,9 @@
     <ClInclude Include="RenderableEntity.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="Primitive.h">
+      <Filter>Physic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -171,5 +177,7 @@
     <None Include="res\shaders\fragment.glsl">
       <Filter>Res</Filter>
     </None>
+    <None Include="res\shaders\colorV.glsl" />
+    <None Include="res\shaders\colorF.glsl" />
   </ItemGroup>
 </Project>

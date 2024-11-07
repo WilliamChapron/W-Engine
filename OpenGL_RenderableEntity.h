@@ -3,6 +3,8 @@
 class OpenGL_Shader;
 class OpenGL_Mesh;
 
+class Primitive;
+
 #include "RenderableEntity.h"
 
 class OpenGL_RenderableEntity : public RenderableEntity {
@@ -13,7 +15,12 @@ public:
     void Render(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& world) override;
 
     void SetShader(const std::string& vertexPath, const std::string& fragmentPath) override;
+
+    // Set mesh, but by loading a file
     void SetMesh(const std::string& filePath) override;
+    // Set mesh by primitive
+    void SetMesh(const Primitive* primitive) override;
+    
 
     inline OpenGL_Shader* GetShader() { return m_shader; }
     inline OpenGL_Mesh* GetMesh() { return m_mesh; }

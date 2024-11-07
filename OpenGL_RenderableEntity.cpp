@@ -1,8 +1,12 @@
 #include "pch.h"
 #include "OpenGL_RenderableEntity.h"
-
 #include "OpenGL_Shader.h"
 #include "OpenGL_Mesh.h"
+#include "SubMesh.h"
+#include "OpenGL_SubMesh.h"
+#include "RenderStructures.hpp"
+#include "Primitive.h"
+
 
 OpenGL_RenderableEntity::OpenGL_RenderableEntity() {};
 
@@ -24,6 +28,13 @@ void OpenGL_RenderableEntity::SetShader(const std::string& vertexPath, const std
 
 void OpenGL_RenderableEntity::SetMesh(const std::string& filePath) {
     m_mesh->LoadFile(filePath);
+}
+
+void OpenGL_RenderableEntity::SetMesh(const Primitive* primitive) {
+    // Add one submesh 
+    OpenGL_SubMesh* submesh = new OpenGL_SubMesh();
+    submesh->LoadModel(primitive->vertices, primitive->indices);
+    m_mesh->AddSubMesh(submesh);
 }
 
 void OpenGL_RenderableEntity::Prepare() {

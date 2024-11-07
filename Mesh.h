@@ -10,14 +10,12 @@ class Mesh {
 public:
     virtual ~Mesh() {};
 
-    virtual void LoadPrimitive() = 0;
     virtual void LoadFile(const std::string& filePath) = 0;
 
     std::vector<SubMesh*>& GetSubMeshes() { return m_subMeshes; }
     inline Material* GetMaterialByID(int id) { return m_materials[id]; }
 
-
-
+    inline void AddSubMesh(SubMesh* submesh) {m_subMeshes.push_back(submesh);}
 protected:
 
     std::vector<SubMesh*> m_subMeshes;

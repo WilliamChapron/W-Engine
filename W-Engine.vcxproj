@@ -157,6 +157,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="OpenGL_RenderableEntity.cpp" />
+    <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="RenderableEntity.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="OpenGL_SubMesh.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="OpenGL_RenderableEntity.h" />
+    <ClInclude Include="Primitive.h" />
     <ClInclude Include="RenderableEntity.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderStructures.hpp" />
@@ -197,6 +199,8 @@
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="packages.config" />
+    <None Include="res\shaders\colorF.glsl" />
+    <None Include="res\shaders\colorV.glsl" />
     <None Include="res\shaders\fragment.glsl" />
     <None Include="res\shaders\vertex.glsl" />
   </ItemGroup>
