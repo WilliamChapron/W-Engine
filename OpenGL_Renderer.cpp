@@ -7,14 +7,19 @@
 #include "OpenGL_Context.h"  
 
 #include "Shader.h"  
+#include "OpenGL_Shader.h"  
 
 #include "Mesh.h"  
 #include "OpenGL_Mesh.h"  
 
+#include "SubMesh.h"  
 #include "OpenGL_SubMesh.h"  
 
 #include "RenderableEntity.h"  
 #include "OpenGL_RenderableEntity.h"  
+
+#include "Material.h"  
+#include "OpenGL_Material.h"  
 
 void OpenGL_Renderer::Initialize(Context* context) {
     m_context = static_cast<OpenGL_Context*>(context);
@@ -32,39 +37,38 @@ void OpenGL_Renderer::Draw(RenderableEntity* renderObject) {
     OpenGL_Shader* shader = static_cast<OpenGL_Shader*>(glRE->GetShader());
 
     if (mesh && shader) {
-        //glRE->Prepare();
+        glRE->Prepare();
+    }
+
+    std::vector<SubMesh*> subMeshArray = mesh->GetSubMeshes();
+
+    for (int i = 0; i < subMeshArray.size(); i++) {
+        OpenGL_SubMesh* glSubMesh = static_cast<OpenGL_SubMesh*>(subMeshArray[i]); 
+
+        // Prepare & draw Submesh
+        OpenGL_Material* subMeshMaterial = static_cast<OpenGL_Material*>(mesh->GetMaterialByID(glSubMesh->GetMaterialID()));
+        glSubMesh->Prepare(subMeshMaterial);
+
+        // Link diffuse texture (0)
+        if (subMeshMaterial) {
+            OpenGL_Texture* diffuseTexture = subMeshMaterial->GetDiffuseTexture();
+
+            if (diffuseTexture) {
+                glActiveTexture(GL_TEXTURE0);  
+                glBindTexture(GL_TEXTURE_2D, diffuseTexture->GetID());  
+
+                glUniform1i(glGetUniformLocation(shader->GetProgramID(), "u_DiffuseTexture"), 0);
+            }
+        }
+
+
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(glSubMesh->GetIndexCount()), GL_UNSIGNED_INT, 0);
+
+        glBindVertexArray(0);
     }
 
 
-    for (auto& subMesh : mesh->GetSubMeshes()) {
-        OpenGL_SubMesh* openGLSubMesh = static_cast<OpenGL_SubMesh*>(subMesh); // Convertir SubMesh en OpenGL_SubMesh
-
-        //// Préparer le SubMesh
-        //openGLSubMesh->Update();  // Mise à jour des données du SubMesh si nécessaire
-        //openGLSubMesh->Prepare(); // S'assurer que le SubMesh est prêt à être dessiné
-
-        //// Lier la texture associée à ce SubMesh (s'il y en a une)
-        //if (openGLSubMesh->m_aText >= 0) {  // Si une texture est associée
-        //    glActiveTexture(GL_TEXTURE0);
-        //    glBindTexture(GL_TEXTURE_2D, openGLSubMesh->m_diffuseTextures[openGLSubMesh->m_aText]->GetID());
-        //}
-
-        //// Lier le VAO du SubMesh pour le rendu
-        //glBindVertexArray(openGLSubMesh->GetVAO());
-
-        //// Dessiner les éléments de ce SubMesh
-        //glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(openGLSubMesh->GetIndexCount()), GL_UNSIGNED_INT, 0);
-
-        //// Libérer le VAO pour ce SubMesh
-        //glBindVertexArray(0);
-    }
-
-    //glBindVertexArray(mesh->GetVAO());
-
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
-    //glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(glMesh.GetIndexCount()), GL_UNSIGNED_INT, 0); 
-
-    //glBindVertexArray(0);
 }
 
 void OpenGL_Renderer::Present() {

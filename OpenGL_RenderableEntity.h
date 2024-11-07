@@ -18,7 +18,7 @@ public:
     inline OpenGL_Shader* GetShader() { return m_shader; }
     inline OpenGL_Mesh* GetMesh() { return m_mesh; }
 
-    void Prepare() override {};
+    void Prepare() override;
 
 private:
     OpenGL_Shader* m_shader;

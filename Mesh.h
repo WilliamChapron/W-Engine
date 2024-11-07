@@ -1,9 +1,10 @@
 #pragma once
 
-#include "RenderStructures.h"
+#include "RenderStructures.hpp"
 
 class SubMesh;
 class Texture;
+class Material;
 
 class Mesh {
 public:
@@ -13,10 +14,12 @@ public:
     virtual void LoadFile(const std::string& filePath) = 0;
 
     std::vector<SubMesh*>& GetSubMeshes() { return m_subMeshes; }
-    std::vector<Texture*>& GetDiffuseTextures() { return m_diffuseTextures; }
+    inline Material* GetMaterialByID(int id) { return m_materials[id]; }
+
+
 
 protected:
 
     std::vector<SubMesh*> m_subMeshes;
-    std::vector<Texture*> m_diffuseTextures;
+    std::vector<Material*> m_materials;
 };

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RenderStructures.h"
+#include "RenderStructures.hpp"
 
 class SubMesh {
 public:
@@ -10,11 +10,11 @@ public:
 
     virtual void Update() = 0;
 
+
+
 protected:
     std::vector<Vertex> m_vertices;
     std::vector<unsigned int> m_indices;
 
-    int m_aText; // Albedo texture Index
+    int m_materialID; // material ID redirect to mesh materials array
 };
-
-// Add a range for offset gpu

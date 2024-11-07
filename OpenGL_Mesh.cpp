@@ -1,10 +1,12 @@
 #include "pch.h"
 
 #include "Texture.h"
+#include "Material.h"
 
 #include "OpenGL_Mesh.h"
 #include "OpenGL_SubMesh.h"
 #include "OpenGL_Texture.h"
+#include "OpenGL_Material.h"
 
 
 
@@ -16,7 +18,7 @@ OpenGL_Mesh::~OpenGL_Mesh() {
     for (auto subMesh : m_subMeshes) {
         delete subMesh;
     }
-    for (auto texture : m_diffuseTextures) {
+    for (auto texture : m_materials) {
         delete texture;
     }
 }
@@ -44,10 +46,17 @@ void OpenGL_Mesh::LoadFile(const std::string& filePath) {
         aiString texturePath;
 
         if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS) {
-            //Texture* texture = new OpenGL_Texture(std::string(texturePath.C_Str()));
+            Texture* texture = new OpenGL_Texture(texturePath.C_Str());
+            Material* material = new OpenGL_Material();
+            material->Init(texture);
 
-            //AddDiffuseTexture(texture);
-            subMesh->SetTextureInfo(m_diffuseTextures.size());
+            AddMaterial(material);
+            subMesh->SetMaterialID(static_cast<int>(m_materials.size() - 1));
+
+            std::cout << "SubMesh " << i << " linked to diffuse texture at path: " << texturePath.C_Str() << " with index: " << m_materials.size() - 1 << std::endl;
+        }
+        else {
+            std::cout << "SubMesh " << i << " has no diffuse texture." << std::endl;
         }
     }
 }
@@ -56,6 +65,6 @@ void OpenGL_Mesh::AddSubMesh(SubMesh* subMesh) {
     m_subMeshes.push_back(subMesh);
 }
 
-void OpenGL_Mesh::AddDiffuseTexture(Texture* texture) {
-    m_diffuseTextures.push_back(texture);
+void OpenGL_Mesh::AddMaterial(Material* material) {
+    m_materials.push_back(material);
 }

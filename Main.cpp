@@ -139,11 +139,12 @@ int main()
         //body.Update(deltaTime);;
         glm::mat4 projection = camera.GetProjectionMatrix(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
+        bodyT->SetPosition(glm::vec3(0.f, -0.7f, 0.f));
         bodyT->SetScale(glm::vec3(scale, scale, scale));
-        //bodyT->SetRotation(glm::vec3(rotationSpeed, 0.f, rotationSpeed));
-        rotationSpeed += 1.f;
+        bodyT->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f));
+        rotationSpeed += 0.7f;
         x -= 0.005f;
-        scale = 1.1f;
+        scale = 0.015f;
         glm::mat4 world = body.GetTransform()->GetTransformMatrix();
 
 
@@ -154,7 +155,6 @@ int main()
         glRE->GetShader()->UpdateMatrices(world, view, projection);
 
         renderer.Clear();
-        //texture.Bind();
         // Bind and draw
         renderer.Draw(renderableEntity);
         renderer.Present();

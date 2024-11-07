@@ -2,6 +2,8 @@
 
 #include "SubMesh.h" 
 
+class OpenGL_Material;
+
 class OpenGL_SubMesh : public SubMesh {
 public:
     OpenGL_SubMesh();
@@ -13,7 +15,11 @@ public:
 
     void Setup(aiMesh* mesh);
 
-    void SetTextureInfo(int albedoTextureIndex);
+    inline void SetMaterialID(int id) {m_materialID = id;}
+    inline int GetMaterialID() { return m_materialID; }
+
+    // Each frame
+    void Prepare(OpenGL_Material* material);
 
 private:
     void LoadModel(aiMesh* mesh);

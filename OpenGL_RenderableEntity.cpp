@@ -25,3 +25,7 @@ void OpenGL_RenderableEntity::SetShader(const std::string& vertexPath, const std
 void OpenGL_RenderableEntity::SetMesh(const std::string& filePath) {
     m_mesh->LoadFile(filePath);
 }
+
+void OpenGL_RenderableEntity::Prepare() {
+    m_shader->Use();
+}

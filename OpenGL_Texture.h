@@ -2,16 +2,22 @@
 
 #include "Texture.h"
 
-class OpenGLTexture : public Texture {
+class OpenGL_Texture : public Texture {
 public:
-    OpenGLTexture(const char* filePath);
+    OpenGL_Texture(const char* filePath);
 
-    ~OpenGLTexture();
+    ~OpenGL_Texture();
 
     void Bind(GLuint slot = 0) const;
 
+    void Test() override {};
+
+    GLuint GetID() { return m_textureID; };
+
+
+
 private:
-    GLuint textureID; 
+    GLuint m_textureID; 
 
     void LoadTexture(const char* filePath);
 };

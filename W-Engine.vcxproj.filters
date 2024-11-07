@@ -82,7 +82,12 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="RenderableEntity.cpp" />
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableEntity.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -128,7 +133,7 @@
       <Filter>Physic</Filter>
     </ClInclude>
     <ClInclude Include="extern\stb_image.h" />
-    <ClInclude Include="RenderStructures.h">
+    <ClInclude Include="RenderStructures.hpp">
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="OpenGL_Material.h">
@@ -149,7 +154,12 @@
     <ClInclude Include="Texture.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="RenderableEntity.h" />
+    <ClInclude Include="ResourceManager.hpp">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableEntity.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

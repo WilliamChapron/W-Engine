@@ -1,5 +1,7 @@
 #include "pch.h"
+
 #include "OpenGL_SubMesh.h"
+#include "OpenGL_Material.h"
 
 OpenGL_SubMesh::OpenGL_SubMesh() : m_VAO(0), m_VBO(0), m_EBO(0) {}
 
@@ -84,6 +86,7 @@ void OpenGL_SubMesh::SetupBinding() {
     glBindVertexArray(0);
 }
 
-void OpenGL_SubMesh::SetTextureInfo(int albedoTextureIndex) {
-    m_aText = albedoTextureIndex; // Albedo texture Index
+void OpenGL_SubMesh::Prepare(OpenGL_Material* material) {
+
+    glBindVertexArray(m_VAO);
 }

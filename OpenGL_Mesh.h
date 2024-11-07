@@ -2,7 +2,8 @@
 
 #include "Mesh.h" 
 
-#include  "Texture.h";
+class Material;
+
 #include  "SubMesh.h";
 
 class OpenGL_Mesh : public Mesh {
@@ -15,7 +16,7 @@ public:
 
 private:
     void AddSubMesh(SubMesh* subMesh);
-    void AddDiffuseTexture(Texture* texture);
+    void AddMaterial(Material* texture);
 
     Assimp::Importer m_importer;
     const aiScene* m_scene;
