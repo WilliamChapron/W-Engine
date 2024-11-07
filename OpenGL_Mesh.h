@@ -11,13 +11,5 @@ public:
     OpenGL_Mesh();
     ~OpenGL_Mesh();
 
-    void LoadFile(const std::string& filePath) override;
-
-    void AddSubMesh(SubMesh* subMesh);
 private:
-
-    void AddMaterial(Material* texture);
-
-    Assimp::Importer m_importer;
-    const aiScene* m_scene;
 };

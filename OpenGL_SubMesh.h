@@ -15,7 +15,7 @@ public:
     unsigned int GetVAO() const { return m_VAO; }
     unsigned int GetIndexCount() const { return static_cast<unsigned int>(m_indices.size()); }
 
-    void Setup(aiMesh* mesh);
+    void Setup(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, int materialI);
 
     inline void SetMaterialID(int id) {m_materialID = id;}
     inline int GetMaterialID() { return m_materialID; }
@@ -23,13 +23,8 @@ public:
     // Each frame
     void Prepare(OpenGL_Material* material);
 
-    void LoadModel(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
-
-private:
-    void LoadModel(aiMesh* mesh);
-
-
     void SetupBinding();
 
+private:
     unsigned int m_VAO, m_VBO, m_EBO;
 };

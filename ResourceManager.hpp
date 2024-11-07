@@ -31,8 +31,12 @@ public:
         } 
     }
 
+    //inline IncrementSlot() { m_curSlotID++; };
+    //int m_curSlotID = 0;
+
 protected:
     std::vector<T*> m_resources;
+
 };
 
 class OpenGL_ResourceManager {
@@ -42,9 +46,11 @@ public:
         return instance;
     }
 
-    inline int AddMesh(OpenGL_Mesh* mesh) { return m_meshManager.AddResource(mesh); }
+    inline int AddMesh(OpenGL_Mesh* mesh) { return m_meshManager.AddResource(mesh);  }
     inline int AddMaterial(OpenGL_Material* material) { return m_materialManager.AddResource(material); }
-    inline int AddTexture(OpenGL_Texture* texture) { return m_textureManager.AddResource(texture); }
+    inline int AddTexture(OpenGL_Texture* texture) { 
+        return m_textureManager.AddResource(texture); 
+    }
 
     inline OpenGL_Mesh* GetMesh(int id) { return m_meshManager.GetResource(id); }
     inline OpenGL_Material* GetMaterial(int id) { return m_materialManager.GetResource(id); }

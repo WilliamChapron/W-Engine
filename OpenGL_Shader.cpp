@@ -85,7 +85,6 @@ unsigned int OpenGL_Shader::CompileShader(unsigned int type, const std::string& 
 }
 
 void OpenGL_Shader::UpdateMatrices(const glm::mat4& world, const glm::mat4& view, const glm::mat4& projection) {
-    Use();
 
     GLuint worldLoc = glGetUniformLocation(m_programID, "u_World");
     GLuint viewLoc = glGetUniformLocation(m_programID, "u_View");

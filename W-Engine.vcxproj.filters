@@ -91,6 +91,7 @@
     <ClCompile Include="Primitive.cpp">
       <Filter>Physic</Filter>
     </ClCompile>
+    <ClCompile Include="GLFWLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -166,6 +167,7 @@
     <ClInclude Include="Primitive.h">
       <Filter>Physic</Filter>
     </ClInclude>
+    <ClInclude Include="GLFWLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

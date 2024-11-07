@@ -143,6 +143,7 @@
     <ClCompile Include="glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="GLFWLoader.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Context.h" />
     <ClInclude Include="extern\stb_image.h" />
+    <ClInclude Include="GLFWLoader.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OpenGL_Context.h" />

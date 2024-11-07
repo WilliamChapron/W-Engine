@@ -7,34 +7,24 @@
 #include "RenderStructures.hpp"
 #include "Primitive.h"
 
-
-OpenGL_RenderableEntity::OpenGL_RenderableEntity() {};
-
-void OpenGL_RenderableEntity::Init() {
-    m_shader = new  OpenGL_Shader();
-    m_mesh = new  OpenGL_Mesh();
-}
+#include "Shader.h"
+#include "Mesh.h"
 
 
-void OpenGL_RenderableEntity::Render(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& world) {
-
+OpenGL_RenderableEntity::OpenGL_RenderableEntity() {
+    m_shader = nullptr;
+    m_mesh = nullptr;
 };
 
-void OpenGL_RenderableEntity::SetShader(const std::string& vertexPath, const std::string& fragmentPath) {
-    if (!m_shader->Compile("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl")) {
-        std::cerr << "Shader compilation failed!" << std::endl;
-    }
+void OpenGL_RenderableEntity::Init() {
 }
 
-void OpenGL_RenderableEntity::SetMesh(const std::string& filePath) {
-    m_mesh->LoadFile(filePath);
+void OpenGL_RenderableEntity::SetShader(Shader* shader) {
+    m_shader = static_cast<OpenGL_Shader*>(shader);
 }
 
-void OpenGL_RenderableEntity::SetMesh(const Primitive* primitive) {
-    // Add one submesh 
-    OpenGL_SubMesh* submesh = new OpenGL_SubMesh();
-    submesh->LoadModel(primitive->vertices, primitive->indices);
-    m_mesh->AddSubMesh(submesh);
+void OpenGL_RenderableEntity::SetMesh(Mesh* mesh) {
+    m_mesh = static_cast<OpenGL_Mesh*>(mesh);
 }
 
 void OpenGL_RenderableEntity::Prepare() {

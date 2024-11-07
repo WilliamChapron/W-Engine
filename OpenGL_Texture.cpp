@@ -12,8 +12,8 @@ OpenGL_Texture::~OpenGL_Texture() {
 }
 
 void OpenGL_Texture::Bind(GLuint slot) const {
-    glActiveTexture(GL_TEXTURE0 + slot); // Activer le slot de texture
-    glBindTexture(GL_TEXTURE_2D, m_textureID); // Lier la texture
+    //glActiveTexture(GL_TEXTURE0 + slot); // Activer le slot de texture
+    //glBindTexture(GL_TEXTURE_2D, m_textureID); // Lier la texture
 }
 
 void OpenGL_Texture::LoadTexture(const char* filePath) {
@@ -46,7 +46,7 @@ void OpenGL_Texture::LoadTexture(const char* filePath) {
         glGenerateMipmap(GL_TEXTURE_2D);
 
 
-        std::cout << "Texture loaded successfully: " << fullPath << std::endl;
+        //std::cout << "Texture loaded successfully: " << fullPath << std::endl;
         //std::cout << "Width: " << width << ", Height: " << height << ", Channels: " << nrChannels << std::endl;
     }
     else {

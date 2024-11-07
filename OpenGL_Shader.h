@@ -8,6 +8,7 @@ public:
     ~OpenGL_Shader() override;
 
     std::string LoadShaderSource(const std::string& filePath);
+
     bool Compile(const std::string& vertexPath, const std::string& fragmentPath) override;
     void Use() const override;
     unsigned int GetProgramID() const override;

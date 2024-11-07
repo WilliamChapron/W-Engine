@@ -15,47 +15,11 @@ OpenGL_SubMesh::~OpenGL_SubMesh() {
     glDeleteBuffers(1, &m_EBO);
 }
 
-void OpenGL_SubMesh::Setup(aiMesh* mesh) {
-    LoadModel(mesh);
-    SetupBinding();
-}
-
-void OpenGL_SubMesh::LoadModel(aiMesh* mesh) {
-    for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
-        Vertex vertex;
-        vertex.position[0] = mesh->mVertices[j].x;
-        vertex.position[1] = mesh->mVertices[j].y;
-        vertex.position[2] = mesh->mVertices[j].z;
-
-        if (mesh->mNormals) {
-            vertex.normal[0] = mesh->mNormals[j].x;
-            vertex.normal[1] = mesh->mNormals[j].y;
-            vertex.normal[2] = mesh->mNormals[j].z;
-        }
-
-        if (mesh->mTextureCoords[0]) {
-            vertex.texCoords[0] = mesh->mTextureCoords[0][j].x;
-            vertex.texCoords[1] = mesh->mTextureCoords[0][j].y;
-        }
-        else {
-            vertex.texCoords[0] = 0.0f;
-            vertex.texCoords[1] = 0.0f;
-        }
-
-        m_vertices.push_back(vertex);
-    }
-
-    for (unsigned int j = 0; j < mesh->mNumFaces; j++) {
-        aiFace face = mesh->mFaces[j];
-        for (unsigned int k = 0; k < face.mNumIndices; k++) {
-            m_indices.push_back(face.mIndices[k]);
-        }
-    }
-}
-
-void OpenGL_SubMesh::LoadModel(const  std::vector<Vertex>& vertices,const std::vector<unsigned int>& indices) {
+void OpenGL_SubMesh::Setup(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, int materialID) {
     m_vertices = vertices;
     m_indices = indices;
+    SetupBinding();
+    SetMaterialID(materialID);
 }
 
 void OpenGL_SubMesh::SetupBinding() {
