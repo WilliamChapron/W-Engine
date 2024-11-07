@@ -94,3 +94,9 @@ void OpenGL_Shader::UpdateMatrices(const glm::mat4& world, const glm::mat4& view
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 }
+
+// #TODO Material has shader and can change shader , this the material that needd contain the shader depending on texture that have or other
+// Penser a comment eviter de cree un shader different pour chaque contexte mais plutot creer un shader qui conditionne les link
+// JE DOIS ENCORE TESTER D'autre objets pour le diffuse et no diffuse
+
+// #AMELIORER le conditionnement en utilisant les octet pour stocker des flags pour material mesh

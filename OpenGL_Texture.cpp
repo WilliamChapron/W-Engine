@@ -17,7 +17,7 @@ void OpenGL_Texture::Bind(GLuint slot) const {
 }
 
 void OpenGL_Texture::LoadTexture(const char* filePath) {
-    std::string fullPath = "res/models/moto/";
+    std::string fullPath = "res/models/dodge/";
     fullPath += filePath;
 
     glGenTextures(1, &m_textureID);

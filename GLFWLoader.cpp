@@ -37,14 +37,17 @@ void GLFWLoader::LoadFile(const std::string& filePath) {
             OpenGL_Texture* glTexture = static_cast<OpenGL_Texture*>(texture);
             int textureID = instance.AddTexture(glTexture) + 1;
             OpenGL_Material* material = new OpenGL_Material();
+            material->m_hasDiffuseText = true;
             material->Init(texture);  
 
             m_materials.push_back(material);  
 
             subMesh->SetMaterialID(static_cast<int>(m_materials.size() - 1));  
-            //std::cout << "SubMesh " << i << " linked to diffuse texture at path: " << texturePath.C_Str() << " with index: " << m_materials.size() - 1 << std::endl;
         }
         else {
+            OpenGL_Material* material = new OpenGL_Material();
+            m_materials.push_back(material);
+            subMesh->SetMaterialID(static_cast<int>(m_materials.size() - 1));
             std::cout << "SubMesh " << i << " has no diffuse texture." << std::endl;
         }
     }

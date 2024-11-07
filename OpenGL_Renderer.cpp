@@ -55,20 +55,32 @@ void OpenGL_Renderer::Draw(RenderableEntity* renderObject) {
 
         // Link diffuse texture (0)
         if (subMeshMaterial) {
-            std::cout << "[INFO] Material ID: " << glSubMesh->GetMaterialID() << std::endl;
-
-            // Vérification de la texture diffuse
-            OpenGL_Texture* diffuseTexture = subMeshMaterial->GetDiffuseTexture();
-            if (diffuseTexture) {
-                std::cout << "[INFO] Diffuse Texture Found - ID: " << diffuseTexture->GetID() << std::endl;
-
-                // Liaison de la texture diffuse
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, diffuseTexture->GetID());
-                glUniform1i(glGetUniformLocation(shader->GetProgramID(), "u_DiffuseTexture"), 0);
+            GLint hasDiffuseLoc = glGetUniformLocation(shader->GetProgramID(), "hasDiffuseTexture");
+            if (hasDiffuseLoc == -1) {
+                std::cerr << "[ERROR] Uniform 'hasDiffuseTexture' not found in the shader!" << std::endl;
             }
             else {
-                std::cout << "[WARNING] No Diffuse Texture found for Material ID: " << glSubMesh->GetMaterialID() << std::endl;
+                glUniform1i(hasDiffuseLoc, subMeshMaterial->m_hasDiffuseText);
+            }
+            if (subMeshMaterial->m_hasDiffuseText) {
+                OpenGL_Texture* diffuseTexture = subMeshMaterial->GetDiffuseTexture();
+
+                if (diffuseTexture) {
+                    std::cout << "[INFO] Diffuse Texture Found - ID: " << diffuseTexture->GetID() << std::endl;
+
+                    // Liaison de la texture diffuse
+                    glActiveTexture(GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, diffuseTexture->GetID());
+                    glUniform1i(glGetUniformLocation(shader->GetProgramID(), "u_DiffuseTexture"), 0);
+                }
+                else {
+                    std::cout << "[WARNING] Diffuse Texture variable set but texture not found for Material ID: "
+                        << glSubMesh->GetMaterialID() << std::endl;
+                }
+            }
+            else {
+                std::cout << "[INFO] Material ID " << glSubMesh->GetMaterialID()
+                    << " has no diffuse texture, skipping binding." << std::endl;
             }
         }
         else {

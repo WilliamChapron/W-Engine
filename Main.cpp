@@ -72,7 +72,7 @@ int main()
     //
 
     GLFWLoader loader;
-    loader.LoadFile("res/models/moto/scene.gltf");
+    loader.LoadFile("res/models/dodge/scene.gltf");
 
     RenderableEntity* renderableEntity = new OpenGL_RenderableEntity();
 
@@ -139,7 +139,7 @@ int main()
         bodyT->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f));
         rotationSpeed += 0.7f;
         x -= 0.005f;
-        scale = 0.015f;
+        scale = 0.515f;
         glm::mat4 world = body.GetTransform()->GetTransformMatrix();
 
 
