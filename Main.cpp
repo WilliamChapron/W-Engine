@@ -76,38 +76,40 @@ int main()
 
     RenderableEntity* renderableEntity = new OpenGL_RenderableEntity();
 
-    Mesh* mesh = new Mesh();
-    mesh->SetMaterials(loader.m_materials);
-    mesh->SetSubMesh(loader.m_subMeshes);
-    renderableEntity->SetMesh(mesh);
-
     Shader* shader = new OpenGL_Shader();
     if (!shader->Compile("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl")) {
         std::cerr << "Shader compilation failed!" << std::endl;
     }
-    renderableEntity->SetShader(shader);
-    renderableEntity->SetMesh(mesh);
-    
 
-    RenderableEntity* pyramid = new OpenGL_RenderableEntity();
-
-    Shader* pshader = new OpenGL_Shader();
-    if (!pshader->Compile("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl")) {
-        std::cerr << "Shader compilation failed!" << std::endl;
+    renderableEntity->SetMaterials(loader.m_materials);
+    for (int i = 0; i < loader.m_materials.size(); i++) {
+        loader.m_materials[i]->SetShader(shader);
     }
 
-    Primitive* pyramidGeometry = new Pyramid();
-    pyramidGeometry->Init();
+    renderableEntity->SetSubMesh(loader.m_subMeshes);
 
-    Mesh* pyramidmesh = new Mesh();
-    OpenGL_SubMesh* submesh = new OpenGL_SubMesh();
-    submesh->Setup(pyramidGeometry->vertices, pyramidGeometry->indices, 0);
-    Material* material = new OpenGL_Material();
-    pyramidmesh->AddSubMesh(submesh);
-    pyramidmesh->AddMaterial(material);
 
-    pyramid->SetShader(pshader);
-    pyramid->SetMesh(pyramidmesh);
+    
+
+    //RenderableEntity* pyramid = new OpenGL_RenderableEntity();
+
+    //Shader* pshader = new OpenGL_Shader();
+    //if (!pshader->Compile("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl")) {
+    //    std::cerr << "Shader compilation failed!" << std::endl;
+    //}
+
+    //Primitive* pyramidGeometry = new Pyramid();
+    //pyramidGeometry->Init();
+
+    //Mesh* pyramidmesh = new Mesh();
+    //OpenGL_SubMesh* submesh = new OpenGL_SubMesh();
+    //submesh->Setup(pyramidGeometry->vertices, pyramidGeometry->indices, 0);
+    //Material* material = new OpenGL_Material();
+    //pyramidmesh->AddSubMesh(submesh);
+    //pyramidmesh->AddMaterial(material);
+
+    //pyramid->SetShader(pshader);
+    //pyramid->SetMesh(pyramidmesh);
 
 
 
@@ -154,8 +156,8 @@ int main()
 
         OpenGL_RenderableEntity* glRE = static_cast<OpenGL_RenderableEntity*>(renderableEntity);
         OpenGL_Shader* sh = static_cast<OpenGL_Shader*>(shader);
-        OpenGL_RenderableEntity* glPrimitive = static_cast<OpenGL_RenderableEntity*>(pyramid);
-        OpenGL_Shader* shPrimitive = static_cast<OpenGL_Shader*>(pshader);
+        //OpenGL_RenderableEntity* glPrimitive = static_cast<OpenGL_RenderableEntity*>(pyramid);
+        //OpenGL_Shader* shPrimitive = static_cast<OpenGL_Shader*>(pshader);
 
 
         renderer.Clear();
@@ -164,8 +166,8 @@ int main()
         sh->UpdateMatrices(world, view, projection);  
         renderer.Draw(renderableEntity); 
 
-        shPrimitive->UpdateMatrices(pyramidWorld, view, projection);  
-        renderer.Draw(pyramid);  
+/*        shPrimitive->UpdateMatrices(pyramidWorld, view, projection);  
+        renderer.Draw(pyramid); */ 
 
         renderer.Present();
     }

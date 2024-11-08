@@ -15,12 +15,12 @@
 OpenGL_Mesh::OpenGL_Mesh() {}
 
 OpenGL_Mesh::~OpenGL_Mesh() {
-    for (auto subMesh : m_subMeshes) {
-        delete subMesh;
-    }
-    for (auto texture : m_materials) {
-        delete texture;
-    }
+    //for (auto subMesh : m_subMeshes) {
+    //    delete subMesh;
+    //}
+    //for (auto texture : m_materials) {
+    //    delete texture;
+    //}
 }
 
 //void OpenGL_Mesh::LoadFile(const std::string& filePath) {

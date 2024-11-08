@@ -12,21 +12,11 @@
 
 
 OpenGL_RenderableEntity::OpenGL_RenderableEntity() {
-    m_shader = nullptr;
-    m_mesh = nullptr;
 };
 
 void OpenGL_RenderableEntity::Init() {
 }
 
-void OpenGL_RenderableEntity::SetShader(Shader* shader) {
-    m_shader = static_cast<OpenGL_Shader*>(shader);
-}
-
-void OpenGL_RenderableEntity::SetMesh(Mesh* mesh) {
-    m_mesh = static_cast<OpenGL_Mesh*>(mesh);
-}
-
-void OpenGL_RenderableEntity::Prepare() {
-    m_shader->Use();
-}
+//void OpenGL_RenderableEntity::Prepare() {
+//    m_shader->Use();
+//}

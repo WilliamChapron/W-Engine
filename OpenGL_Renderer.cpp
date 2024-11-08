@@ -35,22 +35,24 @@ void OpenGL_Renderer::Clear() {
 void OpenGL_Renderer::Draw(RenderableEntity* renderObject) {
 
     OpenGL_RenderableEntity* glRE = static_cast<OpenGL_RenderableEntity*>(renderObject);
-    OpenGL_Mesh* mesh = static_cast<OpenGL_Mesh*>(glRE->GetMesh());
-    OpenGL_Shader* shader = static_cast<OpenGL_Shader*>(glRE->GetShader());
 
-    if (mesh && shader) {
-        glRE->Prepare();
-    }
-
-
-    std::vector<SubMesh*> subMeshArray = mesh->GetSubMeshes();
+    std::vector<SubMesh*> subMeshArray = glRE->GetSubMeshes();
 
 
     for (int i = 0; i < subMeshArray.size(); i++) {
-        OpenGL_SubMesh* glSubMesh = static_cast<OpenGL_SubMesh*>(subMeshArray[i]); 
+        OpenGL_SubMesh* glSubMesh = static_cast<OpenGL_SubMesh*>(subMeshArray[i]);
+
+
+
 
         // Prepare & draw Submesh
-        OpenGL_Material* subMeshMaterial = static_cast<OpenGL_Material*>(mesh->GetMaterialByID(glSubMesh->GetMaterialID()));
+        OpenGL_Material* subMeshMaterial = static_cast<OpenGL_Material*>(glRE->GetMaterialByID(glSubMesh->GetMaterialID()));
+        OpenGL_Shader* shader = static_cast<OpenGL_Shader*>(subMeshMaterial->GetShader());
+
+        if (shader) {
+            shader->Use();
+        }
+
         glSubMesh->Prepare(subMeshMaterial);
 
         // Link diffuse texture (0)
@@ -86,15 +88,12 @@ void OpenGL_Renderer::Draw(RenderableEntity* renderObject) {
             std::cout << "[WARNING] No Material found for SubMesh Index: " << i << std::endl;
         }
 
-
-
-
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(glSubMesh->GetIndexCount()), GL_UNSIGNED_INT, 0);
 
         glBindVertexArray(0);
+        //std::cout << "[WARNING] No Material found for SubMesh Index: " << std::endl;
     }
-    //std::cout << "[WARNING] No Material found for SubMesh Index: " << std::endl;
 
 }
 

@@ -45,7 +45,7 @@ void GLFWLoader::LoadFile(const std::string& filePath) {
             int textureID = instance.AddTexture(glTexture) + 1;
             OpenGL_Material* material = new OpenGL_Material();
             material->m_hasDiffuseText = true;
-            material->Init(texture);  
+            material->SetDiffuseTexture(texture);
 
             m_materials.push_back(material);  
 
