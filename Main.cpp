@@ -178,8 +178,8 @@ int main()
 }
 
 
-
-// #TODO Mettre shader dans material
+// #TODO tableau de transform dans le renderable entity qu'on doit d'ailleur renommer 
+// #TODO sort material by id et dessiner les sub mesh en fonction de leur materiau pou ne pas tout mettre a jour pour rien 
 // #TODO mettre une matrice world dans chaque submesh mais en mettant un tableau de matrice world dans, mettre un transform dans chaque sub mesh avec un tableau de transform pas dans renderable entity mais dans 
 // #TODO Theory collision 
 
