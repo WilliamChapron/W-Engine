@@ -52,6 +52,8 @@ bool OpenGL_Shader::Compile(const std::string& vertexPath, const std::string& fr
         return false;
     }
 
+    std::cout << "Shader program linked successfully, ID : " << m_programID << std::endl;
+
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
@@ -59,7 +61,8 @@ bool OpenGL_Shader::Compile(const std::string& vertexPath, const std::string& fr
 }
 
 void OpenGL_Shader::Use() const {
-    glUseProgram(m_programID);
+    std::cout << "Utilisation du shader avec ID : " << m_programID << std::endl;
+    glUseProgram(m_programID);  
 }
 
 unsigned int OpenGL_Shader::GetProgramID() const {
@@ -85,7 +88,7 @@ unsigned int OpenGL_Shader::CompileShader(unsigned int type, const std::string& 
 }
 
 void OpenGL_Shader::UpdateMatrices(const glm::mat4& world, const glm::mat4& view, const glm::mat4& projection) {
-
+    Use();
     GLuint worldLoc = glGetUniformLocation(m_programID, "u_World");
     GLuint viewLoc = glGetUniformLocation(m_programID, "u_View");
     GLuint projectionLoc = glGetUniformLocation(m_programID, "u_Projection");
@@ -95,8 +98,3 @@ void OpenGL_Shader::UpdateMatrices(const glm::mat4& world, const glm::mat4& view
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 }
 
-// #TODO Material has shader and can change shader , this the material that needd contain the shader depending on texture that have or other
-// Penser a comment eviter de cree un shader different pour chaque contexte mais plutot creer un shader qui conditionne les link
-// JE DOIS ENCORE TESTER D'autre objets pour le diffuse et no diffuse
-
-// #AMELIORER le conditionnement en utilisant les octet pour stocker des flags pour material mesh

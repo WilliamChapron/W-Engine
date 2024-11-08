@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\OpenGL-Engine\OpenGL\includes;C:\OpenGL-Engine\glm-math;C:\OpenGL-Engine\assimp\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\OpenGL-Engine\OpenGL\lib;C:\OpenGL-Engine\assimp\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\wengine-libs\OpenGL\includes;C:\wengine-libs\glm-math;C:\wengine-libs\assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\wengine-libs\OpenGL\lib;C:\wengine-libs\assimp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

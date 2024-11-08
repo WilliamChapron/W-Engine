@@ -72,7 +72,7 @@ int main()
     //
 
     GLFWLoader loader;
-    loader.LoadFile("res/models/dodge/scene.gltf");
+    loader.LoadFile("res/models/moto/scene.gltf");
 
     RenderableEntity* renderableEntity = new OpenGL_RenderableEntity();
 
@@ -89,10 +89,10 @@ int main()
     renderableEntity->SetMesh(mesh);
     
 
-    /*RenderableEntity* pyramid = new OpenGL_RenderableEntity();
+    RenderableEntity* pyramid = new OpenGL_RenderableEntity();
 
     Shader* pshader = new OpenGL_Shader();
-    if (!pshader->Compile("res\\shaders\\colorV.glsl", "res\\shaders\\colorF.glsl")) {
+    if (!pshader->Compile("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl")) {
         std::cerr << "Shader compilation failed!" << std::endl;
     }
 
@@ -107,51 +107,66 @@ int main()
     pyramidmesh->AddMaterial(material);
 
     pyramid->SetShader(pshader);
-    pyramid->SetMesh(pyramidmesh);*/
+    pyramid->SetMesh(pyramidmesh);
 
 
-    
 
-    float rotationSpeed = 0.0f; 
+    float rotationSpeed = 0.0f;
     float x = 0.0f;
-    float scale = 0.0f; 
-    float velocity[3] = { 0.0f, 0.0f, 0.0f }; 
-    float mass = 0.001f; 
-    Body body(velocity, mass);
-    const float GRAVITY = -9.81f; 
-    float lastFrameTime = glfwGetTime(); 
-    Transform* bodyT = body.GetTransform();
+    float scale = 0.0f;
+    float velocity[3] = { 0.0f, 0.0f, 0.0f };
+    float mass = 0.001f;
+    const float GRAVITY = -9.81f;
+    float lastFrameTime = glfwGetTime();
 
-    // render loop
-    // -----------
+    Body body(velocity, mass);
+    Transform* bodyT = body.GetTransform();  
+
+    Transform* bodyT2 = new Transform();  
+
     while (!glfwWindowShouldClose(window))
     {
-        // Engine
-        // ------
-        float currentFrameTime = glfwGetTime(); // Temps actuel
-        float deltaTime = currentFrameTime - lastFrameTime; // Delta time
-        lastFrameTime = currentFrameTime; // Mettre à jour le temps de la dernière frame
-        //body.Update(deltaTime);;
+        float currentFrameTime = glfwGetTime();
+        float deltaTime = currentFrameTime - lastFrameTime;
+        lastFrameTime = currentFrameTime;
+
+
         glm::mat4 projection = camera.GetProjectionMatrix(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        bodyT->SetPosition(glm::vec3(0.f, -0.7f, 0.f));
-        bodyT->SetScale(glm::vec3(scale, scale, scale));
-        bodyT->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f));
-        rotationSpeed += 0.7f;
-        x -= 0.005f;
-        scale = 0.515f;
-        glm::mat4 world = body.GetTransform()->GetTransformMatrix();
 
 
-        // Rendering
-        // ------
+        bodyT->SetPosition(glm::vec3(0.f, -0.7f, 0.f));  
+        bodyT->SetScale(glm::vec3(scale, scale, scale)); 
+        bodyT->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f)); 
+        rotationSpeed += 0.7f; 
+        x -= 0.005f;  
+        scale = 0.015f;  
+
+
+        bodyT2->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));  
+        bodyT2->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));  
+        bodyT2->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f));  
+
+
+        glm::mat4 world = bodyT->GetTransformMatrix();  
+        glm::mat4 pyramidWorld = bodyT2->GetTransformMatrix();  
+
+
         OpenGL_RenderableEntity* glRE = static_cast<OpenGL_RenderableEntity*>(renderableEntity);
         OpenGL_Shader* sh = static_cast<OpenGL_Shader*>(shader);
-        sh->UpdateMatrices(world, view, projection);
+        OpenGL_RenderableEntity* glPrimitive = static_cast<OpenGL_RenderableEntity*>(pyramid);
+        OpenGL_Shader* shPrimitive = static_cast<OpenGL_Shader*>(pshader);
+
 
         renderer.Clear();
-        // Bind and draw
-        renderer.Draw(renderableEntity);
+
+
+        sh->UpdateMatrices(world, view, projection);  
+        renderer.Draw(renderableEntity); 
+
+        shPrimitive->UpdateMatrices(pyramidWorld, view, projection);  
+        renderer.Draw(pyramid);  
+
         renderer.Present();
     }
 
@@ -159,3 +174,17 @@ int main()
     context->Terminate();
     return 0;
 }
+
+
+
+// #TODO Mettre shader dans material
+// #TODO mettre une matrice world dans chaque submesh mais en mettant un tableau de matrice world dans, mettre un transform dans chaque sub mesh avec un tableau de transform pas dans renderable entity mais dans 
+// #TODO Theory collision 
+
+
+
+// #TODO Material has shader and can change shader , this the material that needd contain the shader depending on texture that have or other
+// Penser a comment eviter de cree un shader different pour chaque contexte mais plutot creer un shader qui conditionne les link
+// JE DOIS ENCORE TESTER D'autre objets pour le diffuse et no diffuse
+
+// #AMELIORER le conditionnement en utilisant les octet pour stocker des flags pour material mesh

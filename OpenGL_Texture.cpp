@@ -17,14 +17,12 @@ void OpenGL_Texture::Bind(GLuint slot) const {
 }
 
 void OpenGL_Texture::LoadTexture(const char* filePath) {
-    std::string fullPath = "res/models/dodge/";
-    fullPath += filePath;
 
     glGenTextures(1, &m_textureID);
     glBindTexture(GL_TEXTURE_2D, m_textureID);
 
 
-    std::cout << "Texture ID in GPU: " << m_textureID << std::endl;
+    //std::cout << "Texture ID in GPU: " << m_textureID << std::endl;
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -32,7 +30,7 @@ void OpenGL_Texture::LoadTexture(const char* filePath) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     int width, height, nrChannels;
-    unsigned char* data = stbi_load(fullPath.c_str(), &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);
     if (data) {
         GLenum format;
         if (nrChannels == 1)
@@ -50,7 +48,7 @@ void OpenGL_Texture::LoadTexture(const char* filePath) {
         //std::cout << "Width: " << width << ", Height: " << height << ", Channels: " << nrChannels << std::endl;
     }
     else {
-        std::cerr << "Failed to load texture: " << fullPath << std::endl;
+        //std::cerr << "Failed to load texture: " << fullPath << std::endl;
     }
 
     stbi_image_free(data);

@@ -33,7 +33,14 @@ void GLFWLoader::LoadFile(const std::string& filePath) {
         if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS) {
             OpenGL_ResourceManager& instance = OpenGL_ResourceManager::GetInstance();
 
-            Texture* texture = new OpenGL_Texture(texturePath.C_Str());
+            // Get texture path from file path ex :  res/models/dodge/textures/
+            std::string fTextPath = filePath.c_str();
+            size_t lastSlashPos = fTextPath.find_last_of("/");
+            if (lastSlashPos != std::string::npos) { fTextPath.erase(lastSlashPos + 1);}
+            fTextPath += texturePath.C_Str();
+            //
+
+            Texture* texture = new OpenGL_Texture(fTextPath.c_str());
             OpenGL_Texture* glTexture = static_cast<OpenGL_Texture*>(texture);
             int textureID = instance.AddTexture(glTexture) + 1;
             OpenGL_Material* material = new OpenGL_Material();

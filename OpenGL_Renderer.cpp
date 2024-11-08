@@ -66,7 +66,7 @@ void OpenGL_Renderer::Draw(RenderableEntity* renderObject) {
                 OpenGL_Texture* diffuseTexture = subMeshMaterial->GetDiffuseTexture();
 
                 if (diffuseTexture) {
-                    std::cout << "[INFO] Diffuse Texture Found - ID: " << diffuseTexture->GetID() << std::endl;
+                    //std::cout << "[INFO] Diffuse Texture Found - ID: " << diffuseTexture->GetID() << std::endl;
 
                     // Liaison de la texture diffuse
                     glActiveTexture(GL_TEXTURE0);
@@ -79,8 +79,7 @@ void OpenGL_Renderer::Draw(RenderableEntity* renderObject) {
                 }
             }
             else {
-                std::cout << "[INFO] Material ID " << glSubMesh->GetMaterialID()
-                    << " has no diffuse texture, skipping binding." << std::endl;
+                //std::cout << "[INFO] Material ID " << glSubMesh->GetMaterialID() << " has no diffuse texture, skipping binding." << std::endl;
             }
         }
         else {
@@ -95,7 +94,7 @@ void OpenGL_Renderer::Draw(RenderableEntity* renderObject) {
 
         glBindVertexArray(0);
     }
-    std::cout << "[WARNING] No Material found for SubMesh Index: " << std::endl;
+    //std::cout << "[WARNING] No Material found for SubMesh Index: " << std::endl;
 
 }
 
