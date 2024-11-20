@@ -61,7 +61,7 @@ bool OpenGL_Shader::Compile(const std::string& vertexPath, const std::string& fr
 }
 
 void OpenGL_Shader::Use() const {
-    std::cout << "Utilisation du shader avec ID : " << m_programID << std::endl;
+    //std::cout << "Utilisation du shader avec ID : " << m_programID << std::endl;
     glUseProgram(m_programID);  
 }
 

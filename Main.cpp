@@ -2,6 +2,7 @@
 
 //Core
 #include "Window.h"
+#include "Define.h"
 
 //Render
 #include "Mesh.h" 
@@ -28,8 +29,21 @@
 
 #include "Primitive.h"
 
+
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+//bool CheckCollision(glm::vec3 pos1, glm::vec3 pos2) // AABB - AABB collision
+//{
+//    // collision x-axis?
+//    bool collisionX = pos1.x + one.Size.x >= two.Position.x &&
+//        two.Position.x + two.Size.x >= one.Position.x;
+//    // collision y-axis?
+//    bool collisionY = one.Position.y + one.Size.y >= two.Position.y &&
+//        two.Position.y + two.Size.y >= one.Position.y;
+//    // collision only if on both axes
+//    return collisionX && collisionY;
+//}
 
 int main()
 {
@@ -75,41 +89,37 @@ int main()
     loader.LoadFile("res/models/moto/scene.gltf");
 
     RenderableEntity* renderableEntity = new OpenGL_RenderableEntity();
-
     Shader* shader = new OpenGL_Shader();
     if (!shader->Compile("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl")) {
         std::cerr << "Shader compilation failed!" << std::endl;
     }
-
     renderableEntity->SetMaterials(loader.m_materials);
     for (int i = 0; i < loader.m_materials.size(); i++) {
         loader.m_materials[i]->SetShader(shader);
     }
-
     renderableEntity->SetSubMesh(loader.m_subMeshes);
 
 
     
 
-    //RenderableEntity* pyramid = new OpenGL_RenderableEntity();
+    RenderableEntity* pyramid = new OpenGL_RenderableEntity();
 
-    //Shader* pshader = new OpenGL_Shader();
-    //if (!pshader->Compile("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl")) {
-    //    std::cerr << "Shader compilation failed!" << std::endl;
-    //}
+    Shader* pshader = new OpenGL_Shader();
+    if (!pshader->Compile("res\\shaders\\colorV.glsl", "res\\shaders\\colorF.glsl")) {
+        std::cerr << "Shader compilation failed!" << std::endl;
+    }
 
-    //Primitive* pyramidGeometry = new Pyramid();
-    //pyramidGeometry->Init();
+    Primitive* pyramidGeometry = new Pyramid();
+    pyramidGeometry->Init();
 
     //Mesh* pyramidmesh = new Mesh();
-    //OpenGL_SubMesh* submesh = new OpenGL_SubMesh();
-    //submesh->Setup(pyramidGeometry->vertices, pyramidGeometry->indices, 0);
-    //Material* material = new OpenGL_Material();
-    //pyramidmesh->AddSubMesh(submesh);
-    //pyramidmesh->AddMaterial(material);
+    OpenGL_SubMesh* submesh = new OpenGL_SubMesh();
+    submesh->Setup(pyramidGeometry->vertices, pyramidGeometry->indices, 0);
+    Material* material = new OpenGL_Material();
 
-    //pyramid->SetShader(pshader);
-    //pyramid->SetMesh(pyramidmesh);
+    material->SetShader(pshader);
+    pyramid->AddMaterial(material);
+    pyramid->AddSubMesh(submesh);
 
 
 
@@ -156,8 +166,10 @@ int main()
 
         OpenGL_RenderableEntity* glRE = static_cast<OpenGL_RenderableEntity*>(renderableEntity);
         OpenGL_Shader* sh = static_cast<OpenGL_Shader*>(shader);
-        //OpenGL_RenderableEntity* glPrimitive = static_cast<OpenGL_RenderableEntity*>(pyramid);
-        //OpenGL_Shader* shPrimitive = static_cast<OpenGL_Shader*>(pshader);
+        OpenGL_RenderableEntity* glPrimitive = static_cast<OpenGL_RenderableEntity*>(pyramid);
+        OpenGL_Shader* shPrimitive = static_cast<OpenGL_Shader*>(pshader);
+
+        Vector3Display(bodyT2->GetRotation());
 
 
         renderer.Clear();
@@ -166,8 +178,8 @@ int main()
         sh->UpdateMatrices(world, view, projection);  
         renderer.Draw(renderableEntity); 
 
-/*        shPrimitive->UpdateMatrices(pyramidWorld, view, projection);  
-        renderer.Draw(pyramid); */ 
+        shPrimitive->UpdateMatrices(pyramidWorld, view, projection);  
+        renderer.Draw(pyramid);  
 
         renderer.Present();
     }
@@ -178,6 +190,8 @@ int main()
 }
 
 
+
+// #TODO Collision by distance and then true collision, create bounding box from vertices
 // #TODO tableau de transform dans le renderable entity qu'on doit d'ailleur renommer 
 // #TODO sort material by id et dessiner les sub mesh en fonction de leur materiau pou ne pas tout mettre a jour pour rien 
 // #TODO mettre une matrice world dans chaque submesh mais en mettant un tableau de matrice world dans, mettre un transform dans chaque sub mesh avec un tableau de transform pas dans renderable entity mais dans 

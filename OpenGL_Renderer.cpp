@@ -59,7 +59,7 @@ void OpenGL_Renderer::Draw(RenderableEntity* renderObject) {
         if (subMeshMaterial) {
             GLint hasDiffuseLoc = glGetUniformLocation(shader->GetProgramID(), "hasDiffuseTexture");
             if (hasDiffuseLoc == -1) {
-                std::cerr << "[ERROR] Uniform 'hasDiffuseTexture' not found in the shader!" << std::endl;
+                //std::cerr << "[ERROR] Uniform 'hasDiffuseTexture' not found in the shader!" << std::endl;
             }
             else {
                 glUniform1i(hasDiffuseLoc, subMeshMaterial->m_hasDiffuseText);

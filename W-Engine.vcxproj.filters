@@ -168,6 +168,9 @@
       <Filter>Physic</Filter>
     </ClInclude>
     <ClInclude Include="GLFWLoader.h" />
+    <ClInclude Include="Define.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

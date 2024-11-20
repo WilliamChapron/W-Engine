@@ -173,6 +173,7 @@
     <ClInclude Include="Body.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Context.h" />
+    <ClInclude Include="Define.h" />
     <ClInclude Include="extern\stb_image.h" />
     <ClInclude Include="GLFWLoader.h" />
     <ClInclude Include="Material.h" />
