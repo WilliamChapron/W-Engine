@@ -92,3 +92,33 @@ void GLFWLoader::LoadAiMesh(aiMesh* mesh, SubMesh* subMesh) {
         }
     }
 }
+
+// All Mesh
+
+void GLFWLoader::StoreSceneAllVertices() {
+    for (unsigned int i = 0; i < m_scene->mNumMeshes; i++) {
+        aiMesh* mesh = m_scene->mMeshes[i];
+
+        for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
+            aiVector3D vertex = mesh->mVertices[j];
+
+            float* vertexArray = new float[3];
+            vertexArray[0] = vertex.x;
+            vertexArray[1] = vertex.y;
+            vertexArray[2] = vertex.z;
+
+            m_allVertices.push_back(vertexArray);
+            
+            // FindMinMaxFromVerticesPack
+            m_min[0] = std::min(m_min[0], vertex[0]);
+            m_min[1] = std::min(m_min[1], vertex[1]);
+            m_min[2] = std::min(m_min[2], vertex[2]);
+
+            m_max[0] = std::max(m_max[0], vertex[0]);
+            m_max[1] = std::max(m_max[1], vertex[1]);
+            m_max[2] = std::max(m_max[2], vertex[2]);
+        }
+    }
+
+    //std::cout << "Total number of vertices: " << m_allVertices.size() << std::endl;
+}

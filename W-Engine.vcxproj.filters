@@ -177,6 +177,9 @@
     <ClInclude Include="BoxCollider.h">
       <Filter>Physic</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicStructures.hpp">
+      <Filter>Physic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

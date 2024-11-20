@@ -2,7 +2,6 @@
 
 //Core
 #include "Window.h"
-#include "Define.h"
 
 //Render
 #include "Mesh.h" 
@@ -26,6 +25,7 @@
 #include "Camera.h" 
 #include "Transform.h" 
 #include "Body.h"
+#include "BoxCollider.h"
 
 #include "Primitive.h"
 
@@ -33,17 +33,20 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-//bool CheckCollision(glm::vec3 pos1, glm::vec3 pos2) // AABB - AABB collision
-//{
-//    // collision x-axis?
-//    bool collisionX = pos1.x + one.Size.x >= two.Position.x &&
-//        two.Position.x + two.Size.x >= one.Position.x;
-//    // collision y-axis?
-//    bool collisionY = one.Position.y + one.Size.y >= two.Position.y &&
-//        two.Position.y + two.Size.y >= one.Position.y;
-//    // collision only if on both axes
-//    return collisionX && collisionY;
-//}
+bool CheckCollision(BoxCollider* box1, BoxCollider* box2) // OBB
+{
+    OBB volume1 = box1->m_boundingVolume;
+    OBB volume2 = box2->m_boundingVolume;
+
+    // x
+    bool collisionX = volume1.max[0] >= volume2.min[0] && volume2.max[0] >= volume1.min[0];
+    // y
+    bool collisionY = volume1.max[1] >= volume2.min[1] && volume2.max[1] >= volume1.min[1];
+    // z
+    bool collisionZ = volume1.max[2] >= volume2.min[2] && volume2.max[2] >= volume1.min[2];
+
+    return collisionX && collisionY && collisionZ;
+}
 
 int main()
 {
@@ -85,9 +88,12 @@ int main()
     Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     //
 
+
+    //
     GLFWLoader loader;
     loader.LoadFile("res/models/moto/scene.gltf");
-
+    loader.StoreSceneAllVertices();
+ 
     RenderableEntity* renderableEntity = new OpenGL_RenderableEntity();
     Shader* shader = new OpenGL_Shader();
     if (!shader->Compile("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl")) {
@@ -100,31 +106,39 @@ int main()
     renderableEntity->SetSubMesh(loader.m_subMeshes);
 
 
+    BoxCollider* boxCollider1 = new BoxCollider();
+    boxCollider1->m_boundingVolume.SetMinMax(loader.m_min, loader.m_max);
+
+    boxCollider1->m_boundingVolume.CalculateData();
+
+
     
-
+    //
     RenderableEntity* pyramid = new OpenGL_RenderableEntity();
-
     Shader* pshader = new OpenGL_Shader();
     if (!pshader->Compile("res\\shaders\\colorV.glsl", "res\\shaders\\colorF.glsl")) {
         std::cerr << "Shader compilation failed!" << std::endl;
     }
-
     Primitive* pyramidGeometry = new Pyramid();
     pyramidGeometry->Init();
-
-    //Mesh* pyramidmesh = new Mesh();
     OpenGL_SubMesh* submesh = new OpenGL_SubMesh();
     submesh->Setup(pyramidGeometry->vertices, pyramidGeometry->indices, 0);
     Material* material = new OpenGL_Material();
-
     material->SetShader(pshader);
     pyramid->AddMaterial(material);
     pyramid->AddSubMesh(submesh);
 
+    BoxCollider* boxCollider2 = new BoxCollider(pyramidGeometry->vertices);
+    //
 
 
-    float rotationSpeed = 0.0f;
-    float x = 0.0f;
+
+    float rotationSpeed = 0.0f;      // Vitesse de rotation initiale
+    const float ROTATION_INCREMENT = 0.7f;  // La vitesse d'incrémentation de la rotation à chaque frame
+    const float MAX_ROTATION = 360.0f;  // La valeur maximale avant d'enrouler
+
+
+    float x = -0.5f;
     float scale = 0.0f;
     float velocity[3] = { 0.0f, 0.0f, 0.0f };
     float mass = 0.001f;
@@ -136,6 +150,9 @@ int main()
 
     Transform* bodyT2 = new Transform();  
 
+
+    bodyT->SetPosition(glm::vec3(-0.5f, -0.5f, 1.f));
+
     while (!glfwWindowShouldClose(window))
     {
         float currentFrameTime = glfwGetTime();
@@ -146,22 +163,35 @@ int main()
         glm::mat4 projection = camera.GetProjectionMatrix(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
 
+        rotationSpeed += ROTATION_INCREMENT;
+        if (rotationSpeed >= MAX_ROTATION) {
+            rotationSpeed -= MAX_ROTATION; 
+        }
 
-        bodyT->SetPosition(glm::vec3(0.f, -0.7f, 0.f));  
+
+        bodyT->SetPosition(glm::vec3(x, -0.5f, 1.f));
         bodyT->SetScale(glm::vec3(scale, scale, scale)); 
-        bodyT->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f)); 
+        //bodyT->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f)); 
         rotationSpeed += 0.7f; 
-        x -= 0.005f;  
-        scale = 0.015f;  
+        x += 0.001f;  
+        scale = 0.008f;  
 
 
-        bodyT2->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));  
-        bodyT2->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));  
-        bodyT2->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f));  
+        bodyT2->SetPosition(glm::vec3(0.5f, -0.7f, 0.0f));  
+        //bodyT2->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));  
+        //bodyT2->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f));  
 
 
         glm::mat4 world = bodyT->GetTransformMatrix();  
         glm::mat4 pyramidWorld = bodyT2->GetTransformMatrix();  
+
+        boxCollider1->m_boundingVolume.UpdateAABBWithTransform(world);
+        boxCollider2->m_boundingVolume.UpdateAABBWithTransform(pyramidWorld);
+
+        if (CheckCollision(boxCollider1, boxCollider2)) {
+            PRINT("Collide");
+        }
+        
 
 
         OpenGL_RenderableEntity* glRE = static_cast<OpenGL_RenderableEntity*>(renderableEntity);
@@ -169,10 +199,13 @@ int main()
         OpenGL_RenderableEntity* glPrimitive = static_cast<OpenGL_RenderableEntity*>(pyramid);
         OpenGL_Shader* shPrimitive = static_cast<OpenGL_Shader*>(pshader);
 
-        Vector3Display(bodyT2->GetRotation());
+        //Vector3Display(bodyT2->GetRotation());
 
 
         renderer.Clear();
+
+
+
 
 
         sh->UpdateMatrices(world, view, projection);  
@@ -182,6 +215,8 @@ int main()
         renderer.Draw(pyramid);  
 
         renderer.Present();
+
+        //Sleep(1500);
     }
 
 

@@ -58,3 +58,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>  // Important pour les flags de post-traitement
+
+
+// Intern file, stable file
+#include "Define.h"

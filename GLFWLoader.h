@@ -11,6 +11,14 @@ public:
 
     std::vector<SubMesh*> m_subMeshes;
     std::vector<Material*> m_materials;
+
+
+    // All Mesh
+    void StoreSceneAllVertices();
+    // Specific data
+    std::vector<float*> m_allVertices;
+    std::array<float, 3> m_min;
+    std::array<float, 3> m_max;
 private:
     void LoadAiMesh(aiMesh* mesh, SubMesh* subMesh);
 

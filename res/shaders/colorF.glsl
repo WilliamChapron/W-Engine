@@ -3,7 +3,7 @@ out vec4 FragColor;
 
 in vec4 vertexColor;
 
-uniform bool hasDiffuseTexture;  // Le booléen pour vérifier la présence de la texture
+uniform bool hasDiffuseTexture;  
 
 void main() {
 	FragColor = vertexColor;
