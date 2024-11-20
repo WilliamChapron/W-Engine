@@ -20,5 +20,7 @@ public:
     void Draw(RenderableEntity* renderObject) override;
     void Present() override;                          
 
+    // Debug
+    void DebugDraw(RenderableEntity* renderObject);
 };
 

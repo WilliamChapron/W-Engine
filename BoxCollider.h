@@ -21,8 +21,8 @@ struct OBB {
 	glm::vec3 corners[8];
 
 	OBB() {
-		min = { 0.f,0.f,0.f };
-		max = { 0.f,0.f,0.f };
+		min = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
+		max = { -std::numeric_limits<float>::max(), -std::numeric_limits<float>::max(), -std::numeric_limits<float>::max() };
 	}
 
 	// Update from vertex pack
@@ -49,6 +49,7 @@ struct OBB {
 		max = max3;
 		bMin = min3;
 		bMax = max3;
+
 	}
 
 	// request to have recorded min and max beforehand
@@ -61,6 +62,16 @@ struct OBB {
 		center[1] = (min[1] + max[1]) / 2.0f;
 		center[2] = (min[2] + max[2]) / 2.0f;
 
+
+		corners[0] = glm::vec3(bMin[0], bMin[1], bMin[2]);
+		corners[1] = glm::vec3(bMin[0], bMin[1], bMax[2]);
+		corners[2] = glm::vec3(bMin[0], bMax[1], bMin[2]);
+		corners[3] = glm::vec3(bMin[0], bMax[1], bMax[2]);
+		corners[4] = glm::vec3(bMax[0], bMin[1], bMin[2]);
+		corners[5] = glm::vec3(bMax[0], bMin[1], bMax[2]);
+		corners[6] = glm::vec3(bMax[0], bMax[1], bMin[2]);
+		corners[7] = glm::vec3(bMax[0], bMax[1], bMax[2]);
+
 		//std::cout << "Size: (" << size[0] << ", " << size[1] << ", " << size[2] << ")\n";
 		//std::cout << "Center: (" << center[0] << ", " << center[1] << ", " << center[2] << ")\n";
 		//std::cout << "------------------------------------------\n";
@@ -70,24 +81,11 @@ struct OBB {
 	}
 
 	void UpdateAABBWithTransform(glm::mat4& world) {
-		glm::vec3 corners[8] = {
-			{bMin[0], bMin[1], bMin[2]},
-			{bMin[0], bMin[1], bMax[2]},
-			{bMin[0], bMax[1], bMin[2]},
-			{bMin[0], bMax[1], bMax[2]},
-			{bMax[0], bMin[1], bMin[2]},
-			{bMax[0], bMin[1], bMax[2]},
-			{bMax[0], bMax[1], bMin[2]},
-			{bMax[0], bMax[1], bMax[2]}
-		};
-
-
-
 		glm::vec3 transformedCorners[8];
-		for (int i = 0; i < 8; ++i) {
-			transformedCorners[i] = glm::vec3(world * glm::vec4(corners[i], 1.0f));
-		}
 
+		for (int i = 0; i < 8; ++i) {
+			transformedCorners[i] = glm::vec3(world * glm::vec4(this->corners[i], 1.0f));
+		}
 
 		min[0] = transformedCorners[0].x;
 		min[1] = transformedCorners[0].y;
@@ -113,6 +111,8 @@ struct OBB {
 		std::cout << "------------------------------------------\n";
 
 	}
+
+
 
 };
 

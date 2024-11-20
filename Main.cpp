@@ -55,7 +55,8 @@ int main()
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
     #ifdef __APPLE__
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -131,7 +132,17 @@ int main()
     BoxCollider* boxCollider2 = new BoxCollider(pyramidGeometry->vertices);
     //
 
-
+    // Box collider debug entity
+    RenderableEntity* debugCube = new OpenGL_RenderableEntity();
+    Primitive* cubeGeometry = new Cube();
+    cubeGeometry->Init();
+    OpenGL_SubMesh* submesh2 = new OpenGL_SubMesh();
+    submesh2->Setup(cubeGeometry->vertices, cubeGeometry->indices, 0);
+    Material* material2 = new OpenGL_Material();
+    material2->SetShader(pshader);
+    debugCube->AddMaterial(material2);
+    debugCube->AddSubMesh(submesh2);
+    //
 
     float rotationSpeed = 0.0f;      // Vitesse de rotation initiale
     const float ROTATION_INCREMENT = 0.7f;  // La vitesse d'incrémentation de la rotation à chaque frame
@@ -179,7 +190,8 @@ int main()
 
         bodyT2->SetPosition(glm::vec3(0.5f, -0.7f, 0.0f));  
         //bodyT2->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));  
-        //bodyT2->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f));  
+        bodyT2->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f));  
+
 
 
         glm::mat4 world = bodyT->GetTransformMatrix();  
@@ -213,6 +225,9 @@ int main()
 
         shPrimitive->UpdateMatrices(pyramidWorld, view, projection);  
         renderer.Draw(pyramid);  
+
+        renderer.DebugDraw(debugCube);
+
 
         renderer.Present();
 

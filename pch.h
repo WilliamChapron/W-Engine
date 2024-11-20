@@ -36,6 +36,7 @@
 // OpenGL and GLFW
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <GL/gl.h>
 
 // Math Library (GLM)
 #include <glm/glm.hpp>
