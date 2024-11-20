@@ -92,11 +92,9 @@ void OpenGL_Renderer::DebugDraw(RenderableEntity* renderObject) {
 
         glSubMesh->Prepare(subMeshMaterial);
 
-        // Dessiner en mode ligne pour le débogage
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINES);  // Pour afficher des lignes
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINES);  
         glDrawElements(GL_LINE_STRIP, static_cast<GLsizei>(glSubMesh->GetIndexCount()), GL_UNSIGNED_INT, 0);
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
-        //glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(glSubMesh->GetIndexCount()), GL_UNSIGNED_INT, 0);
 
         glBindVertexArray(0);
     }

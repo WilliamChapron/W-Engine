@@ -149,7 +149,7 @@ int main()
     const float MAX_ROTATION = 360.0f;  // La valeur maximale avant d'enrouler
 
 
-    float x = -0.5f;
+    float x = 0.0f;
     float scale = 0.0f;
     float velocity[3] = { 0.0f, 0.0f, 0.0f };
     float mass = 0.001f;
@@ -162,7 +162,7 @@ int main()
     Transform* bodyT2 = new Transform();  
 
 
-    bodyT->SetPosition(glm::vec3(-0.5f, -0.5f, 1.f));
+    bodyT2->SetPosition(glm::vec3(0.5, -0.7f, 0.0f));
 
     while (!glfwWindowShouldClose(window))
     {
@@ -180,29 +180,31 @@ int main()
         }
 
 
-        bodyT->SetPosition(glm::vec3(x, -0.5f, 1.f));
+        bodyT->SetPosition(glm::vec3(x, 0.0f, 0.f));
         bodyT->SetScale(glm::vec3(scale, scale, scale)); 
-        //bodyT->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f)); 
+        bodyT->SetRotation(glm::vec3(0.f, 0.f, 0.f)); 
         rotationSpeed += 0.7f; 
         x += 0.001f;  
         scale = 0.008f;  
 
 
-        bodyT2->SetPosition(glm::vec3(0.5f, -0.7f, 0.0f));  
+        bodyT2->SetPosition(glm::vec3(0.5, -0.0f, 0.0f));
         //bodyT2->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));  
-        bodyT2->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f));  
+        //bodyT2->SetRotation(glm::vec3(0.f, rotationSpeed, 0.f));  
 
 
 
         glm::mat4 world = bodyT->GetTransformMatrix();  
         glm::mat4 pyramidWorld = bodyT2->GetTransformMatrix();  
 
-        boxCollider1->m_boundingVolume.UpdateAABBWithTransform(world);
-        boxCollider2->m_boundingVolume.UpdateAABBWithTransform(pyramidWorld);
-
         if (CheckCollision(boxCollider1, boxCollider2)) {
             PRINT("Collide");
         }
+
+        boxCollider1->m_boundingVolume.UpdateAABBWithTransform(world);
+        boxCollider2->m_boundingVolume.UpdateAABBWithTransform(pyramidWorld);
+
+ 
         
 
 
