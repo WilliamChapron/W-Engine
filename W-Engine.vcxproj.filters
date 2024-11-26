@@ -95,6 +95,7 @@
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Physic</Filter>
     </ClCompile>
+    <ClCompile Include="Test1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">

@@ -54,8 +54,6 @@
 #include "extern/stb_image.h" // Inclure ici pour utiliser les fonctions de stb_image
 
 // Assimp
-//#include <assimp/Importer.hpp>
-//#include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>  // Important pour les flags de post-traitement
@@ -63,3 +61,12 @@
 
 // Intern file, stable file
 #include "Define.h"
+
+// Math
+#define EIGEN_NO_DEBUG
+#define EIGEN_DONT_VECTORIZE
+
+#include <Eigen/Dense>
+#include <Eigen/Core>  // Pour Eigen::Vector3f
+#include <Eigen/Geometry>  // Pour les transformations géométriques comme les matrices de rotation
+
