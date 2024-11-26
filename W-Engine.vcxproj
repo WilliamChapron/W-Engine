@@ -209,6 +209,8 @@
     <None Include="res\shaders\colorV.glsl" />
     <None Include="res\shaders\fragment.glsl" />
     <None Include="res\shaders\vertex.glsl" />
+    <None Include="res\shaders\wireframeF.glsl" />
+    <None Include="res\shaders\wireframeV.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

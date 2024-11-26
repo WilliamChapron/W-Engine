@@ -4,6 +4,7 @@
 
 class Context;
 class OpenGL_Context;
+class OpenGL_Shader;
 
 #include "RenderableEntity.h";
 
@@ -22,5 +23,7 @@ public:
 
     // Debug
     void DebugDraw(RenderableEntity* renderObject);
+
+    void DebugColliderDraw(std::vector<float> lineVertices, std::vector<unsigned int> indices, OpenGL_Shader* shader);
 };
 

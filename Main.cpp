@@ -30,13 +30,15 @@
 #include "Primitive.h"
 
 
+bool isPaused = false;
+
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 bool CheckCollision(BoxCollider* box1, BoxCollider* box2) // OBB
 {
-    OBB volume1 = box1->m_boundingVolume;
-    OBB volume2 = box2->m_boundingVolume;
+    AABB volume1 = box1->m_boundingVolume;
+    AABB volume2 = box2->m_boundingVolume;
 
     // x
     bool collisionX = volume1.max[0] >= volume2.min[0] && volume2.max[0] >= volume1.min[0];
@@ -47,6 +49,244 @@ bool CheckCollision(BoxCollider* box1, BoxCollider* box2) // OBB
 
     return collisionX && collisionY && collisionZ;
 }
+
+int main()
+{
+    // glfw: initialize and configure
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
+    // Debug console redirection
+    FILE* fDummy;
+    freopen_s(&fDummy, "CONIN$", "r", stdin);
+    freopen_s(&fDummy, "CONOUT$", "w", stderr);
+    freopen_s(&fDummy, "CONOUT$", "w", stdout);
+
+    std::cout << "Bienvenue dans le programme!\n";
+
+    // Create window
+    OpenGL_Context* context = new OpenGL_Context();
+    context->Initialize(SCR_WIDTH, SCR_HEIGHT, "OpenGL WINDOW");
+    GLFWwindow* window = context->getWindow();
+
+    // Renderer initialization
+    OpenGL_Renderer renderer;
+    renderer.Initialize(context);
+
+    // Camera setup
+    Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+    // Shader for pyramid and cube
+    Shader* pshader = new OpenGL_Shader();
+    if (!pshader->Compile("res\\shaders\\colorV.glsl", "res\\shaders\\colorF.glsl")) {
+        std::cerr << "Shader compilation failed!" << std::endl;
+    }
+
+    // Wireframe
+    Shader* wireframeShader = new OpenGL_Shader();
+    if (!wireframeShader->Compile("res\\shaders\\wireframeV.glsl", "res\\shaders\\wireframeF.glsl")) {
+        std::cerr << "Shader compilation failed!" << std::endl;
+    }
+
+    // Pyramid setup
+
+    RenderableEntity* pyramid = new OpenGL_RenderableEntity();
+    Primitive* pyramidGeometry = new Cube;
+    pyramidGeometry->Init();
+    OpenGL_SubMesh* pyramidSubmesh = new OpenGL_SubMesh();
+    pyramidSubmesh->Setup(pyramidGeometry->vertices, pyramidGeometry->indices, 0);
+
+    Material* pyramidMaterial = new OpenGL_Material();
+    pyramidMaterial->SetShader(pshader);
+    pyramid->AddMaterial(pyramidMaterial);
+    pyramid->AddSubMesh(pyramidSubmesh);
+
+
+
+    // Cube setup
+    RenderableEntity* cube = new OpenGL_RenderableEntity();
+    Primitive* cubeGeometry = new PrimitiveRectangle(2.2, 2);
+    cubeGeometry->Init();
+    OpenGL_SubMesh* cubeSubmesh = new OpenGL_SubMesh();
+    cubeSubmesh->Setup(cubeGeometry->vertices, cubeGeometry->indices, 0);
+
+    Material* cubeMaterial = new OpenGL_Material();
+    cubeMaterial->SetShader(pshader); // Utilise le même shader que la pyramide
+    cube->AddMaterial(cubeMaterial);
+    cube->AddSubMesh(cubeSubmesh);
+
+
+    // Debug cubes setup
+
+
+
+    // Transform
+
+    Transform* cubeTransform = new Transform();
+    cubeTransform->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // Position initiale du cube
+
+    Transform* debugTransform = new Transform();
+    debugTransform->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // Position initiale du cube
+    //cubeTransform->SetScale(glm::vec3(1.0f, 1.0f, 1.0f)); // Position initiale du cube
+
+
+    BoxCollider* cubeCollider = new BoxCollider(cubeGeometry->vertices); // Collider du cube
+
+    Transform* pyramidTransform = new Transform();
+    pyramidTransform->SetPosition(glm::vec3(-1.3f, 0.0f, 0.0f)); // Position initiale de la pyramide
+
+
+    BoxCollider* pyramidCollider = new BoxCollider(pyramidGeometry->vertices); // Collider de la pyramide
+
+
+
+
+    // Main loop 
+    float pyramidSpeed = 0.5f; // Vitesse de déplacement de la pyramide
+    float cubeRotationSpeed = 45.0f; // Vitesse de rotation du cube (degrés/sec)
+
+    float dx = 0.0f;
+    float dy = 0.0f;
+
+    // Main loop
+    while (!glfwWindowShouldClose(window))
+    {
+        cubeTransform->SetRotation(glm::vec3(dx, 0.0f, 90.0f)); // Position initiale du cube
+        cubeTransform->SetPosition(glm::vec3(dy, 0.0f, 0.0f)); // Position initiale du cube
+        cubeTransform->SetScale(glm::vec3(dy, dy, dy)); // Position initiale du cube
+        //debugTransform->SetRotation(glm::vec3(dx, 0.0f, 90.0f)); // Position initiale du cube
+        
+        // Timing
+        static float lastFrameTime = 0.0f;
+        float currentFrameTime = glfwGetTime();
+        float deltaTime = currentFrameTime - lastFrameTime;
+        lastFrameTime = currentFrameTime;
+
+        // Update colliders
+
+
+        // Matrices
+        glm::mat4 projection = camera.GetProjectionMatrix(90.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+
+        // World transforms
+        glm::mat4 pyramidWorld = pyramidTransform->GetTransformMatrix();
+        glm::mat4 cubeWorld = cubeTransform->GetTransformMatrix();
+
+        dx += 0.1f;
+        dy += 0.001f;
+
+        //cubeTransform->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+
+        pyramidCollider->m_boundingVolume.UpdateAABBWithTransform(pyramidWorld);
+        cubeCollider->m_boundingVolume.UpdateAABBWithTransform(cubeWorld);
+
+
+        if (CheckCollision(pyramidCollider, cubeCollider)) {
+            PRINT("O");
+        }
+        else {
+            PRINT("X");
+        }
+
+        OpenGL_Shader* shPrimitive = static_cast<OpenGL_Shader*>(pshader);
+        OpenGL_Shader* wfsh = static_cast<OpenGL_Shader*>(wireframeShader);
+        
+
+        // Render
+        renderer.Clear();
+
+        // Draw pyramid
+        shPrimitive->UpdateMatrices(pyramidWorld, view, projection);
+        renderer.Draw(pyramid);
+        ////pyramidCollider->m_boundingVolume.render();
+        ////renderer.DebugDraw(debugCube1);
+
+        //// Draw cube
+        shPrimitive->UpdateMatrices(cubeWorld, view, projection);
+        renderer.Draw(cube);
+
+
+
+
+        // Obtenez les coins de la AABB
+        glm::vec3* corners = cubeCollider->m_boundingVolume.transformedCorners; 
+
+        // Préparer les vertices
+        std::vector<float> lineVertices;
+        for (int i = 0; i < 8; ++i) {
+            lineVertices.push_back(corners[i].x);  // Ajouter X
+            lineVertices.push_back(corners[i].y);  // Ajouter Y
+            lineVertices.push_back(corners[i].z/* + 0.1f*/);  // Ajouter Z avec un léger offset
+
+            //std::cout << "Corner " << i << ": ("
+            //    << corners[i].x << ", "
+            //    << corners[i].y << ", "
+            //    << corners[i].z << ")\n";
+        }
+        std::vector<unsigned int> indices = {
+            0, 1,  // Ligne 1 : Coin 0 à Coin 1 (Horizontal, sur la face avant)
+            1, 3,  // Ligne 2 : Coin 1 à Coin 3 (Vertical, sur la face avant)
+            3, 2,  // Ligne 3 : Coin 3 à Coin 2 (Horizontal, sur la face avant)
+            2, 0,  // Ligne 4 : Coin 2 à Coin 0 (Vertical, sur la face avant)
+
+            4, 5,  // Ligne 5 : Coin 4 à Coin 5 (Horizontal, sur la face arrière)
+            5, 7,  // Ligne 6 : Coin 5 à Coin 7 (Vertical, sur la face arrière)
+            7, 6,  // Ligne 7 : Coin 7 à Coin 6 (Horizontal, sur la face arrière)
+            6, 4,  // Ligne 8 : Coin 6 à Coin 4 (Vertical, sur la face arrière)
+
+            0, 4,  // Ligne 9 : Coin 0 à Coin 4 (Vertical, sur la face gauche)
+            1, 5,  // Ligne 10 : Coin 1 à Coin 5 (Vertical, sur la face droite)
+            2, 6,  // Ligne 11 : Coin 2 à Coin 6 (Vertical, sur la face gauche)
+            3, 7   // Ligne 12 : Coin 3 à Coin 7 (Vertical, sur la face droite)
+        };
+
+        glm::mat4 identityMatrix = glm::mat4(1.0f); 
+        wfsh->UpdateMatrices(identityMatrix, view, projection);
+        renderer.DebugColliderDraw(lineVertices, indices, wfsh);
+
+        renderer.Present();
+
+
+
+        // Input
+
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+            isPaused = !isPaused;  // Basculer l'état de pause
+            while (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+                // Attendre que la touche soit relâchée pour éviter les basculements multiples
+                glfwPollEvents();
+            }
+        }
+    }
+
+    // Cleanup
+    context->Terminate();
+    return 0;
+}
+
+
+// #TODO Collision by distance and then true collision, create bounding box from vertices
+// #TODO tableau de transform dans le renderable entity qu'on doit d'ailleur renommer 
+// #TODO sort material by id et dessiner les sub mesh en fonction de leur materiau pou ne pas tout mettre a jour pour rien 
+// #TODO mettre une matrice world dans chaque submesh mais en mettant un tableau de matrice world dans, mettre un transform dans chaque sub mesh avec un tableau de transform pas dans renderable entity mais dans 
+// #TODO Theory collision 
+
+
+
+// #TODO Material has shader and can change shader , this the material that needd contain the shader depending on texture that have or other
+// Penser a comment eviter de cree un shader different pour chaque contexte mais plutot creer un shader qui conditionne les link
+// JE DOIS ENCORE TESTER D'autre objets pour le diffuse et no diffuse
+
+// #AMELIORER le conditionnement en utilisant les octet pour stocker des flags pour material mesh
+
+
 
 //int main()
 //{
@@ -240,143 +480,3 @@ bool CheckCollision(BoxCollider* box1, BoxCollider* box2) // OBB
 //    context->Terminate();
 //    return 0;
 //}
-
-int main()
-{
-    // glfw: initialize and configure
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
-    // Debug console redirection
-    FILE* fDummy;
-    freopen_s(&fDummy, "CONIN$", "r", stdin);
-    freopen_s(&fDummy, "CONOUT$", "w", stderr);
-    freopen_s(&fDummy, "CONOUT$", "w", stdout);
-
-    std::cout << "Bienvenue dans le programme!\n";
-
-    // Create window
-    OpenGL_Context* context = new OpenGL_Context();
-    context->Initialize(SCR_WIDTH, SCR_HEIGHT, "OpenGL WINDOW");
-    GLFWwindow* window = context->getWindow();
-
-    // Renderer initialization
-    OpenGL_Renderer renderer;
-    renderer.Initialize(context);
-
-    // Camera setup
-    Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-    // Shader for pyramid and cube
-    Shader* pshader = new OpenGL_Shader();
-    if (!pshader->Compile("res\\shaders\\colorV.glsl", "res\\shaders\\colorF.glsl")) {
-        std::cerr << "Shader compilation failed!" << std::endl;
-    }
-
-    // Pyramid setup
-    RenderableEntity* pyramid = new OpenGL_RenderableEntity();
-    Primitive* pyramidGeometry = new Pyramid();
-    pyramidGeometry->Init();
-    OpenGL_SubMesh* pyramidSubmesh = new OpenGL_SubMesh();
-    pyramidSubmesh->Setup(pyramidGeometry->vertices, pyramidGeometry->indices, 0);
-
-    Material* pyramidMaterial = new OpenGL_Material();
-    pyramidMaterial->SetShader(pshader);
-    pyramid->AddMaterial(pyramidMaterial);
-    pyramid->AddSubMesh(pyramidSubmesh);
-
-    Transform* pyramidTransform = new Transform();
-    pyramidTransform->SetPosition(glm::vec3(0.5f, 0.0f, 0.0f)); // Position initiale de la pyramide
-
-    BoxCollider* pyramidCollider = new BoxCollider(pyramidGeometry->vertices); // Collider de la pyramide
-
-    // Cube setup
-    RenderableEntity* cube = new OpenGL_RenderableEntity();
-    Primitive* cubeGeometry = new Cube();
-    cubeGeometry->Init();
-    OpenGL_SubMesh* cubeSubmesh = new OpenGL_SubMesh();
-    cubeSubmesh->Setup(cubeGeometry->vertices, cubeGeometry->indices, 0);
-
-    Material* cubeMaterial = new OpenGL_Material();
-    cubeMaterial->SetShader(pshader); // Utilise le même shader que la pyramide
-    cube->AddMaterial(cubeMaterial);
-    cube->AddSubMesh(cubeSubmesh);
-
-    Transform* cubeTransform = new Transform();
-    cubeTransform->SetPosition(glm::vec3(-0.5f, 0.0f, 0.0f)); // Position initiale du cube
-
-    BoxCollider* cubeCollider = new BoxCollider(cubeGeometry->vertices); // Collider du cube
-
-    // Variables pour mouvement
-    float pyramidSpeed = 0.5f; // Vitesse de déplacement de la pyramide
-    float cubeRotationSpeed = 45.0f; // Vitesse de rotation du cube (degrés/sec)
-
-    // Main loop
-    while (!glfwWindowShouldClose(window))
-    {
-        // Timing
-        static float lastFrameTime = 0.0f;
-        float currentFrameTime = glfwGetTime();
-        float deltaTime = currentFrameTime - lastFrameTime;
-        lastFrameTime = currentFrameTime;
-
-        // Update colliders
-
-
-        // Matrices
-        glm::mat4 projection = camera.GetProjectionMatrix(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 view = camera.GetViewMatrix();
-
-        // World transforms
-        glm::mat4 pyramidWorld = pyramidTransform->GetTransformMatrix();
-        glm::mat4 cubeWorld = cubeTransform->GetTransformMatrix();
-
-        pyramidCollider->m_boundingVolume.UpdateAABBWithTransform(pyramidWorld);
-        cubeCollider->m_boundingVolume.UpdateAABBWithTransform(cubeWorld);
-
-
-        if (CheckCollision(pyramidCollider, cubeCollider)) {
-            PRINT("Collide");
-        }
-
-        OpenGL_Shader* shPrimitive = static_cast<OpenGL_Shader*>(pshader);
-
-        // Render
-        renderer.Clear();
-
-        // Draw pyramid
-        shPrimitive->UpdateMatrices(pyramidWorld, view, projection);
-        renderer.Draw(pyramid);
-
-        // Draw cube
-        shPrimitive->UpdateMatrices(cubeWorld, view, projection);
-        renderer.Draw(cube);
-
-        renderer.Present();
-    }
-
-    // Cleanup
-    context->Terminate();
-    return 0;
-}
-
-
-// #TODO Collision by distance and then true collision, create bounding box from vertices
-// #TODO tableau de transform dans le renderable entity qu'on doit d'ailleur renommer 
-// #TODO sort material by id et dessiner les sub mesh en fonction de leur materiau pou ne pas tout mettre a jour pour rien 
-// #TODO mettre une matrice world dans chaque submesh mais en mettant un tableau de matrice world dans, mettre un transform dans chaque sub mesh avec un tableau de transform pas dans renderable entity mais dans 
-// #TODO Theory collision 
-
-
-
-// #TODO Material has shader and can change shader , this the material that needd contain the shader depending on texture that have or other
-// Penser a comment eviter de cree un shader different pour chaque contexte mais plutot creer un shader qui conditionne les link
-// JE DOIS ENCORE TESTER D'autre objets pour le diffuse et no diffuse
-
-// #AMELIORER le conditionnement en utilisant les octet pour stocker des flags pour material mesh

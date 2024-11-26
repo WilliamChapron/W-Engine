@@ -193,5 +193,7 @@
     </None>
     <None Include="res\shaders\colorV.glsl" />
     <None Include="res\shaders\colorF.glsl" />
+    <None Include="res\shaders\wireframeF.glsl" />
+    <None Include="res\shaders\wireframeV.glsl" />
   </ItemGroup>
 </Project>
