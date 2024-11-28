@@ -5,81 +5,41 @@
 
 struct Vertex;
 
-struct OBB{
-	Eigen::Vector3d center;  // Centre de l'OBB en Eigen
-	Eigen::Vector3d size;    // Taille de l'OBB (dimensions) en Eigen
-	Eigen::Matrix3d rotation; // Matrice de rotation des axes principaux (PCA)
-	Eigen::Vector3d min, max; // Min et Max de l'OBB après rotation
+struct OBB {
+    Eigen::Vector3d center;
+    Eigen::Vector3d size;
+    Eigen::Matrix3d rotation;
+    Eigen::Vector3d min, max;
 
-	std::vector<Vertex> vertices; // Liste des vertices
+    std::vector<Vertex> vertices;
 
-	std::vector<Eigen::Vector3d> corners; // Liste des coins de l'OBB après transformation
-
-	// Fonction pour mettre à jour les coins de l'OBB après rotation
-	void UpdateCorners() {
-		// Définir la taille en double
-		Eigen::Vector3d halfSize = size.cast<double>() / 2.0;
-
-		// Définir les coins locaux avec Eigen::Vector3d
-		Eigen::Vector3d localCorners[8] = {
-			Eigen::Vector3d(-halfSize.x(), -halfSize.y(), -halfSize.z()), // Coin 0
-			Eigen::Vector3d(halfSize.x(), -halfSize.y(), -halfSize.z()),  // Coin 1
-			Eigen::Vector3d(halfSize.x(), -halfSize.y(), halfSize.z()),   // Coin 2
-			Eigen::Vector3d(-halfSize.x(), -halfSize.y(), halfSize.z()),  // Coin 3
-			Eigen::Vector3d(-halfSize.x(), halfSize.y(), -halfSize.z()),  // Coin 4
-			Eigen::Vector3d(halfSize.x(), halfSize.y(), -halfSize.z()),   // Coin 5
-			Eigen::Vector3d(halfSize.x(), halfSize.y(), halfSize.z()),    // Coin 6
-			Eigen::Vector3d(-halfSize.x(), halfSize.y(), halfSize.z())    // Coin 7
-		};
-
-		// Convertir la rotation en double
-		Eigen::Matrix3d rotationD = rotation.cast<double>();
-
-		// Convertir le centre en double
-		Eigen::Vector3d centerD = center.cast<double>();
-
-		// Effacer et préparer la liste des coins globaux
-		corners.clear();
-		corners.reserve(8); // Préallouer l'espace pour optimiser
-
-		// Appliquer la rotation et ajouter les coins globaux
-		for (int i = 0; i < 8; ++i) {
-			Eigen::Vector3d rotatedCorner = rotationD * localCorners[i];
-			Eigen::Vector3d globalCorner = centerD + rotatedCorner;
-		}
-	}
+    std::vector<Eigen::Vector3d> corners;
 
 
-	// Méthode pour afficher les coins
-	//void PrintCorners() {
-	//	for (size_t i = 0; i < corners.size(); ++i) {
-	//		std::cout << "Corner " << i << ": ("
-	//			<< corners[i].x() << ", "
-	//			<< corners[i].y() << ", "
-	//			<< corners[i].z() << ")\n";
-	//	}
-	//}
 
-	void ComputeMinMax() {
-		min = Eigen::Vector3d(std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-		max = Eigen::Vector3d(-std::numeric_limits<double>::max(), -std::numeric_limits<double>::max(), -std::numeric_limits<double>::max());
+    void UpdateCorners() {
+    }
 
-		for (const auto& v : vertices) {
-			Eigen::Vector3d point(v.position[0], v.position[1], v.position[2]);
-			min = min.cwiseMin(point);
-			max = max.cwiseMax(point);
-		}
-	}
+    void ComputeMinMax() {
+        min = Eigen::Vector3d(std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
+        max = Eigen::Vector3d(-std::numeric_limits<double>::max(), -std::numeric_limits<double>::max(), -std::numeric_limits<double>::max());
 
-	void ComputeCenter() {
-		center = (min + max) / 2.0;
-	}
+        for (const auto& v : vertices) {
+            Eigen::Vector3d point(v.position[0], v.position[1], v.position[2]);
+            min = min.cwiseMin(point);
+            max = max.cwiseMax(point);
+        }
+    }
 
-	void ComputeSize() {
-		size = max - min;
-	}
+    void ComputeCenter() {
+        center = (min + max) / 2.0;
+    }
 
-	void ComputeRotationMatrix() {
+    void ComputeSize() {
+        size = max - min;
+    }
+
+    void ComputeRotationMatrix() {
 		// Moyen
 		Eigen::Vector3d mean(0, 0, 0);
 		for (const auto& v : vertices) {
@@ -104,49 +64,96 @@ struct OBB{
 
 		// La matrice de rotation est la matrice des vecteurs propres
 		rotation = eigenVectors;
-	}
+    }
 
-	// Fonction pour appliquer une transformation à l'OBB
-	void ApplyTransformation(const glm::mat4& world) {
-		// Appliquer la rotation et la mise à l'échelle à la matrice de rotation de l'OBB
-		Eigen::Matrix3d scaleRotationMatrix;
-		scaleRotationMatrix << world[0][0], world[0][1], world[0][2],
-							  world[1][0], world[1][1], world[1][2],
-							  world[2][0], world[2][1], world[2][2];
+	void UpdateOBBGlobalBounds(const glm::mat4& world) {
 
-		// Mettre à jour la matrice de rotation avec la transformation
-		rotation = scaleRotationMatrix * rotation;
+		Eigen::Matrix3d rotationMatrix;
+		rotationMatrix << world[0][0], world[1][0], -world[2][0],
+			world[0][1], world[1][1], -world[2][1], 
+			world[0][2], world[1][2], -world[2][2]; 
 
-		// Appliquer la translation au centre de l'OBB
-		center.x() += world[3][0];
-		center.y() += world[3][1];
-		center.z() += world[3][2];
+		rotation = rotationMatrix * Eigen::Matrix3d::Identity();
+		//rotation.transposeInPlace();
 
-		// Mettre à jour les min et max de l'OBB après transformation
+		// Afficher la matrice de rotation
+		std::cout << "Matrice de rotation :\n" << rotation << std::endl;
+
+		// Appeler les autres méthodes pour calculer les nouvelles valeurs
 		ComputeMinMax();
 		ComputeCenter();
 		ComputeSize();
+
+		// Calculer la taille et la position des coins
+		Eigen::Vector3d halfSize = size.cast<double>() / 2.0;
+
+		// Définir les coins locaux avant rotation
+		Eigen::Vector3d localCorners[8] = {
+			Eigen::Vector3d(-halfSize.x(), -halfSize.y(), -halfSize.z()), // Coin 0
+			Eigen::Vector3d(halfSize.x(), -halfSize.y(), -halfSize.z()),  // Coin 1
+			Eigen::Vector3d(halfSize.x(), -halfSize.y(), halfSize.z()),   // Coin 2
+			Eigen::Vector3d(-halfSize.x(), -halfSize.y(), halfSize.z()),  // Coin 3
+			Eigen::Vector3d(-halfSize.x(), halfSize.y(), -halfSize.z()),  // Coin 4
+			Eigen::Vector3d(halfSize.x(), halfSize.y(), -halfSize.z()),   // Coin 5
+			Eigen::Vector3d(halfSize.x(), halfSize.y(), halfSize.z()),    // Coin 6
+			Eigen::Vector3d(-halfSize.x(), halfSize.y(), halfSize.z())    // Coin 7
+		};
+
+		corners.clear();
+		corners.reserve(8);
+
+		// Appliquer la rotation et ajouter les coins globaux
+		for (int i = 0; i < 8; ++i) {
+			Eigen::Vector3d rotatedCorner = rotation * localCorners[i];
+			Eigen::Vector3d globalCorner = center + rotatedCorner;
+			corners.push_back(globalCorner);
+		}
+
+		// Afficher les coins après transformation
 		Print();
 	}
 
-	void InitializeOBB(const std::vector<Vertex>& vertices) {
-		this->vertices = vertices; // Assigner les vertices
-		ComputeMinMax();
-		ComputeCenter();
-		ComputeSize();
-		ComputeRotationMatrix();
-		Print();
-	}
+    void InitializeOBB(const std::vector<Vertex>& vertices) {
+        this->vertices = vertices;
 
-	void Print() const {
-		std::cout << "Center: (" << center.x() << ", " << center.y() << ", " << center.z() << ")\n";
-		std::cout << "Size: (" << size.x() << ", " << size.y() << ", " << size.z() << ")\n";
-		std::cout << "Rotation Matrix:\n";
-		std::cout << rotation << "\n";
-		std::cout << "Min: (" << min.x() << ", " << min.y() << ", " << min.z() << ")\n";
-		std::cout << "Max: (" << max.x() << ", " << max.y() << ", " << max.z() << ")\n";
-	}
+        ComputeMinMax();
+        ComputeCenter();
+        ComputeSize();
+        ComputeRotationMatrix();
+
+        Print();
+        //UpdateCorners();
+        //PrintCorners();
+    }
+
+    void Print() const {
+        //std::cout << "Center: (" << center.x() << ", " << center.y() << ", " << center.z() << ")\n";
+        //std::cout << "Size: (" << size.x() << ", " << size.y() << ", " << size.z() << ")\n";
+        //std::cout << "Rotation Matrix:\n";
+        //std::cout << rotation << "\n";
+        //std::cout << "Min: (" << min.x() << ", " << min.y() << ", " << min.z() << ")\n";
+        //std::cout << "Max: (" << max.x() << ", " << max.y() << ", " << max.z() << ")\n";
+    }
+
+    void PrintCorners() {
+        for (size_t i = 0; i < corners.size(); ++i) {
+            std::cout << "Corner " << i << ": ("
+                << corners[i].x() << ", "
+                << corners[i].y() << ", "
+                << corners[i].z() << ")\n";
+        }
+    }
 };
+
+
+//Eigen::Vector3d(-halfSize.x(), -halfSize.y(), -halfSize.z()), // Coin 0 -> Rouge (Red)
+//Eigen::Vector3d(halfSize.x(), -halfSize.y(), -halfSize.z()),  // Coin 1 -> Vert (Green)
+//Eigen::Vector3d(halfSize.x(), -halfSize.y(), halfSize.z()),   // Coin 2 -> Bleu (Blue)
+//Eigen::Vector3d(-halfSize.x(), -halfSize.y(), halfSize.z()),  // Coin 3 -> Jaune (Yellow)
+//Eigen::Vector3d(-halfSize.x(), halfSize.y(), -halfSize.z()),  // Coin 4 -> Magenta (Magenta)
+//Eigen::Vector3d(halfSize.x(), halfSize.y(), -halfSize.z()),   // Coin 5 -> Cyan (Cyan)
+//Eigen::Vector3d(halfSize.x(), halfSize.y(), halfSize.z()),    // Coin 6 -> Orange (Orange)
+//Eigen::Vector3d(-halfSize.x(), halfSize.y(), halfSize.z())    // Coin 7 -> Violet (Purple)
 
 struct AABB {
 	// Local base position (without transformation)
@@ -260,6 +267,7 @@ class BoxCollider
 {
 public:
 	AABB m_boundingVolume;
+	OBB m_orientedBoundingBox;
 
 	BoxCollider();
 	BoxCollider(std::vector<Vertex>& vertices);
@@ -268,4 +276,3 @@ public:
 
 
 };
-

@@ -112,29 +112,65 @@ void OpenGL_Renderer::DebugColliderDraw(std::vector<float> lineVertices, std::ve
     // Bind VAO
     glBindVertexArray(VAO);
 
-    // Bind VBO et charger les données des sommets
+    // Ajouter les couleurs : chaque sommet a une couleur différente
+    std::vector<float> colors = {
+        1.0f, 0.0f, 0.0f, 1.0f, // Red
+        0.0f, 1.0f, 0.0f, 1.0f, // Green
+        0.0f, 0.0f, 1.0f, 1.0f, // Blue
+        1.0f, 1.0f, 0.0f, 1.0f, // Yellow
+        1.0f, 0.0f, 1.0f, 1.0f, // Magenta
+        0.0f, 1.0f, 1.0f, 1.0f, // Cyan
+        1.0f, 0.5f, 0.0f, 1.0f, // Orange
+        0.5f, 0.0f, 0.5f, 1.0f  // Purple
+    };
+
+    // Combine positions et couleurs dans un seul tableau
+    std::vector<float> verticesWithColor;
+    for (size_t i = 0; i < lineVertices.size() / 3; ++i) {
+        // Ajouter la position
+        verticesWithColor.push_back(lineVertices[i * 3]);
+        verticesWithColor.push_back(lineVertices[i * 3 + 1]);
+        verticesWithColor.push_back(lineVertices[i * 3 + 2]);
+
+        // Ajouter la couleur correspondante
+        verticesWithColor.push_back(colors[i * 4]);
+        verticesWithColor.push_back(colors[i * 4 + 1]);
+        verticesWithColor.push_back(colors[i * 4 + 2]);
+        verticesWithColor.push_back(colors[i * 4 + 3]);
+    }
+
+    // Bind VBO et charger les données des sommets (avec couleurs)
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, lineVertices.size() * sizeof(float), lineVertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, verticesWithColor.size() * sizeof(float), verticesWithColor.data(), GL_STATIC_DRAW);
 
     // Bind EBO et charger les indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
     // Configurer l'attribut de position des sommets (3 composantes par sommet)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0); // 7 = 3 position + 4 couleur
     glEnableVertexAttribArray(0);
+
+    // Configurer l'attribut de couleur (4 composantes par sommet)
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float))); // Couleur commence à l'index 3
+    glEnableVertexAttribArray(1);
 
     // Utiliser glPolygonMode pour afficher en mode lignes
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // Dessiner les polygones comme des lignes
 
-    // Dessiner les polygones avec indices
+    // Dessiner les lignes du colliseur
     glDrawElements(GL_LINES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
 
     // Réactiver le mode normal (mode plein)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // Retour au mode remplissage des polygones
 
+    // Configurer pour dessiner des points
+    glPointSize(8.0f); // Taille des points (ajustez selon vos besoins)
+    glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(lineVertices.size() / 3)); // Dessiner chaque sommet comme un point
+
     // Nettoyer
     glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glDeleteBuffers(1, &VBO);
@@ -142,7 +178,6 @@ void OpenGL_Renderer::DebugColliderDraw(std::vector<float> lineVertices, std::ve
     glBindVertexArray(0);
     glDeleteVertexArrays(1, &VAO);
 }
-
 void OpenGL_Renderer::Present() {
     glfwSwapBuffers(m_context->getWindow());
     glfwPollEvents();
