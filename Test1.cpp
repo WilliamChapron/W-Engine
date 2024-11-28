@@ -29,6 +29,51 @@
 
 #include "Primitive.h"
 
+//bool OBB_Collision(const OBB& obb1, const OBB& obb2) {
+//    // Calcul des 15 axes à tester (3 axes locaux + 9 produits vectoriels des axes)
+//    std::vector<Vector3> axes;
+//    axes.push_back(obb1.axis[0]);
+//    axes.push_back(obb1.axis[1]);
+//    axes.push_back(obb1.axis[2]);
+//    axes.push_back(obb2.axis[0]);
+//    axes.push_back(obb2.axis[1]);
+//    axes.push_back(obb2.axis[2]);
+//
+//    // Ajouter les 9 produits vectoriels
+//    for (int i = 0; i < 3; ++i) {
+//        for (int j = 0; j < 3; ++j) {
+//            axes.push_back(cross(obb1.axis[i], obb2.axis[j]));
+//        }
+//    }
+//
+//    // Tester chaque axe
+//    for (const auto& axis : axes) {
+//        // Projeter les coins des OBB sur cet axe
+//        float min1 = FLT_MAX, max1 = -FLT_MAX;
+//        for (int i = 0; i < 8; ++i) {
+//            float proj = dot(obb1.vertices[i], axis);
+//            min1 = std::min(min1, proj);
+//            max1 = std::max(max1, proj);
+//        }
+//
+//        float min2 = FLT_MAX, max2 = -FLT_MAX;
+//        for (int i = 0; i < 8; ++i) {
+//            float proj = dot(obb2.vertices[i], axis);
+//            min2 = std::min(min2, proj);
+//            max2 = std::max(max2, proj);
+//        }
+//
+//        // Vérifier s'il y a séparation
+//        if (max1 < min2 || max2 < min1) {
+//            // Si les projections ne se chevauchent pas, il n'y a pas de collision
+//            return false;
+//        }
+//    }
+//
+//    // Si aucune séparation n'a été trouvée, il y a une collision
+//    return true;
+//}
+//
 
 
 
