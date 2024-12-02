@@ -96,6 +96,8 @@
       <Filter>Physic</Filter>
     </ClCompile>
     <ClCompile Include="Test1.cpp" />
+    <ClCompile Include="PhysicSystem.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -181,6 +183,8 @@
     <ClInclude Include="PhysicStructures.hpp">
       <Filter>Physic</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicSystem.h" />
+    <ClInclude Include="RigidBody.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

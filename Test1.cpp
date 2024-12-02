@@ -29,54 +29,8 @@
 
 #include "Primitive.h"
 
-bool OBB_Collision(const OBB& obb1, const OBB& obb2) {
-    // Axes à tester : les 3 axes locaux de chaque OBB + leurs produits vectoriels
-    std::vector<Eigen::Vector3d> axes;
-
-    // Ajouter les axes locaux des deux OBB
-    axes.push_back(obb1.rotation.col(0));
-    axes.push_back(obb1.rotation.col(1));
-    axes.push_back(obb1.rotation.col(2));
-    axes.push_back(obb2.rotation.col(0));
-    axes.push_back(obb2.rotation.col(1));
-    axes.push_back(obb2.rotation.col(2));
-
-    // Ajouter les 9 produits vectoriels entre les axes locaux
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            Eigen::Vector3d crossAxis = obb1.rotation.col(i).cross(obb2.rotation.col(j));
-            if (crossAxis.norm() > 1e-6) { // Éviter les axes presque nuls
-                axes.push_back(crossAxis.normalized());
-            }
-        }
-    }
-
-    // Tester chaque axe
-    for (const auto& axis : axes) {
-        // Projeter les coins de chaque OBB sur cet axe
-        double min1 = std::numeric_limits<double>::max(), max1 = -std::numeric_limits<double>::max();
-        for (const auto& corner : obb1.corners) {
-            double projection = axis.dot(corner);
-            min1 = std::min(min1, projection);
-            max1 = std::max(max1, projection);
-        }
-
-        double min2 = std::numeric_limits<double>::max(), max2 = -std::numeric_limits<double>::max();
-        for (const auto& corner : obb2.corners) {
-            double projection = axis.dot(corner);
-            min2 = std::min(min2, projection);
-            max2 = std::max(max2, projection);
-        }
-
-        // Si les projections ne se chevauchent pas, il y a séparation
-        if (max1 < min2 || max2 < min1) {
-            return false; // Pas de collision
-        }
-    }
-
-    // Si aucune séparation n'a été trouvée, il y a collision
-    return true;
-}
+#include "PhysicSystem.h"
+#include "RigidBody.h"
 
 
 
@@ -105,15 +59,18 @@ int main()
     OpenGL_Renderer renderer;
     renderer.Initialize(context);
     Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+    // Init shader
     Shader* pshader = new OpenGL_Shader();
     if (!pshader->Compile("res\\shaders\\colorV.glsl", "res\\shaders\\colorF.glsl")) {
         std::cerr << "Shader compilation failed!" << std::endl;
     }
-
     Shader* wireframeShader = new OpenGL_Shader();
     if (!wireframeShader->Compile("res\\shaders\\wireframeV.glsl", "res\\shaders\\wireframeF.glsl")) {
         std::cerr << "Shader compilation failed!" << std::endl;
     }
+
+    PhysicSystem* physicSystem = new PhysicSystem();
 
     // Cube setup
     RenderableEntity* cube = new OpenGL_RenderableEntity();
@@ -144,7 +101,7 @@ int main()
     cube2Collider->m_orientedBoundingBox.InitializeOBB(cube2Geometry->vertices);
 
     cube2Transform->SetPosition(glm::vec3(2.5f, 0.0f, 0.0f));
-    cube2Transform->SetScale(glm::vec3(2.5f, 1.0f, 1.0f));
+    cube2Transform->SetScale(glm::vec3(2.0f, 1.0f, 1.0f));
 
 
     // Transforms and colliders
@@ -207,7 +164,7 @@ int main()
 
 
 
-        PRINT(OBB_Collision(cubeCollider->m_orientedBoundingBox, cube2Collider->m_orientedBoundingBox));
+        PRINT(physicSystem->OBB_Collision(cubeCollider->m_orientedBoundingBox, cube2Collider->m_orientedBoundingBox));
 
 
 

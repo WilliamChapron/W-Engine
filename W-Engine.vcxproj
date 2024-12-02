@@ -159,10 +159,12 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="OpenGL_RenderableEntity.cpp" />
+    <ClCompile Include="PhysicSystem.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="RenderableEntity.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="OpenGL_Texture.cpp" />
     <ClCompile Include="SubMesh.cpp" />
@@ -190,11 +192,13 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="OpenGL_RenderableEntity.h" />
     <ClInclude Include="PhysicStructures.hpp" />
+    <ClInclude Include="PhysicSystem.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="RenderableEntity.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderStructures.hpp" />
     <ClInclude Include="ResourceManager.hpp" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="OpenGL_Texture.h" />
     <ClInclude Include="SubMesh.h" />

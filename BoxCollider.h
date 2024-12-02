@@ -81,6 +81,13 @@ struct OBB {
         ComputeSize();
     }
 
+	bool isPointInsideOBB(const Eigen::Vector3d& point, const OBB& obb) {
+		Eigen::Vector3d localPoint = obb.rotation.transpose() * (point - obb.center);
+		return std::abs(localPoint.x()) <= obb.halfExtents.x() &&
+			std::abs(localPoint.y()) <= obb.halfExtents.y() &&
+			std::abs(localPoint.z()) <= obb.halfExtents.z();
+	}
+
     //void Print() const {
     //    //std::cout << "Center: (" << center.x() << ", " << center.y() << ", " << center.z() << ")\n";
     //    //std::cout << "Size: (" << size.x() << ", " << size.y() << ", " << size.z() << ")\n";
