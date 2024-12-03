@@ -81,30 +81,11 @@ struct OBB {
         ComputeSize();
     }
 
-	bool isPointInsideOBB(const Eigen::Vector3d& point, const OBB& obb) {
-		Eigen::Vector3d localPoint = obb.rotation.transpose() * (point - obb.center);
-		return std::abs(localPoint.x()) <= obb.halfExtents.x() &&
-			std::abs(localPoint.y()) <= obb.halfExtents.y() &&
-			std::abs(localPoint.z()) <= obb.halfExtents.z();
+	bool isPointInsideOBB(Eigen::Vector3d& point) {
+		Eigen::Vector3d localPoint = rotation.transpose() * (point - center);
+		Eigen::Vector3d halfSize = size.cast<double>() / 2.0;
+		return std::abs(localPoint.x()) <= halfSize.x() && std::abs(localPoint.y()) <= halfSize.y() && std::abs(localPoint.z()) <= halfSize.z();
 	}
-
-    //void Print() const {
-    //    //std::cout << "Center: (" << center.x() << ", " << center.y() << ", " << center.z() << ")\n";
-    //    //std::cout << "Size: (" << size.x() << ", " << size.y() << ", " << size.z() << ")\n";
-    //    //std::cout << "Rotation Matrix:\n";
-    //    //std::cout << rotation << "\n";
-    //    //std::cout << "Min: (" << min.x() << ", " << min.y() << ", " << min.z() << ")\n";
-    //    //std::cout << "Max: (" << max.x() << ", " << max.y() << ", " << max.z() << ")\n";
-    //}
-
-    //void PrintCorners() {
-    //    for (size_t i = 0; i < corners.size(); ++i) {
-    //        std::cout << "Corner " << i << ": ("
-    //            << corners[i].x() << ", "
-    //            << corners[i].y() << ", "
-    //            << corners[i].z() << ")\n";
-    //    }
-    //}
 };
 
 

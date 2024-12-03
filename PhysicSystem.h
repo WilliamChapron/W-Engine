@@ -9,6 +9,6 @@ public:
 
     void CheckCollision();
     void ResolveCollision();
-    bool OBB_Collision(const OBB& obb1, const OBB& obb2);
+    bool OBB_Collision(OBB& obb1, OBB& obb2);
 };
 

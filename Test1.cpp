@@ -32,12 +32,48 @@
 #include "PhysicSystem.h"
 #include "RigidBody.h"
 
-
-
 bool isPaused = false;
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
+
+
+
+
+float speed = 1.f;
+float lastX = 400.0f;  // Position X initiale de la souris
+float lastY = 300.0f;  // Position Y initiale de la souris
+bool firstMouse = true; // Flag pour la première capture de la souris
+float sensitivity = 0.1f; // Sensibilité de la souris
+
+
+void ProcessMouseMovement(GLFWwindow* window, Camera& camera) {
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos); // Récupérer la position actuelle de la souris
+
+    if (firstMouse) { // Si c'est le premier mouvement de souris, on initialise lastX et lastY
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    // Calculer le décalage de la souris (offset) par rapport à la position précédente
+    float xOffset = xpos - lastX;
+    float yOffset = lastY - ypos; // Inverser yOffset pour un mouvement de souris naturel (haut/bas)
+    lastX = xpos;
+    lastY = ypos;
+
+    xOffset *= sensitivity;
+    yOffset *= sensitivity;
+
+    PRINT(xOffset, yOffset);
+
+    camera.Rotate(xOffset, yOffset); 
+}
 
 
 int main()
@@ -49,6 +85,7 @@ int main()
     #ifdef __APPLE__
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     #endif
+
     FILE* fDummy;
     freopen_s(&fDummy, "CONIN$", "r", stdin);
     freopen_s(&fDummy, "CONOUT$", "w", stderr);
@@ -111,6 +148,11 @@ int main()
 
     cubeCollider->m_orientedBoundingBox.InitializeOBB(cubeGeometry->vertices);
 
+    //Camera
+    glfwMakeContextCurrent(window);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  // Cacher le curseur
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    //
 
     float rotate = 0.0f;
     float rotationSpeed = 0.04f; 
@@ -124,6 +166,25 @@ int main()
         float deltaTime = currentFrameTime - lastFrameTime;
         lastFrameTime = currentFrameTime;
 
+
+        // CAMERA HANDLING
+
+        // Entrées utilisateur
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            camera.MoveForward(deltaTime * speed);
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            camera.MoveForward(-deltaTime * speed);
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+            camera.Strafe(-deltaTime * speed);
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+            camera.Strafe(deltaTime * speed);
+        }
+        // CAMERA
+        ProcessMouseMovement(window, camera);
+
         // Matrices for rendering
         glm::mat4 projection = camera.GetProjectionMatrix(90.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
@@ -136,7 +197,7 @@ int main()
         cubeCollider->m_orientedBoundingBox.UpdateOBBGlobalBounds(cubeWorld);
 
         // Update second cube
-        cube2Transform->SetRotation(glm::vec3(0.0f, rotate*2, 0.0f));
+        cube2Transform->SetRotation(glm::vec3(0.0f, -(rotate*10), 0.0f));
         glm::mat4 cube2World = cube2Transform->GetTransformMatrix();
         cube2Collider->m_orientedBoundingBox.UpdateOBBGlobalBounds(cube2World);
 
@@ -156,17 +217,8 @@ int main()
 
 
 
-
-
-
-
-
-
-
-
-        PRINT(physicSystem->OBB_Collision(cubeCollider->m_orientedBoundingBox, cube2Collider->m_orientedBoundingBox));
-
-
+        //PRINT(physicSystem->OBB_Collision(cubeCollider->m_orientedBoundingBox, cube2Collider->m_orientedBoundingBox));
+        physicSystem->OBB_Collision(cubeCollider->m_orientedBoundingBox, cube2Collider->m_orientedBoundingBox);
 
 
 
@@ -242,3 +294,8 @@ int main()
     context->Terminate();
     return 0;
 }
+
+// Camera
+// Debugger pour connaitre temps d'execution d'une fonction 
+// Obb collision
+
