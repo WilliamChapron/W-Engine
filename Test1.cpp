@@ -157,6 +157,7 @@ int main()
 
     // Transforms and colliders
     Transform* cubeTransform = new Transform();
+    cubeTransform->SetScale(glm::vec3(4.0f, 1.0f, 1.0f));
     BoxCollider* cubeCollider = new BoxCollider(cubeGeometry->vertices);
 
 
@@ -216,7 +217,7 @@ int main()
 
 
         // Update first cube
-        cubeTransform->SetRotation(glm::vec3(rotate, 0.0f, 0.0f));
+        //cubeTransform->SetRotation(glm::vec3(rotate, 0.0f, 0.0f));
         glm::mat4 cubeWorld = cubeTransform->GetTransformMatrix();
         cubeCollider->m_orientedBoundingBox.UpdateOBBGlobalBounds(cubeWorld);
 
