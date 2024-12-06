@@ -124,6 +124,36 @@ void OpenGL_Renderer::DebugColliderDraw(std::vector<float> lineVertices, std::ve
         0.5f, 0.0f, 0.5f, 1.0f  // Purple
     };
 
+    //Eigen::Vector3d(-halfSize.x(), -halfSize.y(), -halfSize.z()), // Coin 0
+    //    Eigen::Vector3d(halfSize.x(), -halfSize.y(), -halfSize.z()),  // Coin 1
+    //    Eigen::Vector3d(halfSize.x(), -halfSize.y(), halfSize.z()),   // Coin 2
+    //    Eigen::Vector3d(-halfSize.x(), -halfSize.y(), halfSize.z()),  // Coin 3
+    //    Eigen::Vector3d(-halfSize.x(), halfSize.y(), -halfSize.z()),  // Coin 4
+    //    Eigen::Vector3d(halfSize.x(), halfSize.y(), -halfSize.z()),   // Coin 5
+    //    Eigen::Vector3d(halfSize.x(), halfSize.y(), halfSize.z()),    // Coin 6
+    //    Eigen::Vector3d(-halfSize.x(), halfSize.y(), halfSize.z())    // Coin 7
+
+    //for (int i = 0; i < 8; ++i) {
+    //    lineVertices.push_back(corners[i].coeff(0)); // x
+    //    lineVertices.push_back(corners[i].coeff(1)); // y
+    //    lineVertices.push_back(corners[i].coeff(2)); // z
+    //}
+
+    //std::vector<unsigned int> indices = {
+    //    0, 1,  // Arête entre Coin 0 et Coin 1
+    //    1, 2,  // Arête entre Coin 1 et Coin 2
+    //    2, 3,  // Arête entre Coin 2 et Coin 3
+    //    3, 0,  // Arête entre Coin 3 et Coin 0
+    //    4, 5,  // Arête entre Coin 4 et Coin 5
+    //    5, 6,  // Arête entre Coin 5 et Coin 6
+    //    6, 7,  // Arête entre Coin 6 et Coin 7
+    //    7, 4,  // Arête entre Coin 7 et Coin 4
+    //    0, 4,  // Arête entre Coin 0 et Coin 4
+    //    1, 5,  // Arête entre Coin 1 et Coin 5
+    //    2, 6,  // Arête entre Coin 2 et Coin 6
+    //    3, 7   // Arête entre Coin 3 et Coin 7
+    //};
+
     // Combine positions et couleurs dans un seul tableau
     std::vector<float> verticesWithColor;
     for (size_t i = 0; i < lineVertices.size() / 3; ++i) {

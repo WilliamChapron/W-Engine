@@ -5,6 +5,17 @@
 
 struct Vertex;
 
+static const std::string colors[] = {
+	"Rouge",    // Coin 0 -> Rouge (Red)
+	"Vert",     // Coin 1 -> Vert (Green)
+	"Bleu",     // Coin 2 -> Bleu (Blue)
+	"Jaune",    // Coin 3 -> Jaune (Yellow)
+	"Magenta",  // Coin 4 -> Magenta (Magenta)
+	"Cyan",     // Coin 5 -> Cyan (Cyan)
+	"Orange",   // Coin 6 -> Orange (Orange)
+	"Violet"    // Coin 7 -> Violet (Purple)
+};
+
 struct OBB {
     Eigen::Vector3d center;
     Eigen::Vector3d size;
@@ -81,11 +92,11 @@ struct OBB {
         ComputeSize();
     }
 
-	bool isPointInsideOBB(Eigen::Vector3d& point) {
-		Eigen::Vector3d localPoint = rotation.transpose() * (point - center);
-		Eigen::Vector3d halfSize = size.cast<double>() / 2.0;
-		return std::abs(localPoint.x()) <= halfSize.x() && std::abs(localPoint.y()) <= halfSize.y() && std::abs(localPoint.z()) <= halfSize.z();
-	}
+	//bool isPointInsideOBB(Eigen::Vector3d& point) {
+	//	Eigen::Vector3d localPoint = rotation.transpose() * (point - center);
+	//	Eigen::Vector3d halfSize = size.cast<double>() / 2.0;
+	//	return std::abs(localPoint.x()) <= halfSize.x() && std::abs(localPoint.y()) <= halfSize.y() && std::abs(localPoint.z()) <= halfSize.z();
+	//}
 };
 
 
