@@ -81,7 +81,10 @@ bool PhysicSystem::OBB_Collision(OBB& obb1, OBB& obb2) {
     //collisionPoints.erase(std::unique(collisionPoints.begin(), collisionPoints.end()), collisionPoints.end());
 
     // Afficher le résultat
-    std::cout << "Total collision points: " << collisionPoints.size() << "\n " << std::endl;
+    if (collisionPoints.size() > 0) {
+        std::cout << "Total collision points: " << collisionPoints.size() << "\n " << std::endl;
+    }
+
 
     return !collisionPoints.empty();
 }

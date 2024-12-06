@@ -32,16 +32,30 @@
 #include "PhysicSystem.h"
 #include "RigidBody.h"
 
-bool isPaused = false;
-
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
+#include <chrono>
+#include <thread>
 
 
+int it = 0;
+// Pause handling
+bool isPaused = false;
+bool wasSpacePressed = false;
+std::chrono::steady_clock::time_point lastToggleTime = std::chrono::steady_clock::now();
+
+void ProcessInput(GLFWwindow* window) {
+    bool isSpacePressedNow = (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
+    if (isSpacePressedNow && !wasSpacePressed) {
+        isPaused = !isPaused; 
+        //std::cout << (isPaused ? "Game Paused" : "Game Resumed") << std::endl;
+    }
+    wasSpacePressed = isSpacePressedNow;
+}
 
 
 float speed = 1.f;
@@ -70,7 +84,7 @@ void ProcessMouseMovement(GLFWwindow* window, Camera& camera) {
     xOffset *= sensitivity;
     yOffset *= sensitivity;
 
-    PRINT(xOffset, yOffset);
+    //PRINT(xOffset, yOffset);
 
     camera.Rotate(xOffset, yOffset); 
 }
@@ -123,7 +137,7 @@ int main()
 
     // Second cube setup
     RenderableEntity* cube2 = new OpenGL_RenderableEntity();
-    Primitive* cube2Geometry = new PrimitiveRectangle(2.0f, 1.0f); 
+    Primitive* cube2Geometry = new Cube(); 
     cube2Geometry->Init();
     OpenGL_SubMesh* cube2Submesh = new OpenGL_SubMesh();
     cube2Submesh->Setup(cube2Geometry->vertices, cube2Geometry->indices, 0);
@@ -138,7 +152,7 @@ int main()
     cube2Collider->m_orientedBoundingBox.InitializeOBB(cube2Geometry->vertices);
 
     cube2Transform->SetPosition(glm::vec3(2.5f, 0.0f, 0.0f));
-    cube2Transform->SetScale(glm::vec3(2.0f, 1.0f, 1.0f));
+    cube2Transform->SetScale(glm::vec3(4.0f, 1.0f, 1.0f));
 
 
     // Transforms and colliders
@@ -159,6 +173,16 @@ int main()
     // Main loop 
     while (!glfwWindowShouldClose(window))
     {
+        it++;
+        //PRINT(it);
+
+        glfwPollEvents();
+        ProcessInput(window);
+        if (isPaused) {
+            continue;
+        }
+
+
         rotate += rotationSpeed;
         // Timing
         static float lastFrameTime = 0.0f;
@@ -281,13 +305,7 @@ int main()
 
         renderer.Present();
 
-        // Input handling for pause
-        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-            isPaused = !isPaused;  // Toggle pause state
-            while (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-                glfwPollEvents();
-            }
-        }
+
     }
 
     // Cleanup

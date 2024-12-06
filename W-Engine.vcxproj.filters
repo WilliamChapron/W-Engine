@@ -91,13 +91,19 @@
     <ClCompile Include="Primitive.cpp">
       <Filter>Physic</Filter>
     </ClCompile>
-    <ClCompile Include="GLFWLoader.cpp" />
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Physic</Filter>
     </ClCompile>
     <ClCompile Include="Test1.cpp" />
-    <ClCompile Include="PhysicSystem.cpp" />
-    <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicSystem.cpp">
+      <Filter>Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="GLFWLoader.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -173,7 +179,6 @@
     <ClInclude Include="Primitive.h">
       <Filter>Physic</Filter>
     </ClInclude>
-    <ClInclude Include="GLFWLoader.h" />
     <ClInclude Include="Define.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -183,8 +188,15 @@
     <ClInclude Include="PhysicStructures.hpp">
       <Filter>Physic</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicSystem.h" />
-    <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="PhysicSystem.h">
+      <Filter>Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="GLFWLoader.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
