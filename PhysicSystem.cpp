@@ -4,48 +4,98 @@
 
 #include "BoxCollider.h"
 
+std::map<std::string, std::vector<int>> faces = {
+    {"Front", {0, 1, 2, 3}},
+    {"Back", {4, 5, 6, 7}},
+    {"Left", {0, 3, 7, 4}},
+    {"Right", {1, 2, 6, 5}},
+    {"Top", {2, 3, 7, 6}},
+    {"Bottom", {0, 1, 5, 4}}
+};
 
 bool PhysicSystem::OBB_Collision(OBB& obb1, OBB& obb2) {
-    // Liste des coins de l'OBB1 et OBB2
-    std::vector<Eigen::Vector3d> corners1 = obb1.corners; // Coins de l'OBB1
-    std::vector<Eigen::Vector3d> corners2 = obb2.corners; // Coins de l'OBB2
+    std::vector<Eigen::Vector3d> axes;
+    axes.push_back(obb1.rotation.col(0));
+    axes.push_back(obb1.rotation.col(1));
+    axes.push_back(obb1.rotation.col(2));
+    axes.push_back(obb2.rotation.col(0));
+    axes.push_back(obb2.rotation.col(1));
+    axes.push_back(obb2.rotation.col(2));
 
-    // Liste pour enregistrer les coins de l'OBB1 qui sont dans l'intervalle de l'OBB2
+    // Ajouter les axes croisés
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            Eigen::Vector3d crossAxis = obb1.rotation.col(i).cross(obb2.rotation.col(j));
+            if (crossAxis.norm() > 1e-6) {
+                Eigen::Vector3d normalizedAxis = crossAxis.normalized();
+                if (std::find(axes.begin(), axes.end(), normalizedAxis) == axes.end()) {
+                    axes.push_back(normalizedAxis);
+                }
+            }
+        }
+    }
+
     std::vector<Eigen::Vector3d> collisionPoints;
 
-    int cornerNbr = 0;
-    for (const auto& corner1 : corners1) {
-        bool collisionDetected = true;
 
-        // Vérifier chaque axe (X, Y, Z)
-        for (int i = 0; i < 3; ++i) {
-            // Trouver les projections min et max pour l'OBB2 sur cet axe
-            double min2 = std::numeric_limits<double>::max();
-            double max2 = -std::numeric_limits<double>::max();
-
-            for (const auto& corner2 : corners2) {
-                double projection = corner2[i]; // Projection sur l'axe i (X, Y, Z)
+    // Tester les coins sur tous les axes
+    for (size_t i = 0; i < obb1.corners.size(); ++i) {
+        const auto& corner1 = obb1.corners[i];
+        bool collisionOnAllAxes = true;
+        for (const auto& axis : axes) {
+            double min2 = std::numeric_limits<double>::max(), max2 = -std::numeric_limits<double>::max();
+            for (const auto& corner2 : obb2.corners) {
+                double projection = axis.dot(corner2);
                 min2 = std::min(min2, projection);
                 max2 = std::max(max2, projection);
             }
 
-            // Vérifier si le coin1 est à l'intérieur de l'intervalle [min2, max2]
-            double projection1 = corner1[i]; // Projection de corner1 sur l'axe i
+            double projection1 = axis.dot(corner1);
             if (projection1 < min2 || projection1 > max2) {
-                collisionDetected = false; // Pas de collision si le coin1 est en dehors de l'intervalle
-                break;
+                collisionOnAllAxes = false;
+                break; // Pas de collision pour ce coin sur cet axe
             }
         }
 
-
-        if (collisionDetected) {
+        if (collisionOnAllAxes) {
             collisionPoints.push_back(corner1);
-            std::cout << "Collision detected at corner: "
-                << cornerNbr << " (" << colors[cornerNbr] << ") "
-                << corner1.transpose() << std::endl;
+            // Afficher l'index et la couleur du coin
+            std::cout << "Coin 1 index: " << i << ", Color: " << colors[i] << "\n";
+        }
+    }
+
+    // Tester les coins de OBB2 sur tous les axes (symétriquement)
+    for (size_t i = 0; i < obb2.corners.size(); ++i) {
+        const auto& corner2 = obb2.corners[i];
+        bool collisionOnAllAxes = true;
+        for (const auto& axis : axes) {
+            double min1 = std::numeric_limits<double>::max(), max1 = -std::numeric_limits<double>::max();
+            for (const auto& corner1 : obb1.corners) {
+                double projection = axis.dot(corner1);
+                min1 = std::min(min1, projection);
+                max1 = std::max(max1, projection);
+            }
+
+            double projection2 = axis.dot(corner2);
+            if (projection2 < min1 || projection2 > max1) {
+                collisionOnAllAxes = false;
+                break; // Pas de collision pour ce coin sur cet axe
+            }
         }
 
-        cornerNbr++;
+        if (collisionOnAllAxes) {
+            collisionPoints.push_back(corner2);
+            // Afficher l'index et la couleur du coin
+            std::cout << "Coin 2 index: " << i << ", Color: " << colors[i] << "\n";
+        }
     }
+
+    if (collisionPoints.size() > 0) {
+        std::cout << "Total collision points: " << collisionPoints.size() << "\n" << std::endl;
+    }
+
+    std::cout << "------------------" << "\n";
+
+
     return !collisionPoints.empty();
 }
