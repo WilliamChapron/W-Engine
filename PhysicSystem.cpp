@@ -39,9 +39,10 @@ bool PhysicSystem::OBB_Collision(OBB& obb1, OBB& obb2) {
 
 
         if (collisionDetected) {
-            collisionPoints.push_back(corner1); 
-            //std::cout << "Collision detected at corner : " << cornerNbr << " " << colors[cornerNbr] << std::endl;
-            std::cout << "Collision detected at corner: " << corner1.transpose() << std::endl;
+            collisionPoints.push_back(corner1);
+            std::cout << "Collision detected at corner: "
+                << cornerNbr << " (" << colors[cornerNbr] << ") "
+                << corner1.transpose() << std::endl;
         }
 
         cornerNbr++;

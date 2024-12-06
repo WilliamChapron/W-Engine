@@ -242,7 +242,7 @@ int main()
 
 
         //PRINT(physicSystem->OBB_Collision(cubeCollider->m_orientedBoundingBox, cube2Collider->m_orientedBoundingBox));
-        physicSystem->OBB_Collision(cubeCollider->m_orientedBoundingBox, cube2Collider->m_orientedBoundingBox);
+        physicSystem->OBB_Collision(cube2Collider->m_orientedBoundingBox, cubeCollider->m_orientedBoundingBox);
 
 
 
@@ -283,25 +283,10 @@ int main()
             rectangleVertices.push_back(cube2Corners[i].coeff(2)); // z
         }
 
-        // Indices for rectangle edges
-        std::vector<unsigned int> rectangleIndices = {
-            0, 1,  // Edge 0->1
-            1, 2,  // Edge 1->2
-            2, 3,  // Edge 2->3
-            3, 0,  // Edge 3->0
-            4, 5,  // Edge 4->5
-            5, 6,  // Edge 5->6
-            6, 7,  // Edge 6->7
-            7, 4,  // Edge 7->4
-            0, 4,  // Edge 0->4
-            1, 5,  // Edge 1->5
-            2, 6,  // Edge 2->6
-            3, 7   // Edge 3->7
-        };
 
         // Draw rectangle collider
         wfsh->UpdateMatrices(identityMatrix, view, projection);
-        renderer.DebugColliderDraw(rectangleVertices, rectangleIndices, wfsh);
+        renderer.DebugColliderDraw(rectangleVertices, indices, wfsh);
 
         renderer.Present();
 

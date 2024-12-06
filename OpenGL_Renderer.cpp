@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 
 
 #include "OpenGL_Renderer.h"
@@ -67,7 +67,7 @@ void OpenGL_Renderer::Draw(RenderableEntity* renderObject) {
             }
         }
 
-        // Assurez-vous de dessiner en mode triangles par défaut
+        // Assurez-vous de dessiner en mode triangles par dÃ©faut
         glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(glSubMesh->GetIndexCount()), GL_UNSIGNED_INT, 0);
 
@@ -112,47 +112,17 @@ void OpenGL_Renderer::DebugColliderDraw(std::vector<float> lineVertices, std::ve
     // Bind VAO
     glBindVertexArray(VAO);
 
-    // Ajouter les couleurs : chaque sommet a une couleur différente
+    // Ajouter les couleurs : chaque sommet a une couleur diffÃ©rente
     std::vector<float> colors = {
-        1.0f, 0.0f, 0.0f, 1.0f, // Red
-        0.0f, 1.0f, 0.0f, 1.0f, // Green
-        0.0f, 0.0f, 1.0f, 1.0f, // Blue
-        1.0f, 1.0f, 0.0f, 1.0f, // Yellow
-        1.0f, 0.0f, 1.0f, 1.0f, // Magenta
-        0.0f, 1.0f, 1.0f, 1.0f, // Cyan
-        1.0f, 0.5f, 0.0f, 1.0f, // Orange
-        0.5f, 0.0f, 0.5f, 1.0f  // Purple
+       1.0f, 0.0f, 0.0f, 1.0f, // Coin 0 â†’ Rouge
+       0.0f, 1.0f, 0.0f, 1.0f, // Coin 1 â†’ Vert
+       0.0f, 0.0f, 1.0f, 1.0f, // Coin 2 â†’ Bleu
+       1.0f, 1.0f, 0.0f, 1.0f, // Coin 3 â†’ Jaune
+       1.0f, 0.0f, 1.0f, 1.0f, // Coin 4 â†’ Magenta
+       0.0f, 1.0f, 1.0f, 1.0f, // Coin 5 â†’ Cyan
+       1.0f, 0.5f, 0.0f, 1.0f, // Coin 6 â†’ Orange
+       0.5f, 0.0f, 0.5f, 1.0f  // Coin 7 â†’ Violet
     };
-
-    //Eigen::Vector3d(-halfSize.x(), -halfSize.y(), -halfSize.z()), // Coin 0
-    //    Eigen::Vector3d(halfSize.x(), -halfSize.y(), -halfSize.z()),  // Coin 1
-    //    Eigen::Vector3d(halfSize.x(), -halfSize.y(), halfSize.z()),   // Coin 2
-    //    Eigen::Vector3d(-halfSize.x(), -halfSize.y(), halfSize.z()),  // Coin 3
-    //    Eigen::Vector3d(-halfSize.x(), halfSize.y(), -halfSize.z()),  // Coin 4
-    //    Eigen::Vector3d(halfSize.x(), halfSize.y(), -halfSize.z()),   // Coin 5
-    //    Eigen::Vector3d(halfSize.x(), halfSize.y(), halfSize.z()),    // Coin 6
-    //    Eigen::Vector3d(-halfSize.x(), halfSize.y(), halfSize.z())    // Coin 7
-
-    //for (int i = 0; i < 8; ++i) {
-    //    lineVertices.push_back(corners[i].coeff(0)); // x
-    //    lineVertices.push_back(corners[i].coeff(1)); // y
-    //    lineVertices.push_back(corners[i].coeff(2)); // z
-    //}
-
-    //std::vector<unsigned int> indices = {
-    //    0, 1,  // Arête entre Coin 0 et Coin 1
-    //    1, 2,  // Arête entre Coin 1 et Coin 2
-    //    2, 3,  // Arête entre Coin 2 et Coin 3
-    //    3, 0,  // Arête entre Coin 3 et Coin 0
-    //    4, 5,  // Arête entre Coin 4 et Coin 5
-    //    5, 6,  // Arête entre Coin 5 et Coin 6
-    //    6, 7,  // Arête entre Coin 6 et Coin 7
-    //    7, 4,  // Arête entre Coin 7 et Coin 4
-    //    0, 4,  // Arête entre Coin 0 et Coin 4
-    //    1, 5,  // Arête entre Coin 1 et Coin 5
-    //    2, 6,  // Arête entre Coin 2 et Coin 6
-    //    3, 7   // Arête entre Coin 3 et Coin 7
-    //};
 
     // Combine positions et couleurs dans un seul tableau
     std::vector<float> verticesWithColor;
@@ -169,7 +139,7 @@ void OpenGL_Renderer::DebugColliderDraw(std::vector<float> lineVertices, std::ve
         verticesWithColor.push_back(colors[i * 4 + 3]);
     }
 
-    // Bind VBO et charger les données des sommets (avec couleurs)
+    // Bind VBO et charger les donnÃ©es des sommets (avec couleurs)
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, verticesWithColor.size() * sizeof(float), verticesWithColor.data(), GL_STATIC_DRAW);
 
@@ -182,7 +152,7 @@ void OpenGL_Renderer::DebugColliderDraw(std::vector<float> lineVertices, std::ve
     glEnableVertexAttribArray(0);
 
     // Configurer l'attribut de couleur (4 composantes par sommet)
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float))); // Couleur commence à l'index 3
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float))); // Couleur commence Ã  l'index 3
     glEnableVertexAttribArray(1);
 
     // Utiliser glPolygonMode pour afficher en mode lignes
@@ -191,7 +161,7 @@ void OpenGL_Renderer::DebugColliderDraw(std::vector<float> lineVertices, std::ve
     // Dessiner les lignes du colliseur
     glDrawElements(GL_LINES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
 
-    // Réactiver le mode normal (mode plein)
+    // RÃ©activer le mode normal (mode plein)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // Retour au mode remplissage des polygones
 
     // Configurer pour dessiner des points
