@@ -217,7 +217,7 @@ int main()
 
 
         // Update first cube
-        //cubeTransform->SetRotation(glm::vec3(rotate, 0.0f, 0.0f));
+        //cubeTransform->SetRotation(glm::vec3(rotate, (rotate * 3), 0.0f));
         glm::mat4 cubeWorld = cubeTransform->GetTransformMatrix();
         cubeCollider->m_orientedBoundingBox.UpdateOBBGlobalBounds(cubeWorld);
 
