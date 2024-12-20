@@ -73,7 +73,7 @@ std::map<std::string, std::string> faceColors = {
     {"Bottom", "Magenta"}
 };
 
-void PhysicSystem::SearchInplicatedFace(OBB& obb, const std::vector<Eigen::Vector3d>& collisionPoints, std::vector<std::string>& implicatedFaces) {
+void PhysicSystem::SearchReceiverInplicatedFace(OBB& obb, const std::vector<Eigen::Vector3d>& collisionPoints, std::vector<std::string>& implicatedFaces) {
     implicatedFaces.clear();
 
     // Parcourir les points de collision
@@ -150,7 +150,7 @@ bool PhysicSystem::OBB_Collision(OBB& obb1, OBB& obb2) {
         if (!collisionPointsOBB2.empty()) {
             std::vector<std::string> implicatedFaces1;
             // obb1 is the receiver, collisionPointsOBB2 are the collision points of the penetrator
-            SearchInplicatedFace(obb1, collisionPointsOBB2, implicatedFaces1);
+            SearchReceiverInplicatedFace(obb1, collisionPointsOBB2, implicatedFaces1);
 
             if (!implicatedFaces1.empty()) {
                 std::cout << "Impacted faces OBB1 (right) (receiver): ";
@@ -170,7 +170,7 @@ bool PhysicSystem::OBB_Collision(OBB& obb1, OBB& obb2) {
         if (!collisionPointsOBB1.empty()) {
             std::vector<std::string> implicatedFaces2;
             // obb2 is the receiver, collisionPointsOBB1 are the collision points of the penetrator
-            SearchInplicatedFace(obb2, collisionPointsOBB1, implicatedFaces2);
+            SearchReceiverInplicatedFace(obb2, collisionPointsOBB1, implicatedFaces2);
 
             if (!implicatedFaces2.empty()) {
                 std::cout << "Impacted faces OBB2 (left) (receiver): ";

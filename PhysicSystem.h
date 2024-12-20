@@ -9,7 +9,7 @@ public:
 
 private:
     // part of check collision
-    void SearchInplicatedFace(OBB& obb, const std::vector<Eigen::Vector3d>& collisionPoints, std::vector<std::string>& implicatedFaces);
+    void SearchReceiverInplicatedFace(OBB& obb, const std::vector<Eigen::Vector3d>& collisionPoints, std::vector<std::string>& implicatedFaces);
 
     //intermediate
     std::vector<Eigen::Vector3d> GenerateAxes(const OBB& obb1, const OBB& obb2);
