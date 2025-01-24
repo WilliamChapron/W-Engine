@@ -13,6 +13,9 @@
     <Filter Include="Res">
       <UniqueIdentifier>{6f48fb0d-5f72-4fea-b990-36e16427a937}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Demos">
+      <UniqueIdentifier>{c6ea4383-09b5-4485-9d9f-fcdb09b40fd0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -103,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="GLFWLoader.cpp">
       <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo1-RocketLaunchSimulation.cpp">
+      <Filter>Demos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

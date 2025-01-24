@@ -138,6 +138,7 @@
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Context.cpp" />
+    <ClCompile Include="Demo1-RocketLaunchSimulation.cpp" />
     <ClCompile Include="extern\stb_image.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
