@@ -30,6 +30,11 @@ void Transform::UpdateVectors() {
     m_forward = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f)));
     m_right = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)));
     m_up = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f)));
+
+    // Affichage des vecteurs
+    //std::cout << "Forward: (" << m_forward.x << ", " << m_forward.y << ", " << m_forward.z << ")\n";
+    //std::cout << "Right: (" << m_right.x << ", " << m_right.y << ", " << m_right.z << ")\n";
+    std::cout << "Up: (" << m_up.x << ", " << m_up.y << ", " << m_up.z << ")\n";
 }
 
 void Transform::UpdateWorldMatrix() {

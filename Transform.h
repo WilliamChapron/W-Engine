@@ -19,12 +19,13 @@ public:
 
     glm::mat4 GetWorldMatrix() const { return m_worldMatrix; }
 
+    glm::vec3 m_rotation;
+
 private:
     void UpdateWorldMatrix();
     void UpdateVectors();
 
     glm::vec3 m_position;
-    glm::vec3 m_rotation;
     glm::vec3 m_scale;
     glm::mat4 m_worldMatrix;
 
