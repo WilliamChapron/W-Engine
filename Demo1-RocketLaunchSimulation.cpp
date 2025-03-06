@@ -260,8 +260,8 @@ int main()
 
 
 
-        glm::mat4 cubeWorld = cubeTransform->GetTransformMatrix();
-        glm::mat4 coneRocketWorld = coneRocketTransform->GetTransformMatrix();
+        glm::mat4 cubeWorld = cubeTransform->GetWorldMatrix();
+        glm::mat4 coneRocketWorld = coneRocketTransform->GetWorldMatrix();
 
 
 
@@ -275,7 +275,7 @@ int main()
         renderer.Draw(coneRocket);
 
         for (int i = 0; i < 4; i++) {
-            glm::mat4 engineWorld = engineTransforms[i]->GetTransformMatrix();
+            glm::mat4 engineWorld = engineTransforms[i]->GetWorldMatrix();
             shPrimitive->UpdateMatrices(engineWorld, view, projection);
             renderer.Draw(engines[i]);
         }

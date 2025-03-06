@@ -1,8 +1,7 @@
 #include "pch.h"
 #include "Camera.h"
 
-Camera::Camera(glm::vec3 position, glm::vec3 target, glm::vec3 up)
-    : m_position(position), m_target(target), m_up(up), m_yaw(-90.0f), m_pitch(0.0f) {
+Camera::Camera(glm::vec3 position, glm::vec3 target, glm::vec3 up) : m_position(position), m_target(target), m_up(up), m_yaw(-90.0f), m_pitch(0.0f) {
     m_transform.SetPosition(position);
     m_transform.SetRotation(glm::vec3(m_pitch, m_yaw, 0.0f)); // Initialisation de la rotation
 }
@@ -32,7 +31,7 @@ void Camera::SetPosition(const glm::vec3& position) {
     m_transform.SetPosition(position);
 }
 
-// Déplacer la caméra
+
 void Camera::MoveForward(float amount) {
     glm::vec3 front = glm::normalize(m_target - m_position);  // Direction avant
     m_position += amount * front;
@@ -52,15 +51,15 @@ void Camera::Rotate(float xOffset, float yOffset) {
     m_yaw += xOffset;
     m_pitch += yOffset;
 
-    // Limites sur le pitch pour éviter un flip de la caméra
+    // camera limit
     if (m_pitch > 89.0f)
         m_pitch = 89.0f;
     if (m_pitch < -89.0f)
         m_pitch = -89.0f;
 
-    // Appliquer la rotation directement à la transformation de la caméra
+    // xy 
     m_transform.SetRotation(glm::vec3(m_pitch, m_yaw, 0.0f));
 
-    // Recalcule la matrice de vue après la rotation
+    // 
     UpdateViewMatrix();
 }

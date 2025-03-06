@@ -9,17 +9,26 @@ public:
     void SetRotation(const glm::vec3& rotation);
     void SetScale(const glm::vec3& scale);
 
-    glm::vec3 GetPosition() const;
-    glm::vec3 GetRotation() const;
-    glm::vec3 GetScale() const;
+    inline glm::vec3 GetPosition() const { return m_position; }
+    inline glm::vec3 GetRotation() const { return m_rotation; }
+    inline glm::vec3 GetScale() const { return m_scale; }
 
-    glm::mat4 GetTransformMatrix() const;
+    inline glm::mat4 GetWorldMatrix() const { return m_worldMatrix;}
+
+    inline glm::vec3 GetForward() const { return m_forward; }
+    inline glm::vec3 GetRight() const { return m_right; }
+    inline glm::vec3 GetUp() const { return m_up; }
 
 private:
     void UpdateWorldMatrix();
 
-    glm::vec3 m_Position;
-    glm::vec3 m_Rotation;
-    glm::vec3 m_Scale;
-    glm::mat4 m_WorldMatrix;
+    glm::vec3 m_position;
+    glm::vec3 m_rotation;
+    glm::vec3 m_scale;
+    glm::mat4 m_worldMatrix;
+
+
+    glm::vec3 m_forward;
+    glm::vec3 m_right;
+    glm::vec3 m_up;
 };

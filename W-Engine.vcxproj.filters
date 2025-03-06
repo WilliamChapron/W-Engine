@@ -16,6 +16,9 @@
     <Filter Include="Demos">
       <UniqueIdentifier>{c6ea4383-09b5-4485-9d9f-fcdb09b40fd0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\DataStructures">
+      <UniqueIdentifier>{143b925c-44bb-46ab-9205-5f2867303789}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -155,9 +158,6 @@
       <Filter>Physic</Filter>
     </ClInclude>
     <ClInclude Include="extern\stb_image.h" />
-    <ClInclude Include="RenderStructures.hpp">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="OpenGL_Material.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -191,9 +191,6 @@
     <ClInclude Include="BoxCollider.h">
       <Filter>Physic</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicStructures.hpp">
-      <Filter>Physic</Filter>
-    </ClInclude>
     <ClInclude Include="PhysicSystem.h">
       <Filter>Physic</Filter>
     </ClInclude>
@@ -202,6 +199,12 @@
     </ClInclude>
     <ClInclude Include="GLFWLoader.h">
       <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStructures.hpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicStructures.hpp">
+      <Filter>Core\DataStructures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
