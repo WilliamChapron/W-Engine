@@ -10,8 +10,6 @@ public:
 
     void Bind(GLuint slot = 0) const;
 
-    void Test() override {};
-
     GLuint GetID() { return m_textureID; };
 
 

@@ -144,11 +144,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="GLFWLoader.cpp" />
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MinimalistRender.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="OpenGL_Context.cpp" />
     <ClCompile Include="OpenGL_Material.cpp" />
-    <ClCompile Include="OpenGL_Mesh.cpp" />
     <ClCompile Include="OpenGL_Renderer.cpp" />
     <ClCompile Include="OpenGL_Shader.cpp" />
     <ClCompile Include="OpenGL_SubMesh.cpp" />
@@ -180,9 +180,9 @@
     <ClInclude Include="extern\stb_image.h" />
     <ClInclude Include="GLFWLoader.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="OpenGL_Context.h" />
     <ClInclude Include="OpenGL_Material.h" />
-    <ClInclude Include="OpenGL_Mesh.h" />
     <ClInclude Include="OpenGL_Renderer.h" />
     <ClInclude Include="OpenGL_Shader.h" />
     <ClInclude Include="OpenGL_SubMesh.h" />

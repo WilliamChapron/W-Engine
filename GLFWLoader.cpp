@@ -4,7 +4,6 @@
 #include "Texture.h"
 #include "Material.h"
 
-#include "OpenGL_Mesh.h"
 #include "OpenGL_SubMesh.h"
 #include "OpenGL_Texture.h"
 #include "OpenGL_Material.h"
