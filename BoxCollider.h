@@ -93,16 +93,6 @@ struct OBB {
     }
 };
 
-
-//Eigen::Vector3d(-halfSize.x(), -halfSize.y(), -halfSize.z()), // Coin 0 -> Rouge (Red)
-//Eigen::Vector3d(halfSize.x(), -halfSize.y(), -halfSize.z()),  // Coin 1 -> Vert (Green)
-//Eigen::Vector3d(halfSize.x(), -halfSize.y(), halfSize.z()),   // Coin 2 -> Bleu (Blue)
-//Eigen::Vector3d(-halfSize.x(), -halfSize.y(), halfSize.z()),  // Coin 3 -> Jaune (Yellow)
-//Eigen::Vector3d(-halfSize.x(), halfSize.y(), -halfSize.z()),  // Coin 4 -> Magenta (Magenta)
-//Eigen::Vector3d(halfSize.x(), halfSize.y(), -halfSize.z()),   // Coin 5 -> Cyan (Cyan)
-//Eigen::Vector3d(halfSize.x(), halfSize.y(), halfSize.z()),    // Coin 6 -> Orange (Orange)
-//Eigen::Vector3d(-halfSize.x(), halfSize.y(), halfSize.z())    // Coin 7 -> Violet (Purple)
-
 struct AABB {
 	// Local base position (without transformation)
 	std::array<float, 3> bMin;
@@ -221,6 +211,4 @@ public:
 	BoxCollider(std::vector<Vertex>& vertices);
 
 	~BoxCollider() {};
-
-
 };

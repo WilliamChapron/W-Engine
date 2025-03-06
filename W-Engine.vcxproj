@@ -134,7 +134,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Body.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Context.cpp" />
@@ -147,7 +146,6 @@
     <ClCompile Include="GLFWLoader.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
-    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="OpenGL_Context.cpp" />
     <ClCompile Include="OpenGL_Material.cpp" />
     <ClCompile Include="OpenGL_Mesh.cpp" />
@@ -165,16 +163,16 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="RocketLaunchSimulation.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="OpenGL_Texture.cpp" />
     <ClCompile Include="SubMesh.cpp" />
-    <ClCompile Include="Test1.cpp" />
+    <ClCompile Include="PhysicsCollision.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Body.h" />
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Context.h" />
@@ -182,7 +180,6 @@
     <ClInclude Include="extern\stb_image.h" />
     <ClInclude Include="GLFWLoader.h" />
     <ClInclude Include="Material.h" />
-    <ClInclude Include="Mesh.h" />
     <ClInclude Include="OpenGL_Context.h" />
     <ClInclude Include="OpenGL_Material.h" />
     <ClInclude Include="OpenGL_Mesh.h" />
