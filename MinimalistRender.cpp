@@ -25,7 +25,6 @@
 //Physic
 #include "Camera.h" 
 #include "Transform.h" 
-#include "Body.h"
 
 #include "Primitive.h"
 
@@ -135,8 +134,8 @@ int main()
     //Transform* bodyT = body.GetTransform();
 
     Transform* bodyT = new Transform();
-
     Transform* bodyT2 = new Transform();
+
 
     while (!glfwWindowShouldClose(window))
     {

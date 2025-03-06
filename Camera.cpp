@@ -1,10 +1,12 @@
 #include "pch.h"
 #include "Camera.h"
 
-Camera::Camera(glm::vec3 position, glm::vec3 target, glm::vec3 up)
-    : m_position(position), m_target(target), m_up(up), m_yaw(-90.0f), m_pitch(0.0f) {
+Camera::Camera(glm::vec3 position, glm::vec3 target, glm::vec3 up): m_position(position), m_target(target), m_up(up), m_yaw(-90.0f), m_pitch(0.0f) 
+{ 
     m_transform.SetPosition(position);
-    m_transform.SetRotation(glm::vec3(m_pitch, m_yaw, 0.0f)); // Initialisation de la rotation
+    m_transform.SetRotation(glm::vec3(m_pitch, m_yaw, 0.0f)); 
+
+    UpdateViewMatrix();
 }
 
 void Camera::UpdateViewMatrix() {
@@ -15,7 +17,6 @@ void Camera::UpdateViewMatrix() {
     front.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
     m_target = m_position + glm::normalize(front);
 
-    // Met à jour la matrice de vue
     m_view = glm::lookAt(m_position, m_target, m_up);
 }
 
