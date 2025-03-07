@@ -193,8 +193,8 @@ bool PhysicSystem::OBB_Collision(OBB& obb1, OBB& obb2) {
     return !collisionPointsOBB1.empty() || !collisionPointsOBB2.empty();
 }
 
-
-bool PhysicSystem::DebugLogCollisionOnly_OBB_Collision(OBB& obb1, OBB& obb2) {
+// COLLISION ONLY
+bool PhysicSystem::TestOBBvsOBB_CollisionOnly(OBB& obb1, OBB& obb2) {
     std::vector<Eigen::Vector3d> axes = GenerateAxes(obb1, obb2);
     bool isColliding = false;
 
@@ -220,4 +220,56 @@ bool PhysicSystem::DebugLogCollisionOnly_OBB_Collision(OBB& obb1, OBB& obb2) {
     }
 
     return isColliding;
+}
+
+bool PhysicSystem::TestAABBvsAABB_CollisionOnly(AABB& aabb1, AABB& aabb2) 
+{
+    // x
+    bool collisionX = aabb1.max[0] >= aabb2.min[0] && aabb2.max[0] >= aabb1.min[0];
+    // y
+    bool collisionY = aabb1.max[1] >= aabb2.min[1] && aabb2.max[1] >= aabb1.min[1];
+    // z
+    bool collisionZ = aabb1.max[2] >= aabb2.min[2] && aabb2.max[2] >= aabb1.min[2];
+
+    return collisionX && collisionY && collisionZ;
+}
+
+// RETRIEVE IMPLICATED POINTS
+bool PhysicSystem::TestOBBvsOBB_CollisionWithPoints(OBB& obb1, OBB& obb2, std::vector<Eigen::Vector3d>&collisionPointsOBB1, std::vector<Eigen::Vector3d>&collisionPointsOBB2)
+{
+    std::vector<Eigen::Vector3d> axes = GenerateAxes(obb1, obb2);
+
+    // Tester les coins de obb1
+    for (size_t i = 0; i < obb1.corners.size(); ++i) {
+        const auto& corner1 = obb1.corners[i];
+        if (TestCornerOnAxes(corner1, axes, obb2)) {
+            collisionPointsOBB1.push_back(corner1);
+        }
+    }
+
+    // Tester les coins de obb2
+    for (size_t i = 0; i < obb2.corners.size(); ++i) {
+        const auto& corner2 = obb2.corners[i];
+        if (TestCornerOnAxes(corner2, axes, obb1)) {
+            collisionPointsOBB2.push_back(corner2);
+        }
+    }
+
+    // Affichage des points de collision
+    if (!collisionPointsOBB1.empty()) {
+        std::cout << "Collision points in OBB1:\n";
+        for (const auto& point : collisionPointsOBB1) {
+            std::cout << point.transpose() << "\n";  // Affiche les coordonnées du point de collision
+        }
+    }
+
+    if (!collisionPointsOBB2.empty()) {
+        std::cout << "Collision points in OBB2:\n";
+        for (const auto& point : collisionPointsOBB2) {
+            std::cout << point.transpose() << "\n";  // Affiche les coordonnées du point de collision
+        }
+    }
+
+    // Si des points de collision ont été trouvés, renvoyer true
+    return !collisionPointsOBB1.empty() || !collisionPointsOBB2.empty();
 }

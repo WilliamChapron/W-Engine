@@ -1,19 +1,37 @@
 #pragma once
 
 struct OBB;
+struct AABB;
+
+//#include "BoxCollider.h"
 
 class PhysicSystem {
 public:
     //check collision
     bool OBB_Collision(OBB& obb1, OBB& obb2);
 
-    //bool AABB_Collision(BoxCollider* box1, BoxCollider* box2);
 
 
 
 
-    // Debug *******************
-    bool DebugLogCollisionOnly_OBB_Collision(OBB& obb1, OBB& obb2);
+
+    // ******** Collision Only ********
+    bool TestOBBvsOBB_CollisionOnly(OBB& obb1, OBB& obb2);
+    bool TestAABBvsAABB_CollisionOnly(AABB& aabb1, AABB& aabb2);
+    //Not Implemented
+    //bool TestAABBvsOBB_CollisionOnly(OBB& obb1, AABB& obb2);
+    //
+
+    // ******** Collision With Points Implicated ********
+    bool TestOBBvsOBB_CollisionWithPoints(OBB& obb1, OBB& obb2,
+        std::vector<Eigen::Vector3d>& collisionPointsOBB1,
+        std::vector<Eigen::Vector3d>& collisionPointsOBB2);
+    
+
+
+    // ******** Collision With Faces Implicated ********
+
+
 
 private:
     // part of check collision
