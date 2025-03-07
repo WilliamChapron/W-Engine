@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 class Transform {
 public:
     Transform();
@@ -33,4 +35,5 @@ private:
     glm::vec3 m_right;
     glm::vec3 m_up;
 };
+
 

@@ -21,9 +21,9 @@ public:
     void Draw(RenderableEntity* renderObject) override;
     void Present() override;                          
 
-    // Debug
-    void DebugDraw(RenderableEntity* renderObject);
+    void WireFrameDraw(RenderableEntity* renderObject);
 
-    void DebugColliderDraw(std::vector<float> lineVertices, std::vector<unsigned int> indices, OpenGL_Shader* shader);
+
+    void DrawBoundingBoxCorners(std::vector<float> lineVertices, std::vector<unsigned int> indices, OpenGL_Shader* shader);
 };
 

@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "GLFWLoader.h"
+#include "GLTFLoader.h"
 
 #include "Texture.h"
 #include "Material.h"
@@ -10,7 +10,7 @@
 
 #include "ResourceManager.hpp"
 
-void GLFWLoader::LoadFile(const std::string& filePath) {
+void GLTFLoader::LoadFile(const std::string& filePath) {
     m_scene = m_importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
 
     if (!m_scene || m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode) {
@@ -59,7 +59,7 @@ void GLFWLoader::LoadFile(const std::string& filePath) {
     }
 }
 
-void GLFWLoader::LoadAiMesh(aiMesh* mesh, SubMesh* subMesh) {
+void GLTFLoader::LoadAiMesh(aiMesh* mesh, SubMesh* subMesh) {
     for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
         Vertex vertex;
         vertex.position[0] = mesh->mVertices[j].x;
@@ -94,7 +94,7 @@ void GLFWLoader::LoadAiMesh(aiMesh* mesh, SubMesh* subMesh) {
 
 // All Mesh
 
-void GLFWLoader::StoreSceneAllVertices() {
+void GLTFLoader::StoreSceneAllVertices() {
     for (unsigned int i = 0; i < m_scene->mNumMeshes; i++) {
         aiMesh* mesh = m_scene->mMeshes[i];
 

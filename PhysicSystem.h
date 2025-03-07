@@ -7,6 +7,14 @@ public:
     //check collision
     bool OBB_Collision(OBB& obb1, OBB& obb2);
 
+    //bool AABB_Collision(BoxCollider* box1, BoxCollider* box2);
+
+
+
+
+    // Debug *******************
+    bool DebugLogCollisionOnly_OBB_Collision(OBB& obb1, OBB& obb2);
+
 private:
     // part of check collision
     void SearchReceiverInplicatedFace(OBB& obb, const std::vector<Eigen::Vector3d>& collisionPoints, std::vector<std::string>& implicatedFaces);

@@ -13,6 +13,12 @@
     <Filter Include="Res">
       <UniqueIdentifier>{6f48fb0d-5f72-4fea-b990-36e16427a937}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Demos">
+      <UniqueIdentifier>{a4d3bf3c-437a-4cf1-b854-8b50fe48831d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DataStructures">
+      <UniqueIdentifier>{2c2f45b8-bbe9-4e0f-aa15-87a58cac0a65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -27,16 +33,10 @@
     <ClCompile Include="Context.cpp">
       <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="OpenGL_Context.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenGL_Mesh.cpp">
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="OpenGL_Renderer.cpp">
@@ -53,9 +53,6 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Body.cpp">
-      <Filter>Physic</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Physic</Filter>
@@ -94,15 +91,25 @@
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Physic</Filter>
     </ClCompile>
-    <ClCompile Include="Test1.cpp" />
     <ClCompile Include="RigidBody.cpp">
       <Filter>Physic</Filter>
     </ClCompile>
     <ClCompile Include="PhysicSystem.cpp">
       <Filter>Physic</Filter>
     </ClCompile>
-    <ClCompile Include="GLFWLoader.cpp">
-      <Filter>Render</Filter>
+    <ClCompile Include="MinimalistRender.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="RocketLaunchSimulation.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="GLTFLoader.cpp" />
+    <ClCompile Include="OpenGL_Mesh.cpp" />
+    <ClCompile Include="AABBCollision.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="OBBCollision.cpp">
+      <Filter>Demos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -119,9 +126,6 @@
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="OpenGL_Context.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenGL_Mesh.h">
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="OpenGL_Renderer.h">
@@ -145,13 +149,7 @@
     <ClInclude Include="Camera.h">
       <Filter>Physic</Filter>
     </ClInclude>
-    <ClInclude Include="Body.h">
-      <Filter>Physic</Filter>
-    </ClInclude>
     <ClInclude Include="extern\stb_image.h" />
-    <ClInclude Include="RenderStructures.hpp">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="OpenGL_Material.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -185,17 +183,19 @@
     <ClInclude Include="BoxCollider.h">
       <Filter>Physic</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicStructures.hpp">
-      <Filter>Physic</Filter>
-    </ClInclude>
     <ClInclude Include="PhysicSystem.h">
       <Filter>Physic</Filter>
     </ClInclude>
     <ClInclude Include="RigidBody.h">
       <Filter>Physic</Filter>
     </ClInclude>
-    <ClInclude Include="GLFWLoader.h">
-      <Filter>Render</Filter>
+    <ClInclude Include="GLTFLoader.h" />
+    <ClInclude Include="OpenGL_Mesh.h" />
+    <ClInclude Include="RenderStructures.hpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicStructures.hpp">
+      <Filter>Core\DataStructures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,7 +3,9 @@
 
 #include "OpenGL_Shader.h"
 
-OpenGL_Shader::OpenGL_Shader() : m_programID(0) {}
+OpenGL_Shader::OpenGL_Shader() : m_programID(0) 
+{
+}
 
 OpenGL_Shader::~OpenGL_Shader() {
     if (m_programID != 0) {
@@ -61,7 +63,6 @@ bool OpenGL_Shader::Compile(const std::string& vertexPath, const std::string& fr
 }
 
 void OpenGL_Shader::Use() const {
-    //std::cout << "Utilisation du shader avec ID : " << m_programID << std::endl;
     glUseProgram(m_programID);  
 }
 

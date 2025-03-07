@@ -6,7 +6,7 @@ BoxCollider::BoxCollider() {
 
 BoxCollider::BoxCollider(std::vector<Vertex>& vertices)
 {
-	m_boundingVolume.FindMinMaxFromVerticesPack(vertices);
-	m_boundingVolume.CalculateData();
+	m_aabb.FindMinMaxFromVerticesPack(vertices);
+	m_aabb.CalculateData();
 }
 

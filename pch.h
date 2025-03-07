@@ -51,7 +51,7 @@
 
 
 // Stb image (texture)
-#include "extern/stb_image.h" // Inclure ici pour utiliser les fonctions de stb_image
+#include "extern/stb_image.h" 
 
 // Assimp
 #include <assimp/Importer.hpp>

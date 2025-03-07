@@ -192,3 +192,32 @@ bool PhysicSystem::OBB_Collision(OBB& obb1, OBB& obb2) {
 
     return !collisionPointsOBB1.empty() || !collisionPointsOBB2.empty();
 }
+
+
+bool PhysicSystem::DebugLogCollisionOnly_OBB_Collision(OBB& obb1, OBB& obb2) {
+    std::vector<Eigen::Vector3d> axes = GenerateAxes(obb1, obb2);
+    bool isColliding = false;
+
+    for (size_t i = 0; i < obb1.corners.size(); ++i) {
+        const auto& corner1 = obb1.corners[i];
+        if (TestCornerOnAxes(corner1, axes, obb2)) {
+            isColliding = true;
+        }
+    }
+
+    for (size_t i = 0; i < obb2.corners.size(); ++i) {
+        const auto& corner2 = obb2.corners[i];
+        if (TestCornerOnAxes(corner2, axes, obb1)) {
+            isColliding = true;
+        }
+    }
+
+    if (isColliding) {
+        std::cout << "Collision détectée entre les OBB.\n";
+    }
+    else {
+        std::cout << "Aucune collision détectée.\n";
+    }
+
+    return isColliding;
+}

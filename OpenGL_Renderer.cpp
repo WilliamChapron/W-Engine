@@ -75,7 +75,7 @@ void OpenGL_Renderer::Draw(RenderableEntity* renderObject) {
     }
 }
 
-void OpenGL_Renderer::DebugDraw(RenderableEntity* renderObject) {
+void OpenGL_Renderer::WireFrameDraw(RenderableEntity* renderObject) {
     OpenGL_RenderableEntity* glRE = static_cast<OpenGL_RenderableEntity*>(renderObject);
     std::vector<SubMesh*> subMeshArray = glRE->GetSubMeshes();
 
@@ -101,7 +101,7 @@ void OpenGL_Renderer::DebugDraw(RenderableEntity* renderObject) {
 }
 
 
-void OpenGL_Renderer::DebugColliderDraw(std::vector<float> lineVertices, std::vector<unsigned int> indices, OpenGL_Shader* shader) {
+void OpenGL_Renderer::DrawBoundingBoxCorners(std::vector<float> lineVertices, std::vector<unsigned int> indices, OpenGL_Shader* shader) {
     shader->Use();
 
     GLuint VAO, VBO, EBO;

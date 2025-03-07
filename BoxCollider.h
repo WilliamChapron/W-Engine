@@ -16,9 +16,18 @@ static const std::string colors[] = {
 	"Violet"    // Coin 7 -> Violet (Purple)
 };
 
-struct OBB {
-    Eigen::Vector3d center;
-    Eigen::Vector3d size;
+struct BoundingGeometry {
+	Eigen::Vector3d m_center;
+	Eigen::Vector3d m_size;
+
+	virtual void Init(const std::vector<Vertex>& vertices) = 0;
+	virtual void ComputeCenter() = 0;
+	virtual void ComputeSize() = 0;
+	virtual void ComputeMinMaxForAllVertices() = 0;
+	virtual void UpdateGlobalBounds(const glm::mat4& world) = 0;
+};
+
+struct OBB : public BoundingGeometry {
     Eigen::Matrix3d rotation;
     Eigen::Vector3d min, max;
 
@@ -26,7 +35,19 @@ struct OBB {
 
     std::vector<Eigen::Vector3d> corners;
 
-    void ComputeMinMax() {
+	// Initialize OBB
+	void Init(const std::vector<Vertex>& vertices) override {
+		this->vertices = vertices;
+
+		ComputeMinMaxForAllVertices();
+		ComputeCenter();
+		ComputeSize();
+	}
+
+	void ComputeCenter() override { m_center = (min + max) / 2.0; }
+	void ComputeSize() override { m_size = max - min; }
+
+    void ComputeMinMaxForAllVertices() override {
         min = Eigen::Vector3d(std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
         max = Eigen::Vector3d(-std::numeric_limits<double>::max(), -std::numeric_limits<double>::max(), -std::numeric_limits<double>::max());
 
@@ -37,11 +58,7 @@ struct OBB {
         }
     }
 
-    void ComputeCenter() { center = (min + max) / 2.0;}
-
-    void ComputeSize() {size = max - min;}
-
-	void UpdateOBBGlobalBounds(const glm::mat4& world) {
+	void UpdateGlobalBounds(const glm::mat4& world) override {
 
 		Eigen::Matrix3d rotationMatrix;
 
@@ -55,12 +72,12 @@ struct OBB {
 		Eigen::Vector3d translation(world[3][0], world[3][1], world[3][2]);
 
 
-		ComputeMinMax();
+		ComputeMinMaxForAllVertices();
 		ComputeCenter();
 		ComputeSize();
 
 		// Calculer la taille et la position des coins
-		Eigen::Vector3d halfSize = size.cast<double>() / 2.0;
+		Eigen::Vector3d halfSize = m_size.cast<double>() / 2.0;
 
 		// Définir les coins locaux avant rotation
 		Eigen::Vector3d localCorners[8] = {
@@ -79,18 +96,10 @@ struct OBB {
 
 		for (int i = 0; i < 8; ++i) {
 			Eigen::Vector3d rotatedCorner = rotation * localCorners[i];
-			Eigen::Vector3d globalCorner = center + rotatedCorner + translation;
+			Eigen::Vector3d globalCorner = m_center + rotatedCorner + translation;
 			corners.push_back(globalCorner);
 		}
 	}
-
-    void InitializeOBB(const std::vector<Vertex>& vertices) {
-        this->vertices = vertices;
-
-        ComputeMinMax();
-        ComputeCenter();
-        ComputeSize();
-    }
 };
 
 struct AABB {
@@ -201,11 +210,18 @@ struct AABB {
 
 };
 
-class BoxCollider
+class Collider {
+public:
+	
+};
+
+class BoxCollider : public Collider
 {
 public:
-	AABB m_boundingVolume;
-	OBB m_orientedBoundingBox;
+	// Axis-aligned bounding boxes
+	AABB m_aabb;
+	// oriented bounding box
+	OBB m_obb;
 
 	BoxCollider();
 	BoxCollider(std::vector<Vertex>& vertices);

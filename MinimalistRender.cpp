@@ -20,7 +20,7 @@
 //#include "OpenGL_RenderableEntity.h"
 //#include "RenderableEntity.h"
 //
-//#include "GLFWLoader.h"
+//#include "GLTFLoader.h"
 //
 ////Physic
 //#include "Camera.h" 
@@ -84,14 +84,17 @@
 //    Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 //    //
 //
-//    GLFWLoader loader;
+//    GLTFLoader loader;
 //    loader.LoadFile("res/models/moto/scene.gltf");
 //
 //    RenderableEntity* renderableEntity = new OpenGL_RenderableEntity();
 //    Shader* shader = new OpenGL_Shader();
+//
 //    if (!shader->Compile("res\\shaders\\vertex.glsl", "res\\shaders\\fragment.glsl")) {
 //        std::cerr << "Shader compilation failed!" << std::endl;
 //    }
+//
+//
 //    renderableEntity->SetMaterials(loader.m_materials);
 //    for (int i = 0; i < loader.m_materials.size(); i++) {
 //        loader.m_materials[i]->SetShader(shader);
@@ -117,6 +120,7 @@
 //    Material* material = new OpenGL_Material();
 //
 //    material->SetShader(pshader);
+//
 //    pyramid->AddMaterial(material);
 //    pyramid->AddSubMesh(submesh);
 //
@@ -177,7 +181,7 @@
 //
 //
 //        sh->UpdateMatrices(world, view, projection);
-//        renderer.Draw(renderableEntity);
+//        renderer.WireFrameDraw(renderableEntity);
 //
 //        shPrimitive->UpdateMatrices(pyramidWorld, view, projection);
 //        renderer.Draw(pyramid);

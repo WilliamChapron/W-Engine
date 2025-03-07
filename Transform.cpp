@@ -34,7 +34,7 @@ void Transform::UpdateVectors() {
     // Affichage des vecteurs
     //std::cout << "Forward: (" << m_forward.x << ", " << m_forward.y << ", " << m_forward.z << ")\n";
     //std::cout << "Right: (" << m_right.x << ", " << m_right.y << ", " << m_right.z << ")\n";
-    std::cout << "Up: (" << m_up.x << ", " << m_up.y << ", " << m_up.z << ")\n";
+    //std::cout << "Up: (" << m_up.x << ", " << m_up.y << ", " << m_up.z << ")\n";
 }
 
 void Transform::UpdateWorldMatrix() {
