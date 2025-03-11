@@ -165,17 +165,23 @@ bool PhysicSystem::TestAABBvsOBB_CollisionOnly(BoundingGeometry& bg1, BoundingGe
     std::vector<Eigen::Vector3d>& c1 = bg1.GetCorners();
     std::vector<Eigen::Vector3d>& c2 = bg2.GetCorners();
 
+    // Teste les coins de bg1 par rapport aux axes générés
     for (size_t i = 0; i < c1.size(); ++i) {
         const auto& corner1 = c1[i];
         if (TestCornerOnAxes(corner1, axes, bg2)) {
             isColliding = true;
+            break;  // Collision trouvée, on sort de la boucle
         }
     }
 
-    for (size_t i = 0; i < c2.size(); ++i) {
-        const auto& corner2 = c2[i];
-        if (TestCornerOnAxes(corner2, axes, bg1)) {
-            isColliding = true;
+    // Teste les coins de bg2 par rapport aux axes générés
+    if (!isColliding) {
+        for (size_t i = 0; i < c2.size(); ++i) {
+            const auto& corner2 = c2[i];
+            if (TestCornerOnAxes(corner2, axes, bg1)) {
+                isColliding = true;
+                break;  // Collision trouvée, on sort de la boucle
+            }
         }
     }
 
@@ -188,6 +194,7 @@ bool PhysicSystem::TestAABBvsOBB_CollisionOnly(BoundingGeometry& bg1, BoundingGe
 
     return isColliding;
 }
+
 
 #pragma endregion
 
