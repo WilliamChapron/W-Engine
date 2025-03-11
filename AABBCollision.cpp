@@ -24,7 +24,7 @@
 ////Physic
 //#include "Camera.h" 
 //#include "Transform.h" 
-//#include "BoxCollider.h"
+//#include "Collider.h"
 //
 //#include "Primitive.h"
 //
@@ -155,8 +155,8 @@
 //        dx += 0.1f;
 //        dy += 0.001f;
 //
-//        pyramidCollider->m_aabb.UpdateAABBWithTransform(pyramidWorld);
-//        cubeCollider->m_aabb.UpdateAABBWithTransform(cubeWorld);
+//        pyramidCollider->m_aabb.UpdateGlobalBounds(pyramidWorld);
+//        cubeCollider->m_aabb.UpdateGlobalBounds(cubeWorld);
 //
 //
 //        if (physicSystem->TestAABBvsAABB_CollisionOnly(pyramidCollider->m_aabb, cubeCollider->m_aabb)) {

@@ -1,11 +1,25 @@
 #pragma once
 
+#pragma once
+
+#include <string>
+#include <map>
+#include <vector>
+
+
 struct Vertex {
     float position[3];
     float color[4];
     float normal[3];
     float texCoords[2];
 };
+
+extern const std::string colors[];
+extern std::map<std::string, std::vector<int>> faces;
+extern std::map<std::string, std::string> faceColors;
+
+
+
 
 //
 //

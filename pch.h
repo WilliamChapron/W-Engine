@@ -56,7 +56,7 @@
 // Assimp
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
-#include <assimp/postprocess.h>  // Important pour les flags de post-traitement
+#include <assimp/postprocess.h>  
 
 
 // Intern file, stable file
@@ -67,6 +67,6 @@
 #define EIGEN_DONT_VECTORIZE
 
 #include <Eigen/Dense>
-#include <Eigen/Core>  // Pour Eigen::Vector3f
-#include <Eigen/Geometry>  // Pour les transformations géométriques comme les matrices de rotation
+#include <Eigen/Core>  
+#include <Eigen/Geometry>  
 

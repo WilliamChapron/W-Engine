@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RenderStructures.hpp"
+#include "RenderStructures.h"
 
 class SubMesh;
 class Texture;

@@ -134,8 +134,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AABB.cpp" />
     <ClCompile Include="AABBCollision.cpp" />
-    <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="AABBvsOBBCollision.cpp" />
+    <ClCompile Include="BoundingGeometry.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Context.cpp" />
     <ClCompile Include="extern\stb_image.cpp">
@@ -148,6 +151,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MinimalistRender.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="OBB.cpp" />
     <ClCompile Include="OBBCollision.cpp" />
     <ClCompile Include="OpenGL_Context.cpp" />
     <ClCompile Include="OpenGL_Material.cpp" />
@@ -164,6 +168,7 @@
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="RenderableEntity.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RenderStructures.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="RocketLaunchSimulation.cpp" />
@@ -175,7 +180,9 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="AABB.h" />
+    <ClInclude Include="BoundingGeometry.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Context.h" />
     <ClInclude Include="Define.h" />
@@ -183,6 +190,7 @@
     <ClInclude Include="GLTFLoader.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="OBB.h" />
     <ClInclude Include="OpenGL_Context.h" />
     <ClInclude Include="OpenGL_Material.h" />
     <ClInclude Include="OpenGL_Mesh.h" />
@@ -196,7 +204,7 @@
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="RenderableEntity.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="RenderStructures.hpp" />
+    <ClInclude Include="RenderStructures.h" />
     <ClInclude Include="ResourceManager.hpp" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Shader.h" />

@@ -19,7 +19,7 @@
 //#include "OpenGL_RenderableEntity.h"
 //#include "RenderableEntity.h"
 //
-//#include "GLFWLoader.h"
+//#include "GLTFLoader.h"
 //
 ////Physic
 //#include "Camera.h" 

@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "RenderStructures.hpp"
+#include "RenderStructures.h"
 
 #include "OpenGL_SubMesh.h"
 #include "OpenGL_Material.h"

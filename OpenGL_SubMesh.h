@@ -4,7 +4,7 @@
 
 class OpenGL_Material;
 
-#include "RenderStructures.hpp"
+#include "RenderStructures.h"
 
 class OpenGL_SubMesh : public SubMesh {
 public:

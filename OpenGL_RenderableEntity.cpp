@@ -4,7 +4,7 @@
 #include "OpenGL_Mesh.h"
 #include "SubMesh.h"
 #include "OpenGL_SubMesh.h"
-#include "RenderStructures.hpp"
+#include "RenderStructures.h"
 #include "Primitive.h"
 
 #include "Shader.h"
