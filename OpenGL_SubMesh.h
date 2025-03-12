@@ -6,10 +6,10 @@ class OpenGL_Material;
 
 #include "RenderStructures.h"
 
-class OpenGL_SubMesh : public SubMesh {
+class OpenGL_Submesh : public Submesh {
 public:
-    OpenGL_SubMesh();
-    ~OpenGL_SubMesh();
+    OpenGL_Submesh();
+    ~OpenGL_Submesh();
 
     void Update() override {};
     unsigned int GetVAO() const { return m_VAO; }

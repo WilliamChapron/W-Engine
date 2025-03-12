@@ -158,7 +158,7 @@
     <ClCompile Include="OpenGL_Mesh.cpp" />
     <ClCompile Include="OpenGL_Renderer.cpp" />
     <ClCompile Include="OpenGL_Shader.cpp" />
-    <ClCompile Include="OpenGL_SubMesh.cpp" />
+    <ClCompile Include="OpenGL_Submesh.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
@@ -174,7 +174,7 @@
     <ClCompile Include="RocketLaunchSimulation.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="OpenGL_Texture.cpp" />
-    <ClCompile Include="SubMesh.cpp" />
+    <ClCompile Include="Submesh.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -196,7 +196,7 @@
     <ClInclude Include="OpenGL_Mesh.h" />
     <ClInclude Include="OpenGL_Renderer.h" />
     <ClInclude Include="OpenGL_Shader.h" />
-    <ClInclude Include="OpenGL_SubMesh.h" />
+    <ClInclude Include="OpenGL_Submesh.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="OpenGL_RenderableEntity.h" />
     <ClInclude Include="PhysicStructures.hpp" />
@@ -209,7 +209,7 @@
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="OpenGL_Texture.h" />
-    <ClInclude Include="SubMesh.h" />
+    <ClInclude Include="Submesh.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Window.h" />

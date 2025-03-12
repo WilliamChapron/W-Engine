@@ -25,6 +25,9 @@
     <Filter Include="Physic\Colliders">
       <UniqueIdentifier>{e666bb1c-13b6-47cc-9c0f-127a70d80d2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\Resources">
+      <UniqueIdentifier>{ea6fe767-9225-4644-904d-529688edad78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -39,25 +42,13 @@
     <ClCompile Include="Context.cpp">
       <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="OpenGL_Context.cpp">
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="OpenGL_Renderer.cpp">
       <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="OpenGL_Shader.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenGL_Texture.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
@@ -67,22 +58,7 @@
       <Filter>Physic</Filter>
     </ClCompile>
     <ClCompile Include="extern\stb_image.cpp" />
-    <ClCompile Include="OpenGL_Material.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenGL_SubMesh.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="OpenGL_RenderableEntity.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="SubMesh.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
@@ -106,8 +82,6 @@
     <ClCompile Include="RocketLaunchSimulation.cpp">
       <Filter>Demos</Filter>
     </ClCompile>
-    <ClCompile Include="GLTFLoader.cpp" />
-    <ClCompile Include="OpenGL_Mesh.cpp" />
     <ClCompile Include="AABBCollision.cpp">
       <Filter>Demos</Filter>
     </ClCompile>
@@ -132,6 +106,39 @@
     <ClCompile Include="AABBvsOBBCollision.cpp">
       <Filter>Demos</Filter>
     </ClCompile>
+    <ClCompile Include="OpenGL_Mesh.cpp">
+      <Filter>Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="GLTFLoader.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Render\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Render\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL_Material.cpp">
+      <Filter>Render\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL_Shader.cpp">
+      <Filter>Render\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL_Submesh.cpp">
+      <Filter>Render\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL_Texture.cpp">
+      <Filter>Render\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Render\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Render\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Submesh.cpp">
+      <Filter>Render\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -143,25 +150,13 @@
     <ClInclude Include="Context.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="OpenGL_Context.h">
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="OpenGL_Renderer.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="OpenGL_Shader.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenGL_Texture.h">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
@@ -171,22 +166,7 @@
       <Filter>Physic</Filter>
     </ClInclude>
     <ClInclude Include="extern\stb_image.h" />
-    <ClInclude Include="OpenGL_Material.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenGL_SubMesh.h">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="OpenGL_RenderableEntity.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="SubMesh.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.hpp">
@@ -207,8 +187,6 @@
     <ClInclude Include="RigidBody.h">
       <Filter>Physic</Filter>
     </ClInclude>
-    <ClInclude Include="GLTFLoader.h" />
-    <ClInclude Include="OpenGL_Mesh.h" />
     <ClInclude Include="RenderStructures.h">
       <Filter>Core\DataStructures</Filter>
     </ClInclude>
@@ -227,6 +205,39 @@
     <ClInclude Include="Collider.h">
       <Filter>Physic\Colliders</Filter>
     </ClInclude>
+    <ClInclude Include="OpenGL_Mesh.h">
+      <Filter>Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="GLTFLoader.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Render\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Render\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL_Material.h">
+      <Filter>Render\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL_Shader.h">
+      <Filter>Render\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL_Submesh.h">
+      <Filter>Render\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL_Texture.h">
+      <Filter>Render\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Render\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Render\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Submesh.h">
+      <Filter>Render\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -238,9 +249,17 @@
     <None Include="res\shaders\fragment.glsl">
       <Filter>Res</Filter>
     </None>
-    <None Include="res\shaders\colorV.glsl" />
-    <None Include="res\shaders\colorF.glsl" />
-    <None Include="res\shaders\wireframeF.glsl" />
-    <None Include="res\shaders\wireframeV.glsl" />
+    <None Include="res\shaders\wireframeV.glsl">
+      <Filter>Res</Filter>
+    </None>
+    <None Include="res\shaders\wireframeF.glsl">
+      <Filter>Res</Filter>
+    </None>
+    <None Include="res\shaders\colorV.glsl">
+      <Filter>Res</Filter>
+    </None>
+    <None Include="res\shaders\colorF.glsl">
+      <Filter>Res</Filter>
+    </None>
   </ItemGroup>
 </Project>

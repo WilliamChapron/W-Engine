@@ -1,7 +1,7 @@
 #pragma once
 
 class Material;
-class SubMesh;
+class Submesh;
 
 class GLTFLoader {
 public:
@@ -9,7 +9,7 @@ public:
 
     void LoadFile(const std::string& filePath);
 
-    std::vector<SubMesh*> m_subMeshes;
+    std::vector<Submesh*> m_subMeshes;
     std::vector<Material*> m_materials;
 
 
@@ -24,7 +24,7 @@ public:
 
 
 private:
-    void LoadAiMesh(aiMesh* mesh, SubMesh* subMesh);
+    void LoadAiMesh(aiMesh* mesh, Submesh* subMesh);
 
     Assimp::Importer m_importer;
     const aiScene* m_scene;

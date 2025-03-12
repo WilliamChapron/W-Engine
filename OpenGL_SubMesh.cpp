@@ -2,27 +2,27 @@
 
 #include "RenderStructures.h"
 
-#include "OpenGL_SubMesh.h"
+#include "OpenGL_Submesh.h"
 #include "OpenGL_Material.h"
 
-OpenGL_SubMesh::OpenGL_SubMesh() : m_VAO(0), m_VBO(0), m_EBO(0) 
+OpenGL_Submesh::OpenGL_Submesh() : m_VAO(0), m_VBO(0), m_EBO(0) 
 {
 }
 
-OpenGL_SubMesh::~OpenGL_SubMesh() {
+OpenGL_Submesh::~OpenGL_Submesh() {
     glDeleteVertexArrays(1, &m_VAO);
     glDeleteBuffers(1, &m_VBO);
     glDeleteBuffers(1, &m_EBO);
 }
 
-void OpenGL_SubMesh::Setup(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, int materialID) {
+void OpenGL_Submesh::Setup(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, int materialID) {
     m_vertices = vertices;
     m_indices = indices;
     SetupBinding();
     SetMaterialID(materialID);
 }
 
-void OpenGL_SubMesh::SetupBinding() {
+void OpenGL_Submesh::SetupBinding() {
     // Generate and bind the Vertex Array Object (VAO)
     glGenVertexArrays(1, &m_VAO);
     glGenBuffers(1, &m_VBO);
@@ -59,7 +59,7 @@ void OpenGL_SubMesh::SetupBinding() {
     glBindVertexArray(0);
 }
 
-void OpenGL_SubMesh::Prepare(OpenGL_Material* material) {
+void OpenGL_Submesh::Prepare(OpenGL_Material* material) {
 
     glBindVertexArray(m_VAO);
 }

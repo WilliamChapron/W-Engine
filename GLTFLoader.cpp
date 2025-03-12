@@ -4,7 +4,7 @@
 #include "Texture.h"
 #include "Material.h"
 
-#include "OpenGL_SubMesh.h"
+#include "OpenGL_Submesh.h"
 #include "OpenGL_Texture.h"
 #include "OpenGL_Material.h"
 
@@ -21,7 +21,7 @@ void GLTFLoader::LoadFile(const std::string& filePath) {
     for (unsigned int i = 0; i < m_scene->mNumMeshes; i++) {
         aiMesh* mesh = m_scene->mMeshes[i];
 
-        OpenGL_SubMesh* subMesh = new OpenGL_SubMesh();
+        OpenGL_Submesh* subMesh = new OpenGL_Submesh();
         LoadAiMesh(mesh, subMesh);  
         subMesh->SetupBinding();
         m_subMeshes.push_back(subMesh);  
@@ -59,7 +59,7 @@ void GLTFLoader::LoadFile(const std::string& filePath) {
     }
 }
 
-void GLTFLoader::LoadAiMesh(aiMesh* mesh, SubMesh* subMesh) {
+void GLTFLoader::LoadAiMesh(aiMesh* mesh, Submesh* subMesh) {
     for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
         Vertex vertex;
         vertex.position[0] = mesh->mVertices[j].x;

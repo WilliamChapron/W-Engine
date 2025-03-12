@@ -12,8 +12,8 @@
 #include "Mesh.h"  
 #include "OpenGL_Mesh.h"  
 
-#include "SubMesh.h"  
-#include "OpenGL_SubMesh.h"  
+#include "Submesh.h"  
+#include "OpenGL_Submesh.h"  
 
 #include "RenderableEntity.h"  
 #include "OpenGL_RenderableEntity.h"  
@@ -34,10 +34,10 @@ void OpenGL_Renderer::Clear() {
 
 void OpenGL_Renderer::Draw(RenderableEntity* renderObject) {
     OpenGL_RenderableEntity* glRE = static_cast<OpenGL_RenderableEntity*>(renderObject);
-    std::vector<SubMesh*> subMeshArray = glRE->GetSubMeshes();
+    std::vector<Submesh*> subMeshArray = glRE->GetSubMeshes();
 
     for (int i = 0; i < subMeshArray.size(); i++) {
-        OpenGL_SubMesh* glSubMesh = static_cast<OpenGL_SubMesh*>(subMeshArray[i]);
+        OpenGL_Submesh* glSubMesh = static_cast<OpenGL_Submesh*>(subMeshArray[i]);
 
         // Prepare & draw Submesh
         OpenGL_Material* subMeshMaterial = static_cast<OpenGL_Material*>(glRE->GetMaterialByID(glSubMesh->GetMaterialID()));
@@ -77,10 +77,10 @@ void OpenGL_Renderer::Draw(RenderableEntity* renderObject) {
 
 void OpenGL_Renderer::WireFrameDraw(RenderableEntity* renderObject) {
     OpenGL_RenderableEntity* glRE = static_cast<OpenGL_RenderableEntity*>(renderObject);
-    std::vector<SubMesh*> subMeshArray = glRE->GetSubMeshes();
+    std::vector<Submesh*> subMeshArray = glRE->GetSubMeshes();
 
     for (int i = 0; i < subMeshArray.size(); i++) {
-        OpenGL_SubMesh* glSubMesh = static_cast<OpenGL_SubMesh*>(subMeshArray[i]);
+        OpenGL_Submesh* glSubMesh = static_cast<OpenGL_Submesh*>(subMeshArray[i]);
 
         // Prepare & draw Submesh
         OpenGL_Material* subMeshMaterial = static_cast<OpenGL_Material*>(glRE->GetMaterialByID(glSubMesh->GetMaterialID()));

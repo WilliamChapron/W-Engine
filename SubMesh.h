@@ -2,11 +2,11 @@
 
 #include "RenderStructures.h"
 
-class SubMesh {
+class Submesh {
 public:
-    SubMesh() {};
+    Submesh() {};
 
-    virtual ~SubMesh() {}
+    virtual ~Submesh() {}
 
     virtual void Update() = 0;
 

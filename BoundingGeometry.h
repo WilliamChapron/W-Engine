@@ -17,9 +17,10 @@ public:
 
     // #to protected
     Eigen::Matrix3d m_rotation;
+    Eigen::Vector3d m_center;
 
 protected:
-    Eigen::Vector3d m_center;
+
     Eigen::Vector3d m_size;
 
     std::vector<Eigen::Vector3d> m_corners;
