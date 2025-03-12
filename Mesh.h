@@ -2,7 +2,7 @@
 
 #include "RenderStructures.h"
 
-class SubMesh;
+class Submesh;
 class Texture;
 class Material;
 

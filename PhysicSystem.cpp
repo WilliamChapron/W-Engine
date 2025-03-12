@@ -83,6 +83,7 @@ void PhysicSystem::SearchReceiverInplicatedFace(BoundingGeometry& bg, const std:
 
             // Get corners
             std::vector<Eigen::Vector3d>& c = bg.GetCorners();
+
             // Calculer la normale de la face
             Eigen::Vector3d v1 = c[indices[1]] - c[indices[0]];
             Eigen::Vector3d v2 = c[indices[3]] - c[indices[0]];

@@ -112,63 +112,60 @@ void OpenGL_Renderer::DrawBoundingBoxCorners(std::vector<float> lineVertices, st
     // Bind VAO
     glBindVertexArray(VAO);
 
-    // Ajouter les couleurs : chaque sommet a une couleur différente
     std::vector<float> colors = {
-       1.0f, 0.0f, 0.0f, 1.0f, // Coin 0 → Rouge
-       0.0f, 1.0f, 0.0f, 1.0f, // Coin 1 → Vert
-       0.0f, 0.0f, 1.0f, 1.0f, // Coin 2 → Bleu
-       1.0f, 1.0f, 0.0f, 1.0f, // Coin 3 → Jaune
-       1.0f, 0.0f, 1.0f, 1.0f, // Coin 4 → Magenta
-       0.0f, 1.0f, 1.0f, 1.0f, // Coin 5 → Cyan
-       1.0f, 0.5f, 0.0f, 1.0f, // Coin 6 → Orange
-       0.5f, 0.0f, 0.5f, 1.0f  // Coin 7 → Violet
+       1.0f, 0.0f, 0.0f, 1.0f, // Corner 0 → Red
+       0.0f, 1.0f, 0.0f, 1.0f, // Corner 1 → Green
+       0.0f, 0.0f, 1.0f, 1.0f, // Corner 2 → Blue
+       1.0f, 1.0f, 0.0f, 1.0f, // Corner 3 → Yellow
+       1.0f, 0.0f, 1.0f, 1.0f, // Corner 4 → Magenta
+       0.0f, 1.0f, 1.0f, 1.0f, // Corner 5 → Cyan
+       1.0f, 0.5f, 0.0f, 1.0f, // Corner 6 → Orange
+       0.5f, 0.0f, 0.5f, 1.0f  // Corner 7 → Purple
     };
 
-    // Combine positions et couleurs dans un seul tableau
+    // Combine positions and colors into one array
     std::vector<float> verticesWithColor;
     for (size_t i = 0; i < lineVertices.size() / 3; ++i) {
-        // Ajouter la position
         verticesWithColor.push_back(lineVertices[i * 3]);
         verticesWithColor.push_back(lineVertices[i * 3 + 1]);
         verticesWithColor.push_back(lineVertices[i * 3 + 2]);
 
-        // Ajouter la couleur correspondante
         verticesWithColor.push_back(colors[i * 4]);
         verticesWithColor.push_back(colors[i * 4 + 1]);
         verticesWithColor.push_back(colors[i * 4 + 2]);
         verticesWithColor.push_back(colors[i * 4 + 3]);
     }
 
-    // Bind VBO et charger les données des sommets (avec couleurs)
+    // Bind VBO and load vertex data (with colors)
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, verticesWithColor.size() * sizeof(float), verticesWithColor.data(), GL_STATIC_DRAW);
 
-    // Bind EBO et charger les indices
+    // Bind EBO and load indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
-    // Configurer l'attribut de position des sommets (3 composantes par sommet)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0); // 7 = 3 position + 4 couleur
+    // Set up vertex position attribute (3 components per vertex)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0); // 7 = 3 position + 4 color
     glEnableVertexAttribArray(0);
 
-    // Configurer l'attribut de couleur (4 composantes par sommet)
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float))); // Couleur commence à l'index 3
+    // Set up color attribute (4 components per vertex)
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float))); // Color starts at index 3
     glEnableVertexAttribArray(1);
 
-    // Utiliser glPolygonMode pour afficher en mode lignes
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // Dessiner les polygones comme des lignes
+    // Use glPolygonMode to draw in line mode
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // Draw polygons as lines
 
-    // Dessiner les lignes du colliseur
+    // Draw bounding box lines
     glDrawElements(GL_LINES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
 
-    // Réactiver le mode normal (mode plein)
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // Retour au mode remplissage des polygones
+    // Switch back to normal fill mode
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // Back to polygon fill mode
 
-    // Configurer pour dessiner des points
-    glPointSize(8.0f); // Taille des points (ajustez selon vos besoins)
-    glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(lineVertices.size() / 3)); // Dessiner chaque sommet comme un point
+    // Set up for drawing points
+    glPointSize(8.0f); // Point size (adjust as needed)
+    glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(lineVertices.size() / 3)); // Draw each vertex as a point
 
-    // Nettoyer
+    // Cleanup
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -178,6 +175,8 @@ void OpenGL_Renderer::DrawBoundingBoxCorners(std::vector<float> lineVertices, st
     glBindVertexArray(0);
     glDeleteVertexArrays(1, &VAO);
 }
+
+
 void OpenGL_Renderer::Present() {
     glfwSwapBuffers(m_context->getWindow());
     glfwPollEvents();
