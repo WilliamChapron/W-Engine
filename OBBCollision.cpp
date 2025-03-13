@@ -94,6 +94,13 @@ void ProcessKeyboardMovement(GLFWwindow* window, Transform* cubeTransform, float
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
         cubeTransform->SetPosition(cubeTransform->GetPosition() + glm::vec3(moveSpeed * deltaTime, 0.0f, 0.0f));
     }
+
+    if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) {
+        cubeTransform->SetPosition(cubeTransform->GetPosition() + glm::vec3(0.0f, 0.0f, moveSpeed * deltaTime));
+    }
+    if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) {
+        cubeTransform->SetPosition(cubeTransform->GetPosition() - glm::vec3(0.0f, 0.0f, moveSpeed * deltaTime));
+    }
 }
 
 int main()
@@ -163,6 +170,8 @@ int main()
     // Transforms and colliders
     Transform* cubeTransform = new Transform();
     cubeTransform->SetScale(glm::vec3(4.0f, 1.0f, 1.0f));
+    //cubeTransform->SetRotation(glm::vec3(40, 30, 0));
+    //cubeTransform->SetRotation(glm::vec3(0, 90, 0));
     BoxCollider* cubeCollider = new BoxCollider(cubeGeometry->vertices);
     cubeCollider->m_obb.Init(cubeGeometry->vertices);
 
@@ -240,7 +249,8 @@ int main()
 
 
         //PRINT(physicSystem->OBB_Collision(cubeCollider->m_orientedBoundingBox, cube2Collider->m_orientedBoundingBox));
-        physicSystem->TestOBBvsOBB_CollisionWithFaces(cube2Collider->m_obb, cubeCollider->m_obb);
+        //physicSystem->TestOBBvsOBB_CollisionWithFaces(cube2Collider->m_obb, cubeCollider->m_obb);
+        physicSystem->TestOBBvsOBB_CollisionWithContactPoints(cube2Collider->m_obb, cubeCollider->m_obb);
         //physicSystem->TestOBBvsOBB_CollisionOnly(cube2Collider->m_obb, cubeCollider->m_obb);
 
         std::vector<Eigen::Vector3d> collisionPointsOBB1, collisionPointsOBB2;

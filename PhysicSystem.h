@@ -41,13 +41,10 @@ private:
     void ProjectCornersOnAxis(std::vector<Eigen::Vector3d>& corners, const Eigen::Vector3d& axis, double& min, double& max);
     bool TestCornerOnAxes(const Eigen::Vector3d& corner, const std::vector<Eigen::Vector3d>& axes, BoundingGeometry& bg);
 
-    // Face
-    void SearchReceiverInplicatedFace(BoundingGeometry& bg, const std::vector<Eigen::Vector3d>& collisionPoints, std::vector<std::string>& implicatedFaces);
-
     // ContactsPoint & Penetration
     Eigen::Vector3d ComputeCollisionNormal(BoundingGeometry& receiver, const std::vector<Eigen::Vector3d>& collisionPoints, const std::vector<std::string>& implicatedFaces);
 
-    // #todo will be used by search face
+    //
     Eigen::Vector3d GetFaceNormal(const std::string& faceName, const std::vector<Eigen::Vector3d>& corners);
 
 };

@@ -21,6 +21,7 @@ void OBB::ComputeCenter() {
 
 void OBB::ComputeSize() {
     m_size = max - min;
+    m_halfSize = m_size / 2;
 }
 
 void OBB::ComputeMinMaxForAllVertices(const std::vector<Vertex>& vertices) {

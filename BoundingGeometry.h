@@ -18,6 +18,7 @@ public:
     // #to protected
     Eigen::Matrix3d m_rotation;
     Eigen::Vector3d m_center;
+    Eigen::Vector3d m_halfSize;
 
 protected:
 

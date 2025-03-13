@@ -12,22 +12,28 @@
 
 
 #pragma region UsualFunctions
-// returns a list of potential separating axes for the Separating Axis Theorem (SAT) collision test.
+// returns a list of potential separating axes for the Separating Axis Theorem (SAT) collision test (15 axes in worst case)
 std::vector<Eigen::Vector3d> PhysicSystem::GenerateAxes(BoundingGeometry& bg1, BoundingGeometry& bg2) {
     std::vector<Eigen::Vector3d> axes;
 
-    // Ajouter les normales des faces
+    // Normal of faces (from rotation matrix)
     for (int i = 0; i < 3; ++i) {
         axes.push_back(bg1.m_rotation.col(i));
         axes.push_back(bg2.m_rotation.col(i));
     }
 
-    // Ajouter les axes croisés
+    // Cross axis
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
+
             Eigen::Vector3d crossAxis = bg1.m_rotation.col(i).cross(bg2.m_rotation.col(j));
+
+            // Avoid null cross axes
             if (crossAxis.norm() > 1e-6) {
+
                 Eigen::Vector3d normalizedAxis = crossAxis.normalized();
+
+                // if nothing find, nothing identic
                 if (std::find(axes.begin(), axes.end(), normalizedAxis) == axes.end()) {
                     axes.push_back(normalizedAxis);
                 }
@@ -38,112 +44,127 @@ std::vector<Eigen::Vector3d> PhysicSystem::GenerateAxes(BoundingGeometry& bg1, B
     return axes;
 }
 
-// Projette les coins sur un axe et retourne les min/max
+
 void PhysicSystem::ProjectCornersOnAxis(std::vector<Eigen::Vector3d>& corners, const Eigen::Vector3d& axis, double& min, double& max) {
     min = std::numeric_limits<double>::max();
     max = -std::numeric_limits<double>::max();
 
+    Eigen::Vector3d normalizedAxis = axis.normalized();
+
     for (const auto& corner : corners) {
-        double projection = axis.dot(corner);
+        double projection = normalizedAxis.dot(corner);
         min = std::min(min, projection);
         max = std::max(max, projection);
     }
 }
 
-// Teste si un coin se trouve dans tous les axes projetés de l'autre OBB
-
-// bg -> bounding geometry
 bool PhysicSystem::TestCornerOnAxes(const Eigen::Vector3d& corner, const std::vector<Eigen::Vector3d>& axes, BoundingGeometry& bg) {
     for (const auto& axis : axes) {
         double min, max;
+
         ProjectCornersOnAxis(bg.GetCorners(), axis, min, max);
 
         double projection = axis.dot(corner);
         if (projection < min || projection > max) {
-            return false; // Pas de collision sur cet axe
+            return false; // No collision on axis
         }
     }
     return true;
 }
 
 
-void PhysicSystem::SearchReceiverInplicatedFace(BoundingGeometry& bg, const std::vector<Eigen::Vector3d>& collisionPoints, std::vector<std::string>& implicatedFaces) {
-    implicatedFaces.clear();
-
-    // Parcourir les points de collision
-    for (const auto& point : collisionPoints) {
-        double minDistance = std::numeric_limits<double>::max();
-        std::string closestFace;
-
-        // Parcourir toutes les faces
-        for (const auto& pair : faces) {
-            const std::string& faceName = pair.first;    
-            const std::vector<int>& indices = pair.second; 
-
-
-            // Get corners
-            std::vector<Eigen::Vector3d>& c = bg.GetCorners();
-
-            // Calculer la normale de la face
-            Eigen::Vector3d v1 = c[indices[1]] - c[indices[0]];
-            Eigen::Vector3d v2 = c[indices[3]] - c[indices[0]];
-            Eigen::Vector3d normal = v1.cross(v2).normalized();
-
-            // Calculer la distance entre le point et le plan de la face
-            Eigen::Vector3d faceCenter = Eigen::Vector3d::Zero();
-            for (int index : indices) {
-                faceCenter += c[index];
-            }
-            faceCenter /= indices.size();
-
-            double distanceToPlane = (point - faceCenter).dot(normal);
-
-            // Si la distance est plus proche que la précédente
-            if (std::abs(distanceToPlane) < minDistance) {
-                minDistance = std::abs(distanceToPlane);
-                closestFace = faceName;
-            }
-        }
-
-        // Ajouter la face impliquée
-        if (!closestFace.empty() && std::find(implicatedFaces.begin(), implicatedFaces.end(), closestFace) == implicatedFaces.end()) {
-            implicatedFaces.push_back(closestFace);
-        }
-    }
-}
 #pragma endregion
+
+
+
+
+
+
+
+
+
+Eigen::Vector3d PhysicSystem::GetFaceNormal(const std::string& faceName, const std::vector<Eigen::Vector3d>& corners) {
+    auto it = faces.find(faceName);
+    if (it == faces.end()) {
+        std::cerr << "Erreur : Face non trouvée." << std::endl;
+        return Eigen::Vector3d::Zero();
+    }
+
+    const auto& indices = it->second;  
+
+    Eigen::Vector3d v1 = corners[indices[1]] - corners[indices[0]];
+    Eigen::Vector3d v2 = corners[indices[2]] - corners[indices[0]];
+
+    Eigen::Vector3d normal = v1.cross(v2);
+
+    return normal.normalized();
+}
+
+Eigen::Vector3d PhysicSystem::ComputeCollisionNormal(
+    BoundingGeometry& receiver,
+    const std::vector<Eigen::Vector3d>& collisionPoints,
+    const std::vector<std::string>& implicatedFaces)
+{
+    Eigen::Vector3d normal(0, 0, 0);
+    //if (collisionPoints.empty() || implicatedFaces.empty()) return normal;
+
+    //// Trouver la face la plus proche du centre de masse du receveur
+    //double minDist = std::numeric_limits<double>::max();
+    //for (const auto& face : implicatedFaces) {
+    //    Eigen::Vector3d faceNormal = GetFaceNormal(face, receiver.GetCorners());
+
+    //    for (const auto& point : collisionPoints) {
+    //        double dist = std::abs((point - receiver.m_center).dot(faceNormal));
+    //        if (dist < minDist) {
+    //            minDist = dist;
+    //            normal = faceNormal;
+    //        }
+    //    }
+    //}
+    return normal.normalized();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #pragma region CollisionOnly
 bool PhysicSystem::TestOBBvsOBB_CollisionOnly(BoundingGeometry& bg1, BoundingGeometry& bg2) {
     std::vector<Eigen::Vector3d> axes = GenerateAxes(bg1, bg2);
-    bool isColliding = false;
 
     std::vector<Eigen::Vector3d>& c1 = bg1.GetCorners();
     std::vector<Eigen::Vector3d>& c2 = bg2.GetCorners();
 
-    for (size_t i = 0; i < c1.size(); ++i) {
-        const auto& corner1 = c1[i];
-        if (TestCornerOnAxes(corner1, axes, bg2)) {
-            isColliding = true;
+    for (const auto& axis : axes) {
+        double min1, max1, min2, max2;
+
+        // Project 2 OBB corners on this axis
+        ProjectCornersOnAxis(c1, axis, min1, max1);
+        ProjectCornersOnAxis(c2, axis, min2, max2);
+
+        // No overlap of max with min => no collision
+        if (max1 < min2 || max2 < min1) {
+            std::cout << "Pas de collision, séparation détectée sur un axe.\n";
+            return false;
         }
     }
 
-    for (size_t i = 0; i < c2.size(); ++i) {
-        const auto& corner2 = c2[i];
-        if (TestCornerOnAxes(corner2, axes, bg1)) {
-            isColliding = true;
-        }
-    }
-
-    if (isColliding) {
-        std::cout << "Collision detectee entre les OBB.\n";
-    }
-    else {
-        std::cout << "Aucune collision detectee.\n";
-    }
-
-    return isColliding;
+    std::cout << "Collision détectée entre les OBB.\n";
+    return true;
 }
 
 bool PhysicSystem::TestAABBvsAABB_CollisionOnly(AABB& aabb1, AABB& aabb2)
@@ -166,25 +187,6 @@ bool PhysicSystem::TestAABBvsOBB_CollisionOnly(BoundingGeometry& bg1, BoundingGe
     std::vector<Eigen::Vector3d>& c1 = bg1.GetCorners();
     std::vector<Eigen::Vector3d>& c2 = bg2.GetCorners();
 
-    // Teste les coins de bg1 par rapport aux axes générés
-    for (size_t i = 0; i < c1.size(); ++i) {
-        const auto& corner1 = c1[i];
-        if (TestCornerOnAxes(corner1, axes, bg2)) {
-            isColliding = true;
-            break;  // Collision trouvée, on sort de la boucle
-        }
-    }
-
-    // Teste les coins de bg2 par rapport aux axes générés
-    if (!isColliding) {
-        for (size_t i = 0; i < c2.size(); ++i) {
-            const auto& corner2 = c2[i];
-            if (TestCornerOnAxes(corner2, axes, bg1)) {
-                isColliding = true;
-                break;  // Collision trouvée, on sort de la boucle
-            }
-        }
-    }
 
     if (isColliding) {
         std::cout << "Collision detectee entre les OBB.\n";
@@ -202,55 +204,6 @@ bool PhysicSystem::TestAABBvsOBB_CollisionOnly(BoundingGeometry& bg1, BoundingGe
 
 
 
-
-
-
-Eigen::Vector3d PhysicSystem::GetFaceNormal(const std::string& faceName, const std::vector<Eigen::Vector3d>& corners) {
-    auto it = faces.find(faceName);
-    const auto& indices = it->second;
-
-
-    // Triangle 1 : (coins 0, 1, 2)
-    Eigen::Vector3d v1 = corners[indices[1]] - corners[indices[0]];
-    Eigen::Vector3d v2 = corners[indices[2]] - corners[indices[0]];
-    Eigen::Vector3d normal1 = v1.cross(v2);
-
-    // Triangle 2 : (coins 2, 3, 0)
-    v1 = corners[indices[2]] - corners[indices[3]];
-    v2 = corners[indices[0]] - corners[indices[3]];
-    Eigen::Vector3d normal2 = v1.cross(v2);
-
-    Eigen::Vector3d normal = normal1 + normal2;
-
-    return normal.normalized(); // Normalisation pour avoir une normale unitaire
-}
-
-Eigen::Vector3d PhysicSystem::ComputeCollisionNormal(
-    BoundingGeometry& receiver,
-    const std::vector<Eigen::Vector3d>& collisionPoints,
-    const std::vector<std::string>& implicatedFaces)
-{
-    Eigen::Vector3d normal(0, 0, 0);
-    if (collisionPoints.empty() || implicatedFaces.empty()) return normal;
-
-    // Trouver la face la plus proche du centre de masse du receveur
-    double minDist = std::numeric_limits<double>::max();
-    for (const auto& face : implicatedFaces) {
-        Eigen::Vector3d faceNormal = GetFaceNormal(face, receiver.GetCorners());
-
-        for (const auto& point : collisionPoints) {
-            double dist = std::abs((point - receiver.m_center).dot(faceNormal));
-            if (dist < minDist) {
-                minDist = dist;
-                normal = faceNormal;
-            }
-        }
-    }
-    return normal.normalized();
-}
-
-
-
 #pragma region CollisionWithPoints
 bool PhysicSystem::TestOBBvsOBB_CollisionWithCorners(BoundingGeometry& bg1, BoundingGeometry& bg2, std::vector<Eigen::Vector3d>& collisionPointsbg1, std::vector<Eigen::Vector3d>& collisionPointsbg2)
 {
@@ -259,24 +212,23 @@ bool PhysicSystem::TestOBBvsOBB_CollisionWithCorners(BoundingGeometry& bg1, Boun
     std::vector<Eigen::Vector3d>& c1 = bg1.GetCorners();
     std::vector<Eigen::Vector3d>& c2 = bg2.GetCorners();
 
-    // Tester les coins de bg1
+    // test bg1 corners on axes
     for (size_t i = 0; i < c1.size(); ++i) {
-        const auto& corner1 = c1[i];
-        if (TestCornerOnAxes(corner1, axes, bg2)) {
-            collisionPointsbg1.push_back(corner1);
+        const auto& c = c1[i];
+        if (TestCornerOnAxes(c, axes, bg2)) {
+            collisionPointsbg1.push_back(c);
             std::cout << "Coin 1 (Droite) index: " << i << ", Color: " << colors[i] << "\n";
         }
     }
 
-    // Tester les coins de bg2
+    // test bg2 corners on axes
     for (size_t i = 0; i < c2.size(); ++i) {
-        const auto& corner2 = c2[i];
-        if (TestCornerOnAxes(corner2, axes, bg1)) {
-            collisionPointsbg2.push_back(corner2);
+        const auto& c = c2[i];
+        if (TestCornerOnAxes(c, axes, bg1)) {
+            collisionPointsbg2.push_back(c);
             std::cout << "Coin 2 (Gauche) index: " << i << ", Color: " << colors[i] << "\n";
         }
     }
-
     return !collisionPointsbg1.empty() || !collisionPointsbg2.empty();
 }
 #pragma endregion
@@ -284,97 +236,76 @@ bool PhysicSystem::TestOBBvsOBB_CollisionWithCorners(BoundingGeometry& bg1, Boun
 
 
 #pragma region CollisionWithFaces
-bool PhysicSystem::TestOBBvsOBB_CollisionWithFaces(BoundingGeometry& bg1, BoundingGeometry& bg2) {
-    std::vector<Eigen::Vector3d> axes = GenerateAxes(bg1, bg2);
-    std::vector<Eigen::Vector3d> collisionPointsbg1;
-    std::vector<Eigen::Vector3d> collisionPointsbg2;
 
-    std::vector<Eigen::Vector3d>& c1 = bg1.GetCorners();
-    std::vector<Eigen::Vector3d>& c2 = bg2.GetCorners();
+bool PhysicSystem::TestOBBvsOBB_CollisionWithFaces(BoundingGeometry& bg1, BoundingGeometry& bg2) {
+    std::vector<Eigen::Vector3d>& c1 = bg1.GetCorners(); // Coins de l'OBB 1
+    std::vector<Eigen::Vector3d>& c2 = bg2.GetCorners(); // Coins de l'OBB 2
+    std::vector<Eigen::Vector3d> axes = GenerateAxes(bg1, bg2); // Générer les axes de séparation
 
     std::vector<std::string> implicatedFaces1;
     std::vector<std::string> implicatedFaces2;
 
-    // tst bg1 corners
-    for (size_t i = 0; i < c1.size(); ++i) {
-        const auto& corner1 = c1[i];
-        if (TestCornerOnAxes(corner1, axes, bg2)) {
-            collisionPointsbg1.push_back(corner1);
-            //std::cout << "Coin 1 (Droite) index: " << i << ", Color: " << colors[i] << "\n";
-        }
-    }
-
-    // test bg2 corers
-    for (size_t i = 0; i < c2.size(); ++i) {
-        const auto& corner2 = c2[i];
-        if (TestCornerOnAxes(corner2, axes, bg1)) {
-            collisionPointsbg2.push_back(corner2);
-            //std::cout << "Coin 2 (Gauche) index: " << i << ", Color: " << colors[i] << "\n";
-        }
-    }
-
-    // search implicated faces for each of them
-    if (!collisionPointsbg1.empty() || !collisionPointsbg2.empty()) {
-        std::cout << "Total collision points bg1: " << collisionPointsbg1.size() << "\n";
-        std::cout << "Total collision points bg2: " << collisionPointsbg2.size() << "\n";
-
-        //std::cout << "Searching implicated faces...\n";
-        std::cout << "--------------------------------\n";
-
-        if (!collisionPointsbg2.empty()) {
-            // bg1 is the receiver, collisionPointsbg2 are the collision points of the penetrator
-            SearchReceiverInplicatedFace(bg1, collisionPointsbg2, implicatedFaces1);
-
-            if (!implicatedFaces1.empty()) {
-                std::cout << "Impacted faces bg1 (right) (receiver): ";
-                for (const auto& face : implicatedFaces1) {
-                    auto it = faceColors.find(face);
-                    if (it != faceColors.end()) {
-                        std::cout << "Face: " << face << " - Color: " << it->second << "\n";
-                    }
-                }
-                std::cout << "\n";
-            }
-            else {
-                std::cout << "No implicated faces for bg1 (right) (receiver).\n";
-            }
-        }
-
-        if (!collisionPointsbg1.empty()) {
-            // bg2 is the receiver, collisionPointsbg1 are the collision points of the penetrator
-            SearchReceiverInplicatedFace(bg2, collisionPointsbg1, implicatedFaces2);
-
-            if (!implicatedFaces2.empty()) {
-                std::cout << "Impacted faces bg2 (left) (receiver): ";
-                for (const auto& face : implicatedFaces2) {
-                    auto it = faceColors.find(face);
-                    if (it != faceColors.end()) {
-                        std::cout << "Face: " << face << " - Color: " << it->second << "\n";
-                    }
-                }
-                std::cout << "\n";
-            }
-            else {
-                std::cout << "No implicated faces for bg2 (left) (receiver).\n";
-            }
-        }
-    }
-
-
-
-    //if (!implicatedFaces1.empty()) {
-
-    //    Eigen::Vector3d collisionNormal1 = ComputeCollisionNormal(bg1, collisionPointsbg2, implicatedFaces1);
-    //    std::cout << "Collision Normal bg1: " << collisionNormal1.transpose() << std::endl;
-    //}
-
-    //if (!implicatedFaces2.empty()) {
-    //    Eigen::Vector3d collisionNormal2 = ComputeCollisionNormal(bg2, collisionPointsbg1, implicatedFaces2);
-    //    std::cout << "Collision Normal bg2: " << collisionNormal2.transpose() << std::endl;
-    //}
-
-    std::cout << "---------------CHANGING FRAME-----------------\n";
-
-    return !collisionPointsbg1.empty() || !collisionPointsbg2.empty();
+    return true;
 }
+
 #pragma endregion
+
+
+bool PhysicSystem::TestOBBvsOBB_CollisionWithContactPoints(BoundingGeometry& bg1, BoundingGeometry& bg2) {
+    std::vector<Eigen::Vector3d>& c1 = bg1.GetCorners();
+    std::vector<Eigen::Vector3d>& c2 = bg2.GetCorners();
+    std::vector<Eigen::Vector3d> axes = GenerateAxes(bg1, bg2);
+
+    std::vector<Eigen::Vector3d> contactPoints1;
+    std::vector<Eigen::Vector3d> contactPoints2;
+    double penetrationDepth = std::numeric_limits<double>::max();
+
+    for (auto& axis : axes) {
+        double min1, max1, min2, max2;
+        ProjectCornersOnAxis(c1, axis, min1, max1);
+        ProjectCornersOnAxis(c2, axis, min2, max2);
+
+        if (max1 < min2 || max2 < min1) {
+            std::cout << "Pas de collision sur l'axe : " << axis.transpose() << std::endl;
+            return false;
+        }
+
+        double overlap = std::min(max1, max2) - std::max(min1, min2);
+        penetrationDepth = std::min(penetrationDepth, overlap);
+
+        if (overlap > 0) {
+            Eigen::Vector3d contactPoint = (axis * (std::max(min1, min2) + overlap / 2));
+
+            contactPoints1.push_back(contactPoint);
+            contactPoints2.push_back(contactPoint);
+        }
+    }
+
+    std::cout << "Pénétration : " << penetrationDepth << std::endl;
+
+    Eigen::Vector3d center1 = (bg1.GetCorners()[0] + bg1.GetCorners()[1] + bg1.GetCorners()[2] + bg1.GetCorners()[3] +
+        bg1.GetCorners()[4] + bg1.GetCorners()[5] + bg1.GetCorners()[6] + bg1.GetCorners()[7]) / 8.0;
+    Eigen::Vector3d center2 = (bg2.GetCorners()[0] + bg2.GetCorners()[1] + bg2.GetCorners()[2] + bg2.GetCorners()[3] +
+        bg2.GetCorners()[4] + bg2.GetCorners()[5] + bg2.GetCorners()[6] + bg2.GetCorners()[7]) / 8.0;
+
+    std::cout << "Points de contact pour OBB1 : " << std::endl;
+    for (const auto& point : contactPoints1) {
+        std::cout << "OBB1 - " << point.transpose() << std::endl;
+        Eigen::Vector3d contactDirection1 = (point - center1).normalized();
+        std::cout << "Direction de répulsion pour OBB1: " << contactDirection1.transpose() << std::endl;
+
+    }
+
+    std::cout << "Points de contact pour OBB2 : " << std::endl;
+    for (const auto& point : contactPoints2) {
+        Eigen::Vector3d contactDirection2 = (point - center2).normalized();
+        std::cout << "OBB2 - " << point.transpose() << std::endl;
+        std::cout << "Direction de répulsion pour OBB2: " << contactDirection2.transpose() << std::endl;
+    }
+
+
+
+    std::cout << "---------FRAME--------- : " << "\n" << std::endl;
+
+    return true;
+}
