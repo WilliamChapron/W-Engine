@@ -139,6 +139,9 @@
     <ClCompile Include="Submesh.cpp">
       <Filter>Render\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Solver.cpp">
+      <Filter>Physic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -237,6 +240,9 @@
     </ClInclude>
     <ClInclude Include="Submesh.h">
       <Filter>Render\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Solver.h">
+      <Filter>Physic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

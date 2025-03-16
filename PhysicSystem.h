@@ -5,6 +5,16 @@ struct BoundingGeometry;
 struct OBB;
 struct AABB;
 
+struct CollisionInfo {
+    bool hasCollision;
+    double penetrationDepth;
+    Eigen::Vector3d bestAxis1; 
+    Eigen::Vector3d bestAxis2; 
+    std::vector<Eigen::Vector3d> contactPoints1;
+    std::vector<Eigen::Vector3d> contactPoints2;
+};
+
+
 class PhysicSystem {
 public:
     // ******** Collision Only ********
@@ -25,7 +35,7 @@ public:
 
 
     // Contacts Points / Normals & Penetration
-    bool TestOBBvsOBB_CollisionWithContactPoints(BoundingGeometry& bg1, BoundingGeometry& bg2);
+    CollisionInfo TestOBBvsOBB_CollisionWithContactPoints(BoundingGeometry& bg1, BoundingGeometry& bg2);
 
 
 
@@ -48,3 +58,4 @@ private:
     Eigen::Vector3d GetFaceNormal(const std::string& faceName, const std::vector<Eigen::Vector3d>& corners);
 
 };
+

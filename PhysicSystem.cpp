@@ -251,14 +251,14 @@ bool PhysicSystem::TestOBBvsOBB_CollisionWithFaces(BoundingGeometry& bg1, Boundi
 #pragma endregion
 
 
-bool PhysicSystem::TestOBBvsOBB_CollisionWithContactPoints(BoundingGeometry& bg1, BoundingGeometry& bg2) {
+CollisionInfo PhysicSystem::TestOBBvsOBB_CollisionWithContactPoints(BoundingGeometry& bg1, BoundingGeometry& bg2) {
     std::vector<Eigen::Vector3d>& c1 = bg1.GetCorners();
     std::vector<Eigen::Vector3d>& c2 = bg2.GetCorners();
     std::vector<Eigen::Vector3d> axes = GenerateAxes(bg1, bg2);
 
-    std::vector<Eigen::Vector3d> contactPoints1;
-    std::vector<Eigen::Vector3d> contactPoints2;
-    double penetrationDepth = std::numeric_limits<double>::max();
+    CollisionInfo collisionInfo;
+    collisionInfo.hasCollision = false;
+    collisionInfo.penetrationDepth = std::numeric_limits<double>::max();
 
     for (auto& axis : axes) {
         double min1, max1, min2, max2;
@@ -267,45 +267,40 @@ bool PhysicSystem::TestOBBvsOBB_CollisionWithContactPoints(BoundingGeometry& bg1
 
         if (max1 < min2 || max2 < min1) {
             std::cout << "Pas de collision sur l'axe : " << axis.transpose() << std::endl;
-            return false;
+            return collisionInfo; // Pas de collision
         }
 
         double overlap = std::min(max1, max2) - std::max(min1, min2);
-        penetrationDepth = std::min(penetrationDepth, overlap);
+        if (overlap < collisionInfo.penetrationDepth) {
+            collisionInfo.penetrationDepth = overlap;
+            collisionInfo.bestAxis1 = axis;
+        }
 
         if (overlap > 0) {
             Eigen::Vector3d contactPoint = (axis * (std::max(min1, min2) + overlap / 2));
-
-            contactPoints1.push_back(contactPoint);
-            contactPoints2.push_back(contactPoint);
+            collisionInfo.contactPoints1.push_back(contactPoint);
+            collisionInfo.contactPoints2.push_back(contactPoint);
         }
     }
 
-    std::cout << "Pénétration : " << penetrationDepth << std::endl;
+    collisionInfo.hasCollision = true;
+    collisionInfo.bestAxis2 = -collisionInfo.bestAxis1;
 
-    Eigen::Vector3d center1 = (bg1.GetCorners()[0] + bg1.GetCorners()[1] + bg1.GetCorners()[2] + bg1.GetCorners()[3] +
-        bg1.GetCorners()[4] + bg1.GetCorners()[5] + bg1.GetCorners()[6] + bg1.GetCorners()[7]) / 8.0;
-    Eigen::Vector3d center2 = (bg2.GetCorners()[0] + bg2.GetCorners()[1] + bg2.GetCorners()[2] + bg2.GetCorners()[3] +
-        bg2.GetCorners()[4] + bg2.GetCorners()[5] + bg2.GetCorners()[6] + bg2.GetCorners()[7]) / 8.0;
+    std::cout << "Collision détectée !" << std::endl;
+    std::cout << "Pénétration : " << collisionInfo.penetrationDepth << std::endl;
+    std::cout << "Meilleure direction de collision : " << collisionInfo.bestAxis1.transpose() << std::endl;
 
     std::cout << "Points de contact pour OBB1 : " << std::endl;
-    for (const auto& point : contactPoints1) {
+    for (const auto& point : collisionInfo.contactPoints1) {
         std::cout << "OBB1 - " << point.transpose() << std::endl;
-        Eigen::Vector3d contactDirection1 = (point - center1).normalized();
-        std::cout << "Direction de répulsion pour OBB1: " << contactDirection1.transpose() << std::endl;
-
     }
 
     std::cout << "Points de contact pour OBB2 : " << std::endl;
-    for (const auto& point : contactPoints2) {
-        Eigen::Vector3d contactDirection2 = (point - center2).normalized();
+    for (const auto& point : collisionInfo.contactPoints2) {
         std::cout << "OBB2 - " << point.transpose() << std::endl;
-        std::cout << "Direction de répulsion pour OBB2: " << contactDirection2.transpose() << std::endl;
     }
-
-
 
     std::cout << "---------FRAME--------- : " << "\n" << std::endl;
 
-    return true;
+    return collisionInfo;
 }

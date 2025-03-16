@@ -31,6 +31,8 @@
 #include "PhysicSystem.h"
 #include "RigidBody.h"
 
+#include "Solver.h"
+
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
@@ -51,6 +53,18 @@ void ProcessInput(GLFWwindow* window) {
         isPaused = !isPaused;
     }
     wasSpacePressed = isSpacePressedNow;
+}
+
+glm::vec3 EigenToGLM(const Eigen::Vector3d& eigenVec) {
+    return glm::vec3(static_cast<float>(eigenVec.x()), static_cast<float>(eigenVec.y()), static_cast<float>(eigenVec.z()));
+}
+
+Eigen::Vector3d GLMToEigen(const glm::vec3& glmVec) {
+    return Eigen::Vector3d(
+        static_cast<double>(glmVec.x),
+        static_cast<double>(glmVec.y),
+        static_cast<double>(glmVec.z)
+    );
 }
 
 float speed = 1.f;
@@ -161,6 +175,7 @@ int main()
     cube2->AddSubmesh(cube2Submesh);
 
     Transform* cube2Transform = new Transform();
+    RigidBody* cube2RB = new RigidBody(cube2Transform, 100);
     BoxCollider* cube2Collider = new BoxCollider(cube2Geometry->vertices);
     cube2Collider->m_obb.Init(cube2Geometry->vertices);
 
@@ -169,7 +184,8 @@ int main()
 
     // Transforms and colliders
     Transform* cubeTransform = new Transform();
-    cubeTransform->SetScale(glm::vec3(4.0f, 1.0f, 1.0f));
+    RigidBody* cubeRB = new RigidBody(cubeTransform, 100);
+    //cubeTransform->SetScale(glm::vec3(4.0f, 1.0f, 1.0f));
     //cubeTransform->SetRotation(glm::vec3(40, 30, 0));
     //cubeTransform->SetRotation(glm::vec3(0, 90, 0));
     BoxCollider* cubeCollider = new BoxCollider(cubeGeometry->vertices);
@@ -182,6 +198,8 @@ int main()
 
     float rotate = 0.0f;
     float rotationSpeed = 0.04f;
+
+    Solver* solver = new Solver();
 
     // Main loop 
     while (!glfwWindowShouldClose(window))
@@ -250,7 +268,30 @@ int main()
 
         //PRINT(physicSystem->OBB_Collision(cubeCollider->m_orientedBoundingBox, cube2Collider->m_orientedBoundingBox));
         //physicSystem->TestOBBvsOBB_CollisionWithFaces(cube2Collider->m_obb, cubeCollider->m_obb);
-        physicSystem->TestOBBvsOBB_CollisionWithContactPoints(cube2Collider->m_obb, cubeCollider->m_obb);
+
+
+
+
+
+
+        Eigen::Vector3d pushingForce(0.0, 10.0, 0.0);  
+        Eigen::Vector3d cube1Position = GLMToEigen(cubeRB->m_transform->GetPosition()) - Eigen::Vector3d(3,3,3);
+
+        //cubeRB->ApplyForce(pushingForce, cube1Position);
+
+
+        CollisionInfo ci = physicSystem->TestOBBvsOBB_CollisionWithContactPoints(cube2Collider->m_obb, cubeCollider->m_obb);
+        solver->ResolveCollision(*cubeRB, *cube2RB, ci);
+        cubeRB->Update(deltaTime);
+        cube2RB->Update(deltaTime);
+
+
+
+
+
+
+
+
         //physicSystem->TestOBBvsOBB_CollisionOnly(cube2Collider->m_obb, cubeCollider->m_obb);
 
         std::vector<Eigen::Vector3d> collisionPointsOBB1, collisionPointsOBB2;

@@ -1,18 +1,28 @@
-#pragma once
-#include "Transform.h"
+#include <Eigen/Dense>
 #include <glm/glm.hpp>
+
+#pragma once
+class Transform;
 
 class RigidBody {
 public:
     RigidBody(Transform* transform, float mass);
 
-    void ApplyForce(const glm::vec3& force);
+    void ApplyForce(const Eigen::Vector3d& force, const Eigen::Vector3d& point = Eigen::Vector3d(0.0, 0.0, 0.0));
+    void ApplyTorque(const Eigen::Vector3d& torqueToApply);
+
     void Update(float deltaTime);
 
-    glm::vec3 velocity;
-    glm::vec3 acceleration;
+    Eigen::Vector3d velocity;
+    Eigen::Vector3d acceleration;
+    Eigen::Vector3d angularVelocity; // Vitesse angulaire
+    Eigen::Vector3d torque; // Couple appliqué
+    Eigen::Matrix3d inertia; // Matrice d'inertie
     float mass;
+    Transform* m_transform;
+
+    glm::vec3 EigenToGLM(const Eigen::Vector3d& eigenVec) const;
+    Eigen::Vector3d GLMToEigen(const glm::vec3& glmVec) const;
 
 private:
-    Transform* transform;
 };

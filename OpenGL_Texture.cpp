@@ -7,13 +7,12 @@ OpenGL_Texture::OpenGL_Texture(const char* filePath) {
 }
 
 OpenGL_Texture::~OpenGL_Texture() {
-    // Libération de la texture
     glDeleteTextures(1, &m_textureID);
 }
 
 void OpenGL_Texture::Bind(GLuint slot) const {
-    //glActiveTexture(GL_TEXTURE0 + slot); // Activer le slot de texture
-    //glBindTexture(GL_TEXTURE_2D, m_textureID); // Lier la texture
+    //glActiveTexture(GL_TEXTURE0 + slot); 
+    //glBindTexture(GL_TEXTURE_2D, m_textureID);
 }
 
 void OpenGL_Texture::LoadTexture(const char* filePath) {
