@@ -15,9 +15,9 @@ public:
 
     Eigen::Vector3d velocity;
     Eigen::Vector3d acceleration;
-    Eigen::Vector3d angularVelocity; // Vitesse angulaire
-    Eigen::Vector3d torque; // Couple appliqué
-    Eigen::Matrix3d inertia; // Matrice d'inertie
+    Eigen::Vector3d angularVelocity; 
+    Eigen::Vector3d torque; 
+    Eigen::Matrix3d inertia; 
     float mass;
     Transform* m_transform;
 
