@@ -21,8 +21,11 @@ void RigidBody::ApplyForce(const Eigen::Vector3d& force, const Eigen::Vector3d& 
     acceleration += force / mass;
 
     //
-    Eigen::Vector3d r = point - GLMToEigen(m_transform->GetPosition()); // Vecteur de position relatif
+    Eigen::Vector3d r = point - GLMToEigen(m_transform->GetPosition()); 
     torque += r.cross(force);  // Couple = r x F / Moment of force by the force and application point
+
+    //Eigen::Matrix3d rotationMatrix = Eigen::AngleAxisd(angularVelocity.norm() * deltaTime, angularVelocity.normalized()).toRotationMatrix();
+    //velocity = rotationMatrix * velocity;
 }
 
 void RigidBody::ApplyTorque(const Eigen::Vector3d& torqueToApply) {

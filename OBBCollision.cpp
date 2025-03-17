@@ -68,10 +68,10 @@ Eigen::Vector3d GLMToEigen(const glm::vec3& glmVec) {
 }
 
 float speed = 1.f;
-float lastX = 400.0f;  // Position X initiale de la souris
-float lastY = 300.0f;  // Position Y initiale de la souris
-bool firstMouse = true; // Flag pour la première capture de la souris
-float sensitivity = 0.1f; // Sensibilité de la souris
+float lastX = 400.0f;  
+float lastY = 300.0f; 
+bool firstMouse = true; 
+float sensitivity = 0.1f; 
 
 void ProcessMouseMovement(GLFWwindow* window, Camera& camera) {
     double xpos, ypos;
